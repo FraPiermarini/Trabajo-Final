@@ -39,6 +39,7 @@ public class SecurityConfig {
             .headers(h -> h.frameOptions(f -> f.disable()))
             .authorizeHttpRequests(auth -> auth
                     .requestMatchers("/api/usuarios/registro").permitAll()
+                    .requestMatchers("/api/categorias/**").permitAll()
                     .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
