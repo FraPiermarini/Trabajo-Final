@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-TrabajoFinalApplication<Trabajo-Final>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.example.Trabajo.Final.TrabajoFinalApplication",
+            "projectName": "Trabajo-Final",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
