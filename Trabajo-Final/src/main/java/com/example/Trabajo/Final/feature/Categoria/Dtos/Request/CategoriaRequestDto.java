@@ -22,6 +22,6 @@ public class CategoriaRequestDto {
     @Size(min = 5, max = 150, message = "La descripción debe tener entre 10 y 150 caracteres")
     private String descripcion;
 
-    
+    private Long entrenadorId;
 
 }

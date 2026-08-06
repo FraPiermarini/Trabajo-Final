@@ -12,6 +12,7 @@ public class CategoriaResponseDto {
     private String nombre;
     private String Año;
     private String descripcion;
-    private Long entrenador_id;
+    private Long entrenadorId;
+    private String nombreEntrenador;
 
 }
