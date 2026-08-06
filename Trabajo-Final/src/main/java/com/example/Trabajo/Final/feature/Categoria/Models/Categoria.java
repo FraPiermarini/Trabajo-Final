@@ -1,5 +1,8 @@
 package com.example.Trabajo.Final.feature.Categoria.Models;
 
+import com.example.Trabajo.Final.feature.Entrenador.Models.Entrenador;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,9 +35,10 @@ public class Categoria {
     @NotBlank(message = "La descripción es requerida")
     private String descripcion;
 
-    /*@ManyToOne
-    @JoinColumn(name = "entrenador_id")
-    private Entrenador entrenador;   Comentado hasta crear la clase entrenador*/  
+    @ManyToOne
+    @JoinColumn(name = "entrenadorId")
+     @JsonManagedReference
+    private Entrenador entrenador;   
 
 
 }

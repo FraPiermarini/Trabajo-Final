@@ -49,7 +49,7 @@ public class SecurityConfig {
                 
         ).permitAll()
                     .requestMatchers("/").permitAll()
-
+                    .requestMatchers("/api/entrenadores/**").permitAll()
                     .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
