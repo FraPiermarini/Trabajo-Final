@@ -1,6 +1,11 @@
 package com.example.Trabajo.Final.feature.Categoria.Models;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.example.Trabajo.Final.feature.Entrenador.Models.Entrenador;
+import com.example.Trabajo.Final.feature.Jugador.Models.Jugador;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Entity;
@@ -39,6 +44,10 @@ public class Categoria {
     @JoinColumn(name = "entrenadorId")
      @JsonManagedReference
     private Entrenador entrenador;   
+
+    @OneToMany(mappedBy = "categoria")
+    @JsonBackReference
+    private List<Jugador> jugadores = new ArrayList<>();
 
 
 }

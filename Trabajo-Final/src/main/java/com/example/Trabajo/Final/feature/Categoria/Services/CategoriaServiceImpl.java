@@ -1,14 +1,20 @@
 package com.example.Trabajo.Final.feature.Categoria.Services;
 
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
+import com.example.Trabajo.Final.feature.Categoria.Dtos.CategoriaDto;
 import com.example.Trabajo.Final.feature.Categoria.Dtos.Request.CategoriaRequestDto;
 import com.example.Trabajo.Final.feature.Categoria.Dtos.Response.CategoriaResponseDto;
 import com.example.Trabajo.Final.feature.Categoria.Models.Categoria;
 import com.example.Trabajo.Final.feature.Categoria.Repositories.CategoriaRepository;
 import com.example.Trabajo.Final.feature.Entrenador.Models.Entrenador;
 import com.example.Trabajo.Final.feature.Entrenador.Repositories.EntrenadorRepository;
+import com.example.Trabajo.Final.feature.Jugador.Dtos.JugadorDto;
+import com.example.Trabajo.Final.feature.Jugador.Models.Jugador;
 
 import lombok.RequiredArgsConstructor;
 
@@ -50,6 +56,17 @@ public class CategoriaServiceImpl {
         if (categoria.getEntrenador() != null) {
         respuesta.setEntrenadorId(categoria.getEntrenador().getId());
         respuesta.setNombreEntrenador(categoria.getEntrenador().getNombre());
+        List<JugadorDto> jugadores = new ArrayList<>();
+        for (Jugador jugador : categoria.getJugadores()) {
+            JugadorDto dto = new JugadorDto();
+            dto.setId(jugador.getId());
+            dto.setNombre(jugador.getNombre());
+            dto.setApellido(jugador.getApellido());
+            dto.setPosicion(jugador.getPosicion());
+            dto.setNumeroCamiseta(jugador.getNumeroCamiseta());
+            jugadores.add(dto);
+        }
+        respuesta.setJugadores(jugadores);
 }
         
         return respuesta;
