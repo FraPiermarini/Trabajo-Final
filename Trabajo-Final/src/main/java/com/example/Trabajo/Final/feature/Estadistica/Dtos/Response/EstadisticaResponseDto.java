@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class EstadisticaResponseDto {
     private Long jugadorId;
 
-    //private Long partidoId;
+    private Long partidoId;
 
     private Integer minutos;
 

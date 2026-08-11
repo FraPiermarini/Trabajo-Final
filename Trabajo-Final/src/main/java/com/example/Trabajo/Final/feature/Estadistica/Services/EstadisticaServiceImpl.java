@@ -8,6 +8,7 @@ import com.example.Trabajo.Final.feature.Estadistica.Models.Estadistica;
 import com.example.Trabajo.Final.feature.Estadistica.Repositories.EstadisticaRepository;
 import com.example.Trabajo.Final.feature.Jugador.Models.Jugador;
 import com.example.Trabajo.Final.feature.Jugador.Repositories.JugadorRepository;
+import com.example.Trabajo.Final.feature.Partido.Repositories.PartidoRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -16,7 +17,7 @@ import lombok.RequiredArgsConstructor;
 public class EstadisticaServiceImpl {
     private final EstadisticaRepository estadisticaRepository;
     private final JugadorRepository jugadorRepository;
-    //private final PartidoRepository partidoRepository;
+    private final PartidoRepository partidoRepository;
 
     public EstadisticaResponseDto crearEstadistica(EstadisticaRequestDto dto){
         Estadistica nuevaEstadistica = new Estadistica();
@@ -52,9 +53,9 @@ public class EstadisticaServiceImpl {
         if (estadistica.getJugador() != null){
         respuesta.setJugadorId(estadistica.getJugador().getId());   
         }
-        /*if (estadistica.getPartido() != null){
+        if (estadistica.getPartido() != null){
         respuesta.setPartidoId(estadistica.getPartido().getId());   
-        }*/
+        }
         respuesta.setMinutos(estadistica.getMinutos());
         respuesta.setGoles(estadistica.getGoles());
         respuesta.setAsistencias(estadistica.getAsistencias());

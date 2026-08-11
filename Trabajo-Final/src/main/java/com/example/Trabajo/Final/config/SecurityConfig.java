@@ -46,6 +46,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/entrenadores/**").permitAll()
                     .requestMatchers("/api/jugadores/**").permitAll()
                     .requestMatchers("/api/estadisticas/**").permitAll()
+                    .requestMatchers("/api/partidos/**").permitAll()
                     .anyRequest().authenticated()
                 )
                 
