@@ -25,8 +25,8 @@ public class PartidoRequestDto {
     @NotBlank(message = "El rival es requerido")
     private String rival;
 
-   /*  @NotBlank(message = "El id del campeonato es requerido")
-    private Long campeonatoId;*/
+    @NotBlank(message = "El id del campeonato es requerido")
+    private Long campeonatoId;
 
     @NotBlank(message = "El resultado es requerido")
     private String resultado;

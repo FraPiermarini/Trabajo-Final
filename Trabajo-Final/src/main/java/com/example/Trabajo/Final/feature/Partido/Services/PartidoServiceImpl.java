@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.Trabajo.Final.feature.Campeonato.Models.Campeonato;
+import com.example.Trabajo.Final.feature.Campeonato.Repositories.CampeonatoRepository;
 import com.example.Trabajo.Final.feature.Categoria.Models.Categoria;
 import com.example.Trabajo.Final.feature.Categoria.Repositories.CategoriaRepository;
 import com.example.Trabajo.Final.feature.Estadistica.Dtos.Request.EstadisticaRequestDto;
@@ -24,7 +26,7 @@ import lombok.RequiredArgsConstructor;
 public class PartidoServiceImpl {
     private final PartidoRepository partidoRepository;
     private final CategoriaRepository categoriaRepository;
-   // private final CampeonatoRepository campeonatoRepository;
+   private final CampeonatoRepository campeonatoRepository;
    private final EstadisticaRepository estadisticaRepository;
    private final JugadorRepository jugadorRepository;
 
@@ -33,9 +35,9 @@ public class PartidoServiceImpl {
     nuevoPartido.setJornada(dto.getJornada());
     nuevoPartido.setFecha(dto.getFecha());
     nuevoPartido.setRival(dto.getRival());
-    /*Campeonato campeonato = campeonatoRepository.findById(dto)
-        .orElseThrow(() -> new RuntimeException("Campeonato no encontrado"))
-    nuevoPartido.setCampeonato(campeonato);*/
+    Campeonato campeonato = campeonatoRepository.findById(dto.getCampeonatoId())
+        .orElseThrow(() -> new RuntimeException("Campeonato no encontrado"));
+    nuevoPartido.setCampeonato(campeonato);
     nuevoPartido.setResultado(dto.getResultado());
     nuevoPartido.setRival(dto.getRival());
     Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
@@ -68,9 +70,9 @@ public class PartidoServiceImpl {
     respuesta.setId(guardado.getId());
     respuesta.setJornada(guardado.getJornada());
     respuesta.setFecha(guardado.getFecha());
-    /*if(guardado.getCampeonato() != null){
-        respuesta.setCampeonatoId(guardado.getCampeonato().getId())
-    }*/
+    if(guardado.getCampeonato() != null){
+        respuesta.setCampeonatoId(guardado.getCampeonato().getId());
+    }
     respuesta.setResultado(guardado.getResultado());
     respuesta.setLocal(guardado.getLocal());
     if(guardado.getCategoria() != null){
@@ -79,25 +81,33 @@ public class PartidoServiceImpl {
     return respuesta;
     }
 
-    public List<PartidoResponseDto> obtenerPartidos(){
-        List<Partido> partidos = partidoRepository.findAll();
-        return partidos.stream().map(partido ->{
-            PartidoResponseDto respuesta = new PartidoResponseDto();
-            respuesta.setId(partido.getId());
-            respuesta.setJornada(partido.getJornada());
-            respuesta.setFecha(partido.getFecha());
-            respuesta.setRival(partido.getRival());
-            /*if(partido.getCampeonato() != null){
-                respuesta.setCampeonatoId(partido.getCampeonato().getId())
-            }*/
-           respuesta.setResultado(partido.getResultado());
-           respuesta.setLocal(partido.getLocal());
-           if(partido.getCategoria() != null){
-            respuesta.setCategoriaId((partido.getCategoria().getId()));
-           }
-           return respuesta;
-        }).toList();
-    }
+    public List<PartidoResponseDto> obtenerPartidos() {
+
+    List<Partido> partidos = partidoRepository.findAll();
+
+    return partidos.stream().map(partido -> {
+
+        PartidoResponseDto respuesta = new PartidoResponseDto();
+
+        respuesta.setId(partido.getId());
+        respuesta.setJornada(partido.getJornada());
+        respuesta.setFecha(partido.getFecha());
+        respuesta.setRival(partido.getRival());
+        respuesta.setResultado(partido.getResultado());
+        respuesta.setLocal(partido.getLocal());
+
+        if (partido.getCategoria() != null) {
+            respuesta.setCategoriaId(partido.getCategoria().getId());
+        }
+
+        if (partido.getCampeonato() != null) {
+            respuesta.setCampeonatoId(partido.getCampeonato().getId());
+        }
+
+        return respuesta;
+
+    }).toList();
+}
 
 
 
@@ -109,9 +119,9 @@ public class PartidoServiceImpl {
         respuesta.setJornada(partido.getJornada());
         respuesta.setFecha(partido.getFecha());
         respuesta.setRival(partido.getRival());
-        /*if(partido.getCampeonato() != null){
-        respuesta.setCampeonatoId(partido.getCampeonato().getId())
-        }*/
+        if(partido.getCampeonato() != null){
+        respuesta.setCampeonatoId(partido.getCampeonato().getId());
+        }
         respuesta.setResultado(partido.getResultado());
         respuesta.setLocal(partido.getLocal());
         if(partido.getCategoria() != null){
@@ -124,3 +134,5 @@ public class PartidoServiceImpl {
         partidoRepository.deleteById(id);
     }
 }
+
+

@@ -84,6 +84,7 @@ public class CategoriaServiceImpl {
         if (categoria.getEntrenador() != null) {
         respuesta.setEntrenadorId(categoria.getEntrenador().getId());
         respuesta.setNombreEntrenador(categoria.getEntrenador().getNombre());
+        }
         List<JugadorDto> jugadores = new ArrayList<>();
         for (Jugador jugador : categoria.getJugadores()) {
             JugadorDto dto = new JugadorDto();
@@ -95,8 +96,6 @@ public class CategoriaServiceImpl {
             jugadores.add(dto);
         }
         respuesta.setJugadores(jugadores);
-}
-        
         return respuesta;
     } 
     

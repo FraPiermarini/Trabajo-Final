@@ -2,6 +2,7 @@ package com.example.Trabajo.Final.feature.Partido.Models;
 
 import java.time.LocalDate;
 
+import com.example.Trabajo.Final.feature.Campeonato.Models.Campeonato;
 import com.example.Trabajo.Final.feature.Categoria.Models.Categoria;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -37,10 +38,10 @@ public class Partido {
     @Column
     private String rival;
 
-    /*@ManyToOne
+    @ManyToOne
     @JoinColumn(name = "campeonatoId")
     @JsonManagedReference
-    private Campeonato campeonato; */
+    private Campeonato campeonato; 
 
     @Column    
     private String resultado;
