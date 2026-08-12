@@ -35,6 +35,26 @@ public class EntrenadorServiceImpl {
         return respuesta;
     }
 
+    public List<EntrenadorResponseDto> obtenerEntrenadores(){
+        List<Entrenador> entrenadores = entrenadorRepository.findAll();
+        return entrenadores.stream().map(entrenador -> {
+            EntrenadorResponseDto respuesta = new EntrenadorResponseDto();
+            respuesta.setId(entrenador.getId());
+            respuesta.setNombre(entrenador.getNombre());
+            respuesta.setApellido(entrenador.getApellido());
+            respuesta.setEdad(entrenador.getEdad());
+            List<CategoriaDto> categorias = new ArrayList<>();
+            for (Categoria categoria : entrenador.getCategorias()) {
+                CategoriaDto dto = new CategoriaDto();
+                dto.setId(categoria.getId());
+                dto.setNombre(categoria.getNombre());
+                categorias.add(dto);
+            }
+            respuesta.setCategorias(categorias);
+                return respuesta;
+        }).toList();
+    }
+
     public EntrenadorResponseDto obtenerEntrenador(Long id){
         Entrenador entrenador = entrenadorRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Entrenador no encontrado"));

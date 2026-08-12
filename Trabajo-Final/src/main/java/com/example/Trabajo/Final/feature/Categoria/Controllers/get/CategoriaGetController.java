@@ -22,11 +22,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CategoriaGetController {
     private final CategoriaServiceImpl categoriaServiceImpl;
-    private final CategoriaRepository categoriaRepository;
 
     @GetMapping
-    public ResponseEntity<List<Categoria>> obtenerCategorias(){
-        return ResponseEntity.ok(categoriaRepository.findAll());    
+    public ResponseEntity<List<CategoriaResponseDto>> obtenerCategorias(){
+        return ResponseEntity.ok(categoriaServiceImpl.obtenerCategorias());    
     }
 
     @GetMapping("/{id}")

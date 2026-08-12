@@ -22,11 +22,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EstadisticaGetController {
     private final EstadisticaServiceImpl estadisticaServiceImpl;
-    private final EstadisticaRepository estadisticaRepository;
 
     @GetMapping()
-    public ResponseEntity<List<Estadistica>> obtenerEstadisticas(){
-        return ResponseEntity.ok(estadisticaRepository.findAll());
+    public ResponseEntity<List<EstadisticaResponseDto>> obtenerEstadisticas(){
+        return ResponseEntity.ok(estadisticaServiceImpl.obtenerEstadisticas());
     }
 
     @GetMapping("/{id}")

@@ -1,9 +1,12 @@
 package com.example.Trabajo.Final.feature.Jugador.Services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.example.Trabajo.Final.feature.Categoria.Models.Categoria;
 import com.example.Trabajo.Final.feature.Categoria.Repositories.CategoriaRepository;
+
 import com.example.Trabajo.Final.feature.Jugador.Dtos.Request.JugadorRequestDto;
 import com.example.Trabajo.Final.feature.Jugador.Dtos.Response.JugadorResponseDto;
 import com.example.Trabajo.Final.feature.Jugador.Models.Jugador;
@@ -42,6 +45,26 @@ public class JugadorServiceImpl {
             respuesta.setCategoriaId(guardado.getCategoria().getId());
         }
         return respuesta;
+    }
+
+    public List<JugadorResponseDto> obtenerJugadores(){
+        List<Jugador> jugadores = jugadorRepository.findAll();
+        return jugadores.stream().map(jugador ->{
+            JugadorResponseDto respuesta = new JugadorResponseDto();
+            respuesta.setId(jugador.getId());
+            respuesta.setNombre(jugador.getNombre());
+            respuesta.setApellido(jugador.getApellido());
+            respuesta.setDni(jugador.getDni());
+            respuesta.setFechaNaciemiento(jugador.getFechaNacimiento());
+            respuesta.setPosicion(jugador.getPosicion());
+            respuesta.setNumeroCamiseta(jugador.getNumeroCamiseta());
+            if(jugador.getCategoria() != null){
+                respuesta.setCategoriaId(jugador.getCategoria().getId());
+                respuesta.setNombreCategoria(jugador.getCategoria().getNombre());
+            }
+            return respuesta;
+
+        }).toList();
     }
 
     public JugadorResponseDto obtenerJugador(Long id){

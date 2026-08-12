@@ -22,11 +22,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EntrenadorGetController {
     private final EntrenadorServiceImpl entrenadorServiceImpl;
-    private final EntrenadorRepository entrenadorRepository;
 
     @GetMapping
-    public ResponseEntity<List<Entrenador>> obtenerEntrenadores(){
-        return ResponseEntity.ok(entrenadorRepository.findAll());
+    public ResponseEntity<List<EntrenadorResponseDto>> obtenerEntrenadores(){
+        return ResponseEntity.ok(entrenadorServiceImpl.obtenerEntrenadores());
     }
 
     @GetMapping("/{id}")

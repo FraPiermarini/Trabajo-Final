@@ -1,5 +1,7 @@
 package com.example.Trabajo.Final.feature.Partido.Services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.example.Trabajo.Final.feature.Categoria.Models.Categoria;
@@ -7,6 +9,7 @@ import com.example.Trabajo.Final.feature.Categoria.Repositories.CategoriaReposit
 import com.example.Trabajo.Final.feature.Estadistica.Dtos.Request.EstadisticaRequestDto;
 import com.example.Trabajo.Final.feature.Estadistica.Models.Estadistica;
 import com.example.Trabajo.Final.feature.Estadistica.Repositories.EstadisticaRepository;
+import com.example.Trabajo.Final.feature.Jugador.Dtos.Response.JugadorResponseDto;
 import com.example.Trabajo.Final.feature.Jugador.Models.Jugador;
 import com.example.Trabajo.Final.feature.Jugador.Repositories.JugadorRepository;
 import com.example.Trabajo.Final.feature.Partido.Dtos.Request.PartidoRequestDto;
@@ -76,6 +79,28 @@ public class PartidoServiceImpl {
     return respuesta;
     }
 
+    public List<PartidoResponseDto> obtenerPartidos(){
+        List<Partido> partidos = partidoRepository.findAll();
+        return partidos.stream().map(partido ->{
+            PartidoResponseDto respuesta = new PartidoResponseDto();
+            respuesta.setId(partido.getId());
+            respuesta.setJornada(partido.getJornada());
+            respuesta.setFecha(partido.getFecha());
+            respuesta.setRival(partido.getRival());
+            /*if(partido.getCampeonato() != null){
+                respuesta.setCampeonatoId(partido.getCampeonato().getId())
+            }*/
+           respuesta.setResultado(partido.getResultado());
+           respuesta.setLocal(partido.getLocal());
+           if(partido.getCategoria() != null){
+            respuesta.setCategoriaId((partido.getCategoria().getId()));
+           }
+           return respuesta;
+        }).toList();
+    }
+
+
+
     public PartidoResponseDto obtenerPartido(Long id){
         Partido partido = partidoRepository.findById(id)
            .orElseThrow(() -> new RuntimeException("Partido no encontrado"));
@@ -83,6 +108,7 @@ public class PartidoServiceImpl {
         respuesta.setId(partido.getId());
         respuesta.setJornada(partido.getJornada());
         respuesta.setFecha(partido.getFecha());
+        respuesta.setRival(partido.getRival());
         /*if(partido.getCampeonato() != null){
         respuesta.setCampeonatoId(partido.getCampeonato().getId())
         }*/

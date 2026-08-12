@@ -45,6 +45,34 @@ public class CategoriaServiceImpl {
         return respuesta;
     }
 
+    public List<CategoriaResponseDto> obtenerCategorias(){
+        List<Categoria> categorias =  categoriaRepository.findAll();
+        return categorias.stream().map(categoria ->{
+            CategoriaResponseDto respuesta = new CategoriaResponseDto();
+            respuesta.setId(categoria.getId());
+            respuesta.setNombre(categoria.getNombre());
+            respuesta.setAño(categoria.getAño());
+            respuesta.setDescripcion(categoria.getDescripcion());
+            if(categoria.getEntrenador() != null){
+                respuesta.setEntrenadorId(categoria.getEntrenador().getId());
+                respuesta.setNombreEntrenador(categoria.getEntrenador().getNombre());
+            }
+            List<JugadorDto> jugadores = new ArrayList<>();
+            for (Jugador jugador : categoria.getJugadores()) {
+                JugadorDto dto = new JugadorDto();
+                dto.setId(jugador.getId());
+                dto.setNombre(jugador.getNombre());
+                dto.setApellido(jugador.getApellido());
+                dto.setPosicion(jugador.getPosicion());
+                dto.setNumeroCamiseta(jugador.getNumeroCamiseta());
+                jugadores.add(dto);
+            }
+            respuesta.setJugadores(jugadores);
+            return respuesta;
+        }).toList();
+    }
+
+
     public CategoriaResponseDto obtenerCategoria(Long id){
         Categoria categoria = categoriaRepository.findById(id)
             .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));

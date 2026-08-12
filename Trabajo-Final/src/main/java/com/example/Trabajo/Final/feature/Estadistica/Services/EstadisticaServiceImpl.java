@@ -1,5 +1,7 @@
 package com.example.Trabajo.Final.feature.Estadistica.Services;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.example.Trabajo.Final.feature.Estadistica.Dtos.Request.EstadisticaRequestDto;
@@ -44,6 +46,26 @@ public class EstadisticaServiceImpl {
         respuesta.setAmarillas(guardado.getAmarillas());
         respuesta.setTitular(guardado.getTitular());
         return respuesta;
+    }
+
+    public List<EstadisticaResponseDto> obtenerEstadisticas(){
+        List<Estadistica> estadisticas = estadisticaRepository.findAll();
+        return estadisticas.stream().map(estadistica -> {
+            EstadisticaResponseDto respuesta = new EstadisticaResponseDto();
+            if(estadistica.getJugador() != null){
+                respuesta.setJugadorId(estadistica.getJugador().getId());
+            }
+            if(estadistica.getPartido() != null){
+                respuesta.setPartidoId(estadistica.getPartido().getId());
+            }
+            respuesta.setMinutos(estadistica.getMinutos());
+            respuesta.setGoles(estadistica.getGoles());
+            respuesta.setAsistencias(estadistica.getAsistencias());
+            respuesta.setRojas(estadistica.getRojas());
+            respuesta.setAmarillas(estadistica.getAmarillas());
+            respuesta.setTitular(estadistica.getTitular());
+            return respuesta;
+        }).toList();
     }
 
     public EstadisticaResponseDto obtenerEstadistica(Long id){

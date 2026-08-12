@@ -22,12 +22,11 @@ import lombok.RequiredArgsConstructor;
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class JugadorGetController {
-    private final JugadorRepository jugadorRepository;
     private final JugadorServiceImpl jugadorServiceImpl;
 
     @GetMapping
-    public ResponseEntity<List<Jugador>> obtenerJugadores(){
-        return ResponseEntity.ok(jugadorRepository.findAll());
+    public ResponseEntity<List<JugadorResponseDto>> obtenerJugadores(){
+        return ResponseEntity.ok(jugadorServiceImpl.obtenerJugadores());
     }
 
     @GetMapping("/{id}")

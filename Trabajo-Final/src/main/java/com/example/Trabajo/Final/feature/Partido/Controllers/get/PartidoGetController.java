@@ -23,11 +23,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class PartidoGetController {
     private final PartidoServiceImpl partidoServiceImpl;
-    private final PartidoRepository partidoRepository;
 
     @GetMapping
-    public ResponseEntity<List<Partido>> obtenerPartidos(){
-        return ResponseEntity.ok(partidoRepository.findAll());
+    public ResponseEntity<List<PartidoResponseDto>> obtenerPartidos(){
+        return ResponseEntity.ok(partidoServiceImpl.obtenerPartidos());
     }
 
     @GetMapping("/{id}")
