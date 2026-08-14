@@ -13,6 +13,7 @@ import com.example.Trabajo.Final.feature.Categoria.Models.Categoria;
 import com.example.Trabajo.Final.feature.Categoria.Repositories.CategoriaRepository;
 import com.example.Trabajo.Final.feature.Entrenador.Models.Entrenador;
 import com.example.Trabajo.Final.feature.Entrenador.Repositories.EntrenadorRepository;
+import com.example.Trabajo.Final.feature.Exceptions.RecursoNoEncontradoException;
 import com.example.Trabajo.Final.feature.Jugador.Dtos.JugadorDto;
 import com.example.Trabajo.Final.feature.Jugador.Models.Jugador;
 
@@ -30,7 +31,7 @@ public class CategoriaServiceImpl {
         nuevaCategoria.setAño(dto.getAño());
         nuevaCategoria.setDescripcion(dto.getDescripcion());
         Entrenador entrenador = entrenadorRepository.findById(dto.getEntrenadorId())
-            .orElseThrow(() -> new RuntimeException("Entrenador no encontrado"));
+            .orElseThrow(() -> new RecursoNoEncontradoException("Entrenador con id " + dto.getEntrenadorId() + " no encontrado"));
         nuevaCategoria.setEntrenador(entrenador); 
         Categoria guardado = categoriaRepository.save(nuevaCategoria);
 
@@ -75,7 +76,7 @@ public class CategoriaServiceImpl {
 
     public CategoriaResponseDto obtenerCategoria(Long id){
         Categoria categoria = categoriaRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Categoría no encontrada"));
+            .orElseThrow(() -> new RecursoNoEncontradoException("Categoría con id " + id + " no encontrada"));
         CategoriaResponseDto respuesta = new CategoriaResponseDto();
         respuesta.setId(categoria.getId());
         respuesta.setNombre(categoria.getNombre());

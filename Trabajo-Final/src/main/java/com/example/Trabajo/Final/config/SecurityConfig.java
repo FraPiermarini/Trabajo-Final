@@ -41,19 +41,20 @@ public class SecurityConfig {
                     .requestMatchers("/api/usuarios/registro").permitAll()
                     .requestMatchers("/api/categorias/**").permitAll()
                     .requestMatchers("/api/usuarios/**").permitAll()
-                    
+                    .requestMatchers("/api/login").permitAll()
                     .requestMatchers("/").permitAll()
                     .requestMatchers("/api/entrenadores/**").permitAll()
-                    .requestMatchers("/api/jugadores/**").permitAll()
+                    .requestMatchers("/api/jugadores/**").hasAnyRole("USUARIO", "ENTRENADOR", "ADMIN")
                     .requestMatchers("/api/estadisticas/**").permitAll()
                     .requestMatchers("/api/partidos/**").permitAll()
                     .requestMatchers("/api/campeonatos/**").permitAll()
+                    .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
+                    .requestMatchers("/api/login", "/api/usuarios/registro").permitAll()
                     .anyRequest().authenticated()
                 )
-                
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    } 
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+    return http.build();
+}
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource(){

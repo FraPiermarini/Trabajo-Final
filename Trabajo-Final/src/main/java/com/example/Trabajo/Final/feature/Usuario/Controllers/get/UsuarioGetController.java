@@ -2,6 +2,7 @@ package com.example.Trabajo.Final.feature.Usuario.Controllers.get;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.Trabajo.Final.config.JwtService;
 import com.example.Trabajo.Final.feature.Usuario.Dtos.Response.RegistroResponseDto;
 import com.example.Trabajo.Final.feature.Usuario.Models.Usuario;
 import com.example.Trabajo.Final.feature.Usuario.Repositories.UsuarioRepository;
@@ -23,6 +25,8 @@ import lombok.RequiredArgsConstructor;
 public class UsuarioGetController {
     private final UsuarioServiceImpl UsuarioServiceImpl;
     private final UsuarioRepository usuarioRepository;
+    @Autowired
+    private JwtService jwtService;
 
     @GetMapping
     public ResponseEntity<List<Usuario>> obtenerUsuarios(){
@@ -38,5 +42,6 @@ public class UsuarioGetController {
             return ResponseEntity.notFound().build();
         }
     }
-
 }
+
+

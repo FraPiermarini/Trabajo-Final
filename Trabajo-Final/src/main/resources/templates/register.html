@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Crear Cuenta - Gestión Deportiva</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
+
+    <style>
+        body {
+            font-family: 'Hanken Grotesk', sans-serif;
+        }
+    </style>
+
+</head>
+
+
+<body class="bg-slate-50 min-h-screen flex items-center justify-center p-6">
+
+
+<div class="bg-white rounded-[2rem] shadow-2xl flex overflow-hidden
+            max-w-5xl w-full border border-slate-100">
+
+
+    <!-- PANEL IZQUIERDO -->
+    <div class="hidden lg:flex lg:w-1/2 bg-blue-600 p-12
+                flex-col justify-between relative overflow-hidden">
+
+
+        <div class="relative z-10">
+
+
+            <!-- LOGO -->
+            <div class="flex items-center gap-3 text-white mb-12">
+
+                <span class="material-symbols-rounded text-4xl">
+                    sports_soccer
+                </span>
+
+                <span class="text-2xl font-black tracking-tight">
+                    Gestión Deportiva
+                </span>
+
+            </div>
+
+
+            <!-- TITULO -->
+            <h2 class="text-5xl font-extrabold text-white
+                       leading-tight mb-6">
+
+                Sumate al equipo.
+
+            </h2>
+
+
+            <p class="text-blue-100 text-lg leading-relaxed max-w-md">
+
+                Creá tu cuenta para acceder al sistema de gestión
+                del club y trabajar con jugadores, categorías,
+                partidos y estadísticas.
+
+            </p>
+
+        </div>
+
+
+        <!-- CARACTERISTICAS -->
+        <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl
+                    border border-white/20 relative z-10">
+
+
+            <p class="text-white font-bold mb-4 uppercase
+                      tracking-widest text-xs">
+
+                Sistema del club
+
+            </p>
+
+
+            <div class="space-y-3">
+
+
+                <div class="flex items-center gap-3 text-white/90">
+
+                    <span class="material-symbols-rounded">
+                        groups
+                    </span>
+
+                    <span class="text-sm font-medium">
+                        Gestión de jugadores y categorías
+                    </span>
+
+                </div>
+
+
+                <div class="flex items-center gap-3 text-white/90">
+
+                    <span class="material-symbols-rounded">
+                        sports_soccer
+                    </span>
+
+                    <span class="text-sm font-medium">
+                        Registro de partidos
+                    </span>
+
+                </div>
+
+
+                <div class="flex items-center gap-3 text-white/90">
+
+                    <span class="material-symbols-rounded">
+                        analytics
+                    </span>
+
+                    <span class="text-sm font-medium">
+                        Estadísticas y reportes
+                    </span>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- DECORACION -->
+        <div class="absolute -bottom-20 -left-20
+                    w-80 h-80 bg-blue-500 rounded-full
+                    blur-3xl opacity-50">
+        </div>
+
+    </div>
+
+
+
+    <!-- PANEL DERECHO -->
+    <div class="w-full lg:w-1/2 p-10 lg:p-16">
+
+
+        <div class="max-w-md mx-auto">
+
+
+            <!-- TITULO -->
+            <h1 class="text-3xl font-extrabold text-slate-900 mb-2">
+
+                Crear cuenta
+
+            </h1>
+
+
+            <p class="text-slate-500 mb-8 font-medium">
+
+                Completá tus datos para registrarte en el sistema.
+
+            </p>
+
+
+            <!-- FORMULARIO -->
+            <form
+                th:action="@{/api/usuarios/registro}"
+                method="post"
+                class="space-y-5">
+
+
+                <!-- NOMBRE + APELLIDO -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+
+                    <!-- NOMBRE -->
+                    <div>
+
+                        <label class="block text-sm font-bold
+                                      text-slate-700 mb-2">
+
+                            Nombre
+
+                        </label>
+
+
+                        <div class="relative">
+
+                            <span class="material-symbols-rounded
+                                         absolute left-4 top-1/2
+                                         -translate-y-1/2
+                                         text-slate-400">
+
+                                person
+
+                            </span>
+
+
+                            <input
+                                type="text"
+                                name="nombre"
+                                required
+                                pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
+                                class="w-full pl-12 pr-4 py-3
+                                       bg-slate-50
+                                       border border-slate-200
+                                       rounded-xl
+                                       focus:ring-2
+                                       focus:ring-blue-500
+                                       outline-none
+                                       transition-all"
+                                placeholder="Juan">
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- APELLIDO -->
+                    <div>
+
+                        <label class="block text-sm font-bold
+                                      text-slate-700 mb-2">
+
+                            Apellido
+
+                        </label>
+
+
+                        <div class="relative">
+
+                            <span class="material-symbols-rounded
+                                         absolute left-4 top-1/2
+                                         -translate-y-1/2
+                                         text-slate-400">
+
+                                person
+
+                            </span>
+
+
+                            <input
+                                type="text"
+                                name="apellido"
+                                required
+                                pattern="[A-Za-zÁÉÍÓÚáéíóúÑñ ]+"
+                                class="w-full pl-12 pr-4 py-3
+                                       bg-slate-50
+                                       border border-slate-200
+                                       rounded-xl
+                                       focus:ring-2
+                                       focus:ring-blue-500
+                                       outline-none
+                                       transition-all"
+                                placeholder="Pérez">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- EMAIL -->
+                <div>
+
+                    <label class="block text-sm font-bold
+                                  text-slate-700 mb-2">
+
+                        Correo electrónico
+
+                    </label>
+
+
+                    <div class="relative">
+
+                        <span class="material-symbols-rounded
+                                     absolute left-4 top-1/2
+                                     -translate-y-1/2
+                                     text-slate-400">
+
+                            mail
+
+                        </span>
+
+
+                        <input
+                            type="email"
+                            name="email"
+                            required
+                            autocomplete="email"
+                            class="w-full pl-12 pr-4 py-3
+                                   bg-slate-50
+                                   border border-slate-200
+                                   rounded-xl
+                                   focus:ring-2
+                                   focus:ring-blue-500
+                                   outline-none
+                                   transition-all"
+                            placeholder="juan@club.com">
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONTRASEÑA -->
+                <div>
+
+                    <label class="block text-sm font-bold
+                                  text-slate-700 mb-2">
+
+                        Contraseña
+
+                    </label>
+
+
+                    <div class="relative">
+
+                        <span class="material-symbols-rounded
+                                     absolute left-4 top-1/2
+                                     -translate-y-1/2
+                                     text-slate-400">
+
+                            lock
+
+                        </span>
+
+
+                        <input
+                            id="password"
+                            type="password"
+                            name="password"
+                            required
+                            minlength="8"
+                            autocomplete="new-password"
+                            class="w-full pl-12 pr-12 py-3
+                                   bg-slate-50
+                                   border border-slate-200
+                                   rounded-xl
+                                   focus:ring-2
+                                   focus:ring-blue-500
+                                   outline-none
+                                   transition-all"
+                            placeholder="••••••••">
+
+
+                        <button
+                            type="button"
+                            onclick="mostrarPassword()"
+                            class="absolute right-4 top-1/2
+                                   -translate-y-1/2
+                                   text-slate-400">
+
+                            <span id="iconPassword"
+                                  class="material-symbols-rounded">
+
+                                visibility
+
+                            </span>
+
+                        </button>
+
+                    </div>
+
+
+                    <p class="text-xs text-slate-400 mt-2">
+                        Mínimo 8 caracteres.
+                    </p>
+
+                </div>
+
+
+                <!-- CONFIRMAR CONTRASEÑA -->
+                <div>
+
+                    <label class="block text-sm font-bold
+                                  text-slate-700 mb-2">
+
+                        Confirmar contraseña
+
+                    </label>
+
+
+                    <div class="relative">
+
+                        <span class="material-symbols-rounded
+                                     absolute left-4 top-1/2
+                                     -translate-y-1/2
+                                     text-slate-400">
+
+                            lock_reset
+
+                        </span>
+
+
+                        <input
+                            id="confirmPassword"
+                            type="password"
+                            required
+                            class="w-full pl-12 pr-4 py-3
+                                   bg-slate-50
+                                   border border-slate-200
+                                   rounded-xl
+                                   focus:ring-2
+                                   focus:ring-blue-500
+                                   outline-none
+                                   transition-all"
+                            placeholder="••••••••">
+
+                    </div>
+
+                </div>
+
+
+                <!-- BOTON -->
+                <button
+                    type="submit"
+                    class="w-full bg-blue-600
+                           hover:bg-blue-700
+                           text-white font-bold
+                           py-4 rounded-xl
+                           shadow-lg shadow-blue-200
+                           transition-all
+                           active:scale-[0.98]
+                           flex items-center
+                           justify-center gap-2 mt-4">
+
+                    CREAR CUENTA
+
+                    <span class="material-symbols-rounded">
+                        person_add
+                    </span>
+
+                </button>
+
+
+                <!-- VOLVER LOGIN -->
+                <p class="text-center text-slate-500
+                          font-medium text-sm mt-6">
+
+                    ¿Ya tenés una cuenta?
+
+                    <a
+                        th:href="@{/login}"
+                        class="text-blue-600 font-bold hover:underline">
+
+                        Iniciar sesión
+
+                    </a>
+
+                </p>
+
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<script>
+
+    function mostrarPassword() {
+
+        const password =
+            document.getElementById("password");
+
+        const icon =
+            document.getElementById("iconPassword");
+
+
+        if (password.type === "password") {
+
+            password.type = "text";
+
+            icon.textContent = "visibility_off";
+
+        } else {
+
+            password.type = "password";
+
+            icon.textContent = "visibility";
+
+        }
+
+    }
+
+
+    document.querySelector("form").addEventListener("submit", function(event) {
+
+        const password =
+            document.getElementById("password").value;
+
+        const confirmPassword =
+            document.getElementById("confirmPassword").value;
+
+
+        if (password !== confirmPassword) {
+
+            event.preventDefault();
+
+            alert("Las contraseñas no coinciden.");
+
+        }
+
+    });
+
+</script>
+
+
+</body>
+
+</html>

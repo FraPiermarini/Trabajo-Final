@@ -8,6 +8,7 @@ import com.example.Trabajo.Final.feature.Estadistica.Dtos.Request.EstadisticaReq
 import com.example.Trabajo.Final.feature.Estadistica.Dtos.Response.EstadisticaResponseDto;
 import com.example.Trabajo.Final.feature.Estadistica.Models.Estadistica;
 import com.example.Trabajo.Final.feature.Estadistica.Repositories.EstadisticaRepository;
+import com.example.Trabajo.Final.feature.Exceptions.RecursoNoEncontradoException;
 import com.example.Trabajo.Final.feature.Jugador.Models.Jugador;
 import com.example.Trabajo.Final.feature.Jugador.Repositories.JugadorRepository;
 import com.example.Trabajo.Final.feature.Partido.Repositories.PartidoRepository;
@@ -24,7 +25,7 @@ public class EstadisticaServiceImpl {
     public EstadisticaResponseDto crearEstadistica(EstadisticaRequestDto dto){
         Estadistica nuevaEstadistica = new Estadistica();
         Jugador jugador = jugadorRepository.findById(dto.getJugadorId())
-            .orElseThrow(() -> new RuntimeException("Jugador no encontrado"));
+            .orElseThrow(() -> new RecursoNoEncontradoException("Jugador con id " + dto.getJugadorId() + " no encontrado"));
         nuevaEstadistica.setJugador(jugador);
         nuevaEstadistica.setMinutos(dto.getMinutos());
         nuevaEstadistica.setGoles(dto.getGoles());
@@ -70,7 +71,7 @@ public class EstadisticaServiceImpl {
 
     public EstadisticaResponseDto obtenerEstadistica(Long id){
         Estadistica estadistica = estadisticaRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Estadistica no encontrada"));
+            .orElseThrow(() -> new RecursoNoEncontradoException("Estadistica con id " + id + " no encontrada"));
         EstadisticaResponseDto respuesta = new EstadisticaResponseDto();
         if (estadistica.getJugador() != null){
         respuesta.setJugadorId(estadistica.getJugador().getId());   

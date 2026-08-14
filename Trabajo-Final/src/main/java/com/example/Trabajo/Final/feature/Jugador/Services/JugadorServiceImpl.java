@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.Trabajo.Final.feature.Categoria.Models.Categoria;
 import com.example.Trabajo.Final.feature.Categoria.Repositories.CategoriaRepository;
-
+import com.example.Trabajo.Final.feature.Exceptions.RecursoNoEncontradoException;
 import com.example.Trabajo.Final.feature.Jugador.Dtos.Request.JugadorRequestDto;
 import com.example.Trabajo.Final.feature.Jugador.Dtos.Response.JugadorResponseDto;
 import com.example.Trabajo.Final.feature.Jugador.Models.Jugador;
@@ -29,7 +29,7 @@ public class JugadorServiceImpl {
         nuevojugador.setPosicion(dto.getPosicion());
         nuevojugador.setNumeroCamiseta(dto.getNumeroCamiseta());
         Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
-            .orElseThrow(() -> new RuntimeException("Categoria no encontrada"));
+            .orElseThrow(() -> new RecursoNoEncontradoException("Categoria con id " + dto.getCategoriaId() + " no encontrado"));
         nuevojugador.setCategoria(categoria);
         Jugador guardado = jugadorRepository.save(nuevojugador);
 
@@ -69,7 +69,7 @@ public class JugadorServiceImpl {
 
     public JugadorResponseDto obtenerJugador(Long id){
         Jugador jugador = jugadorRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Jugador no encontrado"));
+            .orElseThrow(() -> new RecursoNoEncontradoException("Jugador con id " + id + " no encontrado"));
         JugadorResponseDto respuesta = new JugadorResponseDto();
         respuesta.setId(jugador.getId());
         respuesta.setNombre(jugador.getNombre());

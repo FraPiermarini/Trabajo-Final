@@ -11,6 +11,7 @@ import com.example.Trabajo.Final.feature.Entrenador.Dtos.Request.EntrenadorReque
 import com.example.Trabajo.Final.feature.Entrenador.Dtos.Response.EntrenadorResponseDto;
 import com.example.Trabajo.Final.feature.Entrenador.Models.Entrenador;
 import com.example.Trabajo.Final.feature.Entrenador.Repositories.EntrenadorRepository;
+import com.example.Trabajo.Final.feature.Exceptions.RecursoNoEncontradoException;
 
 import lombok.RequiredArgsConstructor;
 
@@ -57,7 +58,7 @@ public class EntrenadorServiceImpl {
 
     public EntrenadorResponseDto obtenerEntrenador(Long id){
         Entrenador entrenador = entrenadorRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Entrenador no encontrado"));
+            .orElseThrow(() -> new RecursoNoEncontradoException("Entrenador con id " + id + " no encontrado"));
         
         EntrenadorResponseDto respuesta = new EntrenadorResponseDto();
         respuesta.setId((entrenador.getId()));

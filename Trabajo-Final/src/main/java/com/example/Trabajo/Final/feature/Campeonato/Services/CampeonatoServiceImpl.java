@@ -9,6 +9,7 @@ import com.example.Trabajo.Final.feature.Campeonato.Dtos.Request.CampeonatoReque
 import com.example.Trabajo.Final.feature.Campeonato.Dtos.Response.CampeonatoResponseDto;
 import com.example.Trabajo.Final.feature.Campeonato.Models.Campeonato;
 import com.example.Trabajo.Final.feature.Campeonato.Repositories.CampeonatoRepository;
+import com.example.Trabajo.Final.feature.Exceptions.RecursoNoEncontradoException;
 import com.example.Trabajo.Final.feature.Partido.Dtos.PartidoDto;
 import com.example.Trabajo.Final.feature.Partido.Models.Partido;
 import com.example.Trabajo.Final.feature.Partido.Repositories.PartidoRepository;
@@ -58,7 +59,7 @@ public class CampeonatoServiceImpl {
 
     public CampeonatoResponseDto obtenerCampeonato(Long id){
         Campeonato campeonato = campeonatoRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Campeonato no encontrado"));
+            .orElseThrow(() -> new RecursoNoEncontradoException("Campeonato con id " + id + " no encontrado"));
         CampeonatoResponseDto  respuesta = new CampeonatoResponseDto();
         respuesta.setId(campeonato.getId());
         respuesta.setNombre(campeonato.getNombre());

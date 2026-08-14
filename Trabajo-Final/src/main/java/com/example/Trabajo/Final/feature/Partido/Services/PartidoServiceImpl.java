@@ -11,6 +11,7 @@ import com.example.Trabajo.Final.feature.Categoria.Repositories.CategoriaReposit
 import com.example.Trabajo.Final.feature.Estadistica.Dtos.Request.EstadisticaRequestDto;
 import com.example.Trabajo.Final.feature.Estadistica.Models.Estadistica;
 import com.example.Trabajo.Final.feature.Estadistica.Repositories.EstadisticaRepository;
+import com.example.Trabajo.Final.feature.Exceptions.RecursoNoEncontradoException;
 import com.example.Trabajo.Final.feature.Jugador.Dtos.Response.JugadorResponseDto;
 import com.example.Trabajo.Final.feature.Jugador.Models.Jugador;
 import com.example.Trabajo.Final.feature.Jugador.Repositories.JugadorRepository;
@@ -36,12 +37,12 @@ public class PartidoServiceImpl {
     nuevoPartido.setFecha(dto.getFecha());
     nuevoPartido.setRival(dto.getRival());
     Campeonato campeonato = campeonatoRepository.findById(dto.getCampeonatoId())
-        .orElseThrow(() -> new RuntimeException("Campeonato no encontrado"));
+        .orElseThrow(() -> new RecursoNoEncontradoException("Campeonato con id " + dto.getCampeonatoId() + " no encontrado"));
     nuevoPartido.setCampeonato(campeonato);
     nuevoPartido.setResultado(dto.getResultado());
     nuevoPartido.setRival(dto.getRival());
     Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
-        .orElseThrow(() ->  new RuntimeException("Categoria no encontrada"));
+        .orElseThrow(() ->  new RecursoNoEncontradoException("Categoria con id " + dto.getCategoriaId() + " no encontrada"));
     nuevoPartido.setCategoria(categoria);
     Partido guardado = partidoRepository.save(nuevoPartido);
     if (dto.getEstadisticas() != null) {
@@ -49,7 +50,7 @@ public class PartidoServiceImpl {
     for (EstadisticaRequestDto estadisticaDto : dto.getEstadisticas()) {
 
         Jugador jugador = jugadorRepository.findById(estadisticaDto.getJugadorId())
-            .orElseThrow(() -> new RuntimeException("Jugador no encontrado"));
+            .orElseThrow(() -> new RecursoNoEncontradoException("Jugador con id" + estadisticaDto.getJugadorId() + " no encontrado"));
 
         Estadistica estadistica = new Estadistica();
 
@@ -113,7 +114,7 @@ public class PartidoServiceImpl {
 
     public PartidoResponseDto obtenerPartido(Long id){
         Partido partido = partidoRepository.findById(id)
-           .orElseThrow(() -> new RuntimeException("Partido no encontrado"));
+           .orElseThrow(() -> new RecursoNoEncontradoException("Partido con id " + id + " no encontrado"));
         PartidoResponseDto respuesta = new PartidoResponseDto();
         respuesta.setId(partido.getId());
         respuesta.setJornada(partido.getJornada());

@@ -34,6 +34,7 @@ public class UsuarioPostController {
             .body(new ErrorResponseDto("Error interno del servidor", HttpStatus.INTERNAL_SERVER_ERROR.value()));
         }
     }
+    
     public static class ErrorResponseDto {
         public String mensaje;
         public int codigo;
