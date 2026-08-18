@@ -7,21 +7,24 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.example.Trabajo.Final.feature.Categoria.Dtos.CategoriaDto;
+import com.example.Trabajo.Final.feature.Categoria.Dtos.Request.CategoriaPutDto;
 import com.example.Trabajo.Final.feature.Categoria.Dtos.Request.CategoriaRequestDto;
 import com.example.Trabajo.Final.feature.Categoria.Dtos.Response.CategoriaResponseDto;
 import com.example.Trabajo.Final.feature.Categoria.Models.Categoria;
 import com.example.Trabajo.Final.feature.Categoria.Repositories.CategoriaRepository;
+import com.example.Trabajo.Final.feature.Categoria.Services.Interface.CategoriaService;
 import com.example.Trabajo.Final.feature.Entrenador.Models.Entrenador;
 import com.example.Trabajo.Final.feature.Entrenador.Repositories.EntrenadorRepository;
 import com.example.Trabajo.Final.feature.Exceptions.RecursoNoEncontradoException;
 import com.example.Trabajo.Final.feature.Jugador.Dtos.JugadorDto;
+import com.example.Trabajo.Final.feature.Jugador.Dtos.Response.JugadorResponseDto;
 import com.example.Trabajo.Final.feature.Jugador.Models.Jugador;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class CategoriaServiceImpl {
+public class CategoriaServiceImpl implements CategoriaService{
     private final CategoriaRepository categoriaRepository;
     private final EntrenadorRepository entrenadorRepository;
 
@@ -102,6 +105,41 @@ public class CategoriaServiceImpl {
     
      public void eliminarCategoria(Long id) {
         categoriaRepository.deleteById(id);
+    }
+
+    @Override
+    public CategoriaResponseDto actualizarCategoria(Long id, CategoriaPutDto dto){
+        Categoria categoria = categoriaRepository.findById(id)
+            .orElseThrow(() -> new RecursoNoEncontradoException("Categoria con id " + id + " no encontrada"));
+        categoria.setNombre(dto.getNombre());
+        categoria.setAño(dto.getAño());
+        categoria.setDescripcion(dto.getDescripcion());
+        Entrenador entrenador = entrenadorRepository.findById(dto.getEntrenadorId())
+            .orElseThrow(() -> new RecursoNoEncontradoException("Entrenador con id " + dto.getEntrenadorId() + " no encontrado"));
+        categoria.setEntrenador(entrenador);
+        Categoria categoriaActualizada = categoriaRepository.save(categoria);
+
+        CategoriaResponseDto respuesta = new CategoriaResponseDto();
+        respuesta.setId(categoriaActualizada.getId());
+        respuesta.setNombre(categoriaActualizada.getNombre());
+        respuesta.setAño(categoriaActualizada.getAño());
+        respuesta.setDescripcion(categoriaActualizada.getDescripcion());
+        if (categoriaActualizada.getEntrenador() != null) {
+        respuesta.setEntrenadorId(categoria.getEntrenador().getId());
+        respuesta.setNombreEntrenador(categoria.getEntrenador().getNombre());
+        }
+        List<JugadorDto> jugadores = new ArrayList<>();
+        for (Jugador jugador : categoria.getJugadores()) {
+            JugadorDto jugadordto = new JugadorDto();
+            jugadordto.setId(jugador.getId());
+            jugadordto.setNombre(jugador.getNombre());
+            jugadordto.setApellido(jugador.getApellido());
+            jugadordto.setPosicion(jugador.getPosicion());
+            jugadordto.setNumeroCamiseta(jugador.getNumeroCamiseta());
+            jugadores.add(jugadordto);
+        }
+        respuesta.setJugadores(jugadores);
+        return respuesta;
     }
 
 }

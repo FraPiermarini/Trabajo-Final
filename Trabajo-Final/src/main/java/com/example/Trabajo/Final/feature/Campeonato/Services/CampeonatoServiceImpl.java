@@ -5,10 +5,12 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.example.Trabajo.Final.feature.Campeonato.Dtos.Request.CampeonatoPutDto;
 import com.example.Trabajo.Final.feature.Campeonato.Dtos.Request.CampeonatoRequestDto;
 import com.example.Trabajo.Final.feature.Campeonato.Dtos.Response.CampeonatoResponseDto;
 import com.example.Trabajo.Final.feature.Campeonato.Models.Campeonato;
 import com.example.Trabajo.Final.feature.Campeonato.Repositories.CampeonatoRepository;
+import com.example.Trabajo.Final.feature.Campeonato.Services.Interface.CampeonatoService;
 import com.example.Trabajo.Final.feature.Exceptions.RecursoNoEncontradoException;
 import com.example.Trabajo.Final.feature.Partido.Dtos.PartidoDto;
 import com.example.Trabajo.Final.feature.Partido.Models.Partido;
@@ -18,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class CampeonatoServiceImpl {
+public class CampeonatoServiceImpl implements CampeonatoService{
     private final CampeonatoRepository campeonatoRepository;
     private final PartidoRepository partidoRepository;
 
@@ -80,5 +82,31 @@ public class CampeonatoServiceImpl {
 
     public void eliminarCampeonato(Long id){
         campeonatoRepository.deleteById(id);
+    }
+
+    @Override
+    public CampeonatoResponseDto actualizarCampeonato(Long id, CampeonatoPutDto dto){
+        Campeonato campeonato = campeonatoRepository.findById(id)
+            .orElseThrow(() -> new RecursoNoEncontradoException("Campeonato con id " + id + " no encontrado"));
+        campeonato.setNombre(dto.getNombre());
+        campeonato.setAño(dto.getAño());
+        Campeonato nuevoCampeonato = campeonatoRepository.save(campeonato);
+        CampeonatoResponseDto respuesta = new CampeonatoResponseDto();
+        respuesta.setId(nuevoCampeonato.getId());
+        respuesta.setNombre(nuevoCampeonato.getNombre());
+        respuesta.setAño(nuevoCampeonato.getAño());
+         List<PartidoDto> partidos = new ArrayList<>();
+            for (Partido partido : campeonato.getPartidos()){
+                PartidoDto partidodto = new PartidoDto();
+                partidodto.setId(partido.getId());
+                partidodto.setJornada(partido.getJornada());
+                partidodto.setRival(partido.getRival());
+                partidodto.setResultado(partido.getResultado());
+                partidodto.setLocal(partido.getLocal());
+                partidos.add(partidodto);
+            }
+        respuesta.setPartidos(partidos);
+        return respuesta;
+
     }
 }

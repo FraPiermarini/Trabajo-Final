@@ -1,4 +1,4 @@
-package com.example.Trabajo.Final.feature.Jugador.Dtos.Response;
+package com.example.Trabajo.Final.feature.Jugador.Dtos.Request;
 
 import java.time.LocalDate;
 
@@ -9,8 +9,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class JugadorResponseDto {
-    private Long id;
+public class JugadorPutDto {
     private String nombre;
     private String apellido;
     private String dni;
@@ -18,6 +17,4 @@ public class JugadorResponseDto {
     private String posicion;
     private Integer numeroCamiseta;
     private Long categoriaId;
-    private String nombreCategoria;
-
 }
