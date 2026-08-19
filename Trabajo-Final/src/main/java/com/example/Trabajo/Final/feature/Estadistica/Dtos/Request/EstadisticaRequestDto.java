@@ -14,6 +14,9 @@ public class EstadisticaRequestDto {
     @NotNull(message = "El id del jugador es requerido")
     private Long jugadorId;
 
+    @NotNull(message = "El id del partido es obligatorio")
+    private Long partidoId;
+
     @Min(0)
     private Integer minutos = 0;
 

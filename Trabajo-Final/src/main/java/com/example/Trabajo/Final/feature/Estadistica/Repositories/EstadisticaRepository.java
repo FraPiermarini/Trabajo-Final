@@ -1,5 +1,6 @@
 package com.example.Trabajo.Final.feature.Estadistica.Repositories;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,5 +11,7 @@ import com.example.Trabajo.Final.feature.Estadistica.Models.Estadistica;
 @Repository
 public interface EstadisticaRepository extends JpaRepository<Estadistica, Long> {
         Optional<Estadistica> findByJugadorIdAndPartidoId(Long jugadorId, Long partidoId);
+        List<Estadistica> findByJugadorId(Long jugadorId);
+        List<Estadistica> findByPartidoId(Long partidoId);
 
 }
