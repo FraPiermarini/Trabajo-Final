@@ -1,9 +1,11 @@
 package com.example.Trabajo.Final.feature.Jugador.Models;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.example.Trabajo.Final.feature.Categoria.Models.Categoria;
 import com.example.Trabajo.Final.feature.Entrenador.Models.Entrenador;
+import com.example.Trabajo.Final.feature.Incidencias.Models.Incidencia;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.Column;
@@ -13,6 +15,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -52,6 +55,9 @@ public class Jugador {
     @JoinColumn(name = "categoriaId")
     @JsonManagedReference
     private Categoria categoria;  
+
+    @OneToMany(mappedBy = "jugador")
+    private List<Incidencia> incidencias;
 
 
 }

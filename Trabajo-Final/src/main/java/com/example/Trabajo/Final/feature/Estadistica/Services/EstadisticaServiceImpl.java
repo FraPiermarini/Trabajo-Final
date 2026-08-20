@@ -16,6 +16,9 @@ import com.example.Trabajo.Final.feature.Estadistica.Dtos.Response.ReporteEstadi
 import com.example.Trabajo.Final.feature.Estadistica.Models.Estadistica;
 import com.example.Trabajo.Final.feature.Estadistica.Repositories.EstadisticaRepository;
 import com.example.Trabajo.Final.feature.Exceptions.RecursoNoEncontradoException;
+import com.example.Trabajo.Final.feature.Incidencias.Dtos.Response.IncidenciaResponseDto;
+import com.example.Trabajo.Final.feature.Incidencias.Models.Incidencia;
+import com.example.Trabajo.Final.feature.Incidencias.Repositories.IncidenciaRepository;
 import com.example.Trabajo.Final.feature.Jugador.Models.Jugador;
 import com.example.Trabajo.Final.feature.Jugador.Repositories.JugadorRepository;
 import com.example.Trabajo.Final.feature.Partido.Models.Partido;
@@ -27,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class EstadisticaServiceImpl {
     private final EstadisticaRepository estadisticaRepository;
+    private final IncidenciaRepository incidenciaRepository; 
     private final JugadorRepository jugadorRepository;
     private final PartidoRepository partidoRepository;
 
@@ -115,11 +119,28 @@ public class EstadisticaServiceImpl {
         int titulares =(int) estadisticas.stream().filter(e -> Boolean.TRUE.equals(e.getTitular())).count();
         int minutos = (int) estadisticas.stream().mapToInt(e -> e.getMinutos() != null ? e.getMinutos() : 0).sum();
         int goles = (int) estadisticas.stream().mapToInt(e -> e.getGoles() != null ? e.getGoles() : 0).sum();
-        int asistencias = (int) estadisticas.stream().mapToInt(e -> e.getAsistencias() != null ? e.getGoles() : 0).sum();
+        int asistencias = (int) estadisticas.stream().mapToInt(e -> e.getAsistencias() != null ? e.getAsistencias() : 0).sum();
         int rojas = (int) estadisticas.stream().mapToInt(e -> e.getRojas() != null ? e.getRojas() : 0).sum();
         int amarillas = (int) estadisticas.stream().mapToInt(e -> e.getAmarillas() != null ? e.getAmarillas() : 0).sum();
+        List<Incidencia> incidencias = incidenciaRepository.findByJugadorId(jugadorId);
+        List<IncidenciaResponseDto> incidenciasDto = new ArrayList<>();
+        int diasIncidencias = 0;
+        for(Incidencia incidencia : incidencias){
+            IncidenciaResponseDto dto = new IncidenciaResponseDto();
+            dto.setId(incidencia.getId());
+            dto.setJugadorId(incidencia.getJugador().getId());
+            dto.setFecha(incidencia.getFecha());
+            dto.setMotivo(incidencia.getMotivo());
+            dto.setCantidadDias(incidencia.getCantidadDias());
+            if(incidencia.getPartido() != null){
+                dto.setPartidoId(incidencia.getPartido().getId());
+            }
+            incidenciasDto.add(dto);
+            diasIncidencias += incidencia.getCantidadDias() != null ? incidencia.getCantidadDias() : 0;
+
+        }
         return new ReporteEstadisticaResponseDto(
-            jugadorId, partidos, titulares, minutos, goles, asistencias, rojas ,amarillas
+            jugadorId, partidos, titulares, minutos, goles, asistencias, rojas ,amarillas, incidenciasDto, diasIncidencias
         );
     }
 
@@ -144,6 +165,7 @@ public class EstadisticaServiceImpl {
                 reporte.setAsistencias(0);
                 reporte.setRojas(0);
                 reporte.setAmarillas(0);
+                reporte.setIncidencias(new ArrayList<>());
                 acumulados.put(jugadorId, reporte);
             }
             reporte.setPartidos(reporte.getPartidos() + 1);
@@ -156,7 +178,38 @@ public class EstadisticaServiceImpl {
             reporte.setRojas(reporte.getRojas() + (estadistica.getRojas() != null ? estadistica.getRojas() : 0));
             reporte.setAmarillas(reporte.getAmarillas() + (estadistica.getAmarillas() != null ? estadistica.getAmarillas() : 0));
         }
-        } 
+        }
+        List<Incidencia> incidencias = incidenciaRepository.findByFecha(inicio, fin);
+        for(Incidencia incidencia : incidencias){
+            Long jugadorId = incidencia.getJugador().getId();
+            ReporteEstadisticaResponseDto reporte = acumulados.get(jugadorId);
+            if(reporte == null){
+                reporte = new ReporteEstadisticaResponseDto();
+                reporte.setJugadorId(jugadorId);
+                reporte.setPartidos(0);
+                reporte.setTitulares(0);
+                reporte.setMinutos(0);
+                reporte.setGoles(0);
+                reporte.setAsistencias(0);
+                reporte.setRojas(0);
+                reporte.setAmarillas(0);
+                reporte.setIncidencias(new ArrayList<>());
+                acumulados.put(jugadorId, reporte);
+            }
+            if(reporte.getIncidencias() == null){
+                reporte.setIncidencias(new ArrayList<>());
+            }
+            IncidenciaResponseDto  dto = new IncidenciaResponseDto();
+            dto.setId(incidencia.getId());
+            dto.setJugadorId(incidencia.getJugador().getId());
+            dto.setFecha(incidencia.getFecha());
+            dto.setMotivo(incidencia.getMotivo());
+            dto.setCantidadDias(incidencia.getCantidadDias());
+            if(incidencia.getPartido() != null){
+                dto.setPartidoId(incidencia.getPartido().getId());
+            }
+            reporte.getIncidencias().add(dto);
+        }
         return new ArrayList<>(acumulados.values());
     }
 
@@ -178,6 +231,7 @@ public class EstadisticaServiceImpl {
                 reporte.setAsistencias(0);
                 reporte.setRojas(0);
                 reporte.setAmarillas(0);
+                reporte.setIncidencias(new ArrayList<>());
                 acumulados.put(jugadorId, reporte);
             }
             reporte.setPartidos(reporte.getPartidos() + 1);
@@ -191,6 +245,39 @@ public class EstadisticaServiceImpl {
             reporte.setAmarillas(reporte.getAmarillas() + (estadistica.getAmarillas() != null ? estadistica.getAmarillas() : 0));
         }
         } 
+        for(Partido partido : partidos){
+            List<Incidencia> incidencias = incidenciaRepository.findByPartidoId(partido.getId());
+            for(Incidencia incidencia : incidencias){
+            Long jugadorId = incidencia.getJugador().getId();
+            ReporteEstadisticaResponseDto reporte = acumulados.get(jugadorId);
+            if(reporte == null){
+                reporte = new ReporteEstadisticaResponseDto();
+                reporte.setJugadorId(jugadorId);
+                reporte.setPartidos(0);
+                reporte.setTitulares(0);
+                reporte.setMinutos(0);
+                reporte.setGoles(0);
+                reporte.setAsistencias(0);
+                reporte.setRojas(0);
+                reporte.setAmarillas(0);
+                reporte.setIncidencias(new ArrayList<>());
+                acumulados.put(jugadorId, reporte);
+            }
+            if(reporte.getIncidencias() == null){
+                reporte.setIncidencias(new ArrayList<>());
+            }
+            IncidenciaResponseDto  dto = new IncidenciaResponseDto();
+            dto.setId(incidencia.getId());
+            dto.setJugadorId(incidencia.getJugador().getId());
+            dto.setFecha(incidencia.getFecha());
+            dto.setMotivo(incidencia.getMotivo());
+            dto.setCantidadDias(incidencia.getCantidadDias());
+            if(incidencia.getPartido() != null){
+                dto.setPartidoId(incidencia.getPartido().getId());
+            }
+            reporte.getIncidencias().add(dto);
+        }
+        }
         return new ArrayList<>(acumulados.values());
     }
 
@@ -222,6 +309,37 @@ public class EstadisticaServiceImpl {
             reporte.setRojas(reporte.getRojas() + (estadistica.getRojas() != null ? estadistica.getRojas() : 0));
             reporte.setAmarillas(reporte.getAmarillas() + (estadistica.getAmarillas() != null ? estadistica.getAmarillas() : 0));
         }
+        List<Incidencia> incidencias = incidenciaRepository.findByPartidoId(partidoId);
+        for(Incidencia incidencia : incidencias){
+            Long jugadorId = incidencia.getJugador().getId();
+            ReporteEstadisticaResponseDto reporte = acumulados.get(jugadorId);
+            if(reporte == null){
+                reporte = new ReporteEstadisticaResponseDto();
+                reporte.setJugadorId(jugadorId);
+                reporte.setPartidos(0);
+                reporte.setTitulares(0);
+                reporte.setMinutos(0);
+                reporte.setGoles(0);
+                reporte.setAsistencias(0);
+                reporte.setRojas(0);
+                reporte.setAmarillas(0);
+                reporte.setIncidencias(new ArrayList<>());
+                acumulados.put(jugadorId, reporte);
+            }
+            if(reporte.getIncidencias() == null){
+                reporte.setIncidencias(new ArrayList<>());
+            }
+            IncidenciaResponseDto  dto = new IncidenciaResponseDto();
+            dto.setId(incidencia.getId());
+            dto.setJugadorId(incidencia.getJugador().getId());
+            dto.setFecha(incidencia.getFecha());
+            dto.setMotivo(incidencia.getMotivo());
+            dto.setCantidadDias(incidencia.getCantidadDias());
+            if(incidencia.getPartido() != null){
+                dto.setPartidoId(incidencia.getPartido().getId());
+            }
+            reporte.getIncidencias().add(dto);
+        }
         return new ArrayList<>(acumulados.values());
         } 
 
@@ -238,6 +356,7 @@ public class EstadisticaServiceImpl {
             reporte.setAsistencias(0);
             reporte.setRojas(0);
             reporte.setAmarillas(0);
+            reporte.setIncidencias(new ArrayList<>());
             reporte.setPartidos(reporte.getPartidos() + 1);
             if(Boolean.TRUE.equals(estadistica.getTitular())){
                 reporte.setTitulares(reporte.getTitulares() + 1);
@@ -247,6 +366,22 @@ public class EstadisticaServiceImpl {
             reporte.setAsistencias(reporte.getAsistencias() + (estadistica.getAsistencias() != null ? estadistica.getAsistencias() : 0));
             reporte.setRojas(reporte.getRojas() + (estadistica.getRojas() != null ? estadistica.getRojas() : 0));
             reporte.setAmarillas(reporte.getAmarillas() + (estadistica.getAmarillas() != null ? estadistica.getAmarillas() : 0));
+            List<Incidencia> incidencias = incidenciaRepository.findByJugadorIdAndPartidoId(jugadorId, partidoId);
+            List<IncidenciaResponseDto> incidenciasDto = new ArrayList<>();
+            int diasIncidencias  = 0;
+            for(Incidencia incidencia : incidencias){
+                IncidenciaResponseDto dto = new IncidenciaResponseDto();
+                dto.setId(incidencia.getId());
+                dto.setJugadorId(incidencia.getJugador().getId());
+                dto.setPartidoId(partidoId);
+                dto.setFecha(incidencia.getFecha());
+                dto.setMotivo(incidencia.getMotivo());
+                dto.setCantidadDias(incidencia.getCantidadDias());
+                incidenciasDto.add(dto);
+                diasIncidencias += incidencia.getCantidadDias() != null ? incidencia.getCantidadDias() : 0;
+            }
+            reporte.setIncidencias(incidenciasDto);
+            reporte.setDiasIncidencias(diasIncidencias);
             return reporte;
         }
 
@@ -265,6 +400,8 @@ public class EstadisticaServiceImpl {
             reporte.setAsistencias(0);
             reporte.setRojas(0);
             reporte.setAmarillas(0);
+            reporte.setIncidencias(new ArrayList<>());
+
             boolean encontroEstadistica = false;
             for(Partido partido : partidos){
                 Optional<Estadistica> resultado = estadisticaRepository.findByJugadorIdAndPartidoId(jugadorId, partido.getId());
@@ -282,9 +419,44 @@ public class EstadisticaServiceImpl {
             reporte.setAmarillas(reporte.getAmarillas() + (estadistica.getAmarillas() != null ? estadistica.getAmarillas() : 0)); 
             }
             }
+            List<Incidencia> incidencias =
+        incidenciaRepository.findByJugadorId(jugadorId);
+
+    int diasIncidencias = 0;
+
+    for (Incidencia incidencia : incidencias) {
+
+        if (!incidencia.getFecha().isBefore(inicio)
+                && !incidencia.getFecha().isAfter(fin)) {
+
+            IncidenciaResponseDto dto =
+                new IncidenciaResponseDto();
+
+            dto.setId(incidencia.getId());
+            dto.setJugadorId(jugadorId);
+            dto.setFecha(incidencia.getFecha());
+            dto.setMotivo(incidencia.getMotivo());
+            dto.setCantidadDias(incidencia.getCantidadDias());
+
+            if (incidencia.getPartido() != null) {
+                dto.setPartidoId(
+                    incidencia.getPartido().getId());
+            }
+
+            reporte.getIncidencias().add(dto);
+
+            diasIncidencias += incidencia.getCantidadDias() != null
+                ? incidencia.getCantidadDias()
+                : 0;
+        }
+    }
+
+    reporte.setDiasIncidencias(diasIncidencias);
+
             if(!encontroEstadistica){
                 throw new RecursoNoEncontradoException("No se encontraron estadisticas del jugador " + jugadorId + " en el mes " + mes);
             }
+
             return reporte;
         } 
 
@@ -317,6 +489,40 @@ public class EstadisticaServiceImpl {
             reporte.setAmarillas(reporte.getAmarillas() + (estadistica.getAmarillas() != null ? estadistica.getAmarillas() : 0)); 
             }
             }
+            int diasIncidencias = 0;
+
+    for (Partido partido : partidos) {
+
+        List<Incidencia> incidencias =
+            incidenciaRepository.findByJugadorIdAndPartidoId(
+                jugadorId, partido.getId());
+
+        for (Incidencia incidencia : incidencias) {
+
+            IncidenciaResponseDto dto =
+                new IncidenciaResponseDto();
+
+            dto.setId(incidencia.getId());
+            dto.setJugadorId(jugadorId);
+            dto.setFecha(incidencia.getFecha());
+            dto.setMotivo(incidencia.getMotivo());
+            dto.setCantidadDias(incidencia.getCantidadDias());
+
+            if (incidencia.getPartido() != null) {
+                dto.setPartidoId(
+                    incidencia.getPartido().getId());
+            }
+
+            reporte.getIncidencias().add(dto);
+
+            diasIncidencias += incidencia.getCantidadDias() != null
+                ? incidencia.getCantidadDias()
+                : 0;
+        }
+    }
+
+    reporte.setDiasIncidencias(diasIncidencias);
+
             if(!encontroEstadistica){
                 throw new RecursoNoEncontradoException("No se encontraron estadsiticas del jugador " + jugadorId + " en el campeonato " + campeonatoId);
             }

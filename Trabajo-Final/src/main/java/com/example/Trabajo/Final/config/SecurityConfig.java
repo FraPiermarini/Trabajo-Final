@@ -48,6 +48,7 @@ public class SecurityConfig {
                     .requestMatchers("/api/estadisticas/**").permitAll()
                     .requestMatchers("/api/partidos/**").permitAll()
                     .requestMatchers("/api/campeonatos/**").permitAll()
+                    .requestMatchers("/api/incidencias").permitAll()
                     .requestMatchers("/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
                     .requestMatchers("/api/login", "/api/usuarios/registro").permitAll()
                     .anyRequest().authenticated()
