@@ -14,6 +14,6 @@ import com.example.Trabajo.Final.feature.Jugador.Models.Jugador;
 public interface IncidenciaRepository extends JpaRepository<Incidencia, Long> {
     List<Incidencia> findByJugadorId(Long jugadorId);
     List<Incidencia> findByJugadorIdAndPartidoId(Long jugadorId, Long partidoId);
-    List<Incidencia> findByFecha(LocalDate inicio, LocalDate fin);
+    List<Incidencia> findByFechaBetween(LocalDate inicio, LocalDate fin);
     List<Incidencia> findByPartidoId(Long partidoId);
 }
