@@ -59,5 +59,8 @@ public class Jugador {
     @OneToMany(mappedBy = "jugador")
     private List<Incidencia> incidencias;
 
+    @Column(columnDefinition = "TEXT")
+    private String imagenUrl;
+
 
 }

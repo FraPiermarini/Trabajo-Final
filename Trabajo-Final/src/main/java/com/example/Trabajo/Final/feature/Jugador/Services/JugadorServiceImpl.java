@@ -1,9 +1,12 @@
 package com.example.Trabajo.Final.feature.Jugador.Services;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.Trabajo.Final.feature.Categoria.Models.Categoria;
 import com.example.Trabajo.Final.feature.Categoria.Repositories.CategoriaRepository;
@@ -48,6 +51,7 @@ public class JugadorServiceImpl implements JugadorService{
         if (guardado.getCategoria() != null) {
             respuesta.setCategoriaId(guardado.getCategoria().getId());
         }
+        respuesta.setImagenUrl(guardado.getImagenUrl());
         return respuesta;
     }
 
@@ -66,6 +70,7 @@ public class JugadorServiceImpl implements JugadorService{
                 respuesta.setCategoriaId(jugador.getCategoria().getId());
                 respuesta.setNombreCategoria(jugador.getCategoria().getNombre());
             }
+            respuesta.setImagenUrl(jugador.getImagenUrl());
             return respuesta;
 
         }).toList();
@@ -86,6 +91,7 @@ public class JugadorServiceImpl implements JugadorService{
             respuesta.setCategoriaId(jugador.getCategoria().getId());
             respuesta.setNombreCategoria(jugador.getCategoria().getNombre());
         }
+        respuesta.setImagenUrl(jugador.getImagenUrl());
         return respuesta;
     }
 
@@ -120,6 +126,7 @@ public class JugadorServiceImpl implements JugadorService{
             respuesta.setCategoriaId(jugadorActualizado.getCategoria().getId());
             respuesta.setNombreCategoria(jugadorActualizado.getCategoria().getNombre());
         }
+        respuesta.setImagenUrl(jugadorActualizado.getImagenUrl());
         return respuesta;
     }
 
@@ -136,5 +143,32 @@ public class JugadorServiceImpl implements JugadorService{
         respuesta.setId(jugadorActualizado.getId());
         respuesta.setNumeroCamiseta(jugadorActualizado.getNumeroCamiseta());
         return respuesta;
+    }
+
+    public JugadorResponseDto importarImagen(Long id, MultipartFile imagen){
+        Jugador jugador = jugadorRepository.findById(id)
+            .orElseThrow(() -> new RecursoNoEncontradoException("Jugador con id " + id + " no encontrado"));
+        if(jugador.getImagenUrl() != null && !jugador.getImagenUrl().isBlank()){
+            throw new RuntimeException("El jugador ya tiene una imagen asignada");
+        }
+        try{
+            String base64 = Base64.getEncoder().encodeToString(imagen.getBytes());
+            String mediaType = imagen.getContentType();
+            jugador.setImagenUrl("data:" + mediaType + ";base64," + base64);
+        }catch(IOException e){
+            throw new RuntimeException("Error al procesar la imagen");
+        }
+        Jugador guardado = jugadorRepository.save(jugador);
+        JugadorResponseDto dto = new JugadorResponseDto();
+        dto.setId(guardado.getId());
+        dto.setNombre(guardado.getNombre());
+        dto.setApellido(guardado.getApellido());
+        dto.setDni(guardado.getDni());
+        dto.setFechaNacimiento(guardado.getFechaNacimiento());
+        dto.setPosicion(guardado.getPosicion());
+        dto.setNumeroCamiseta(guardado.getNumeroCamiseta());
+        dto.setCategoriaId(guardado.getCategoria().getId());
+        dto.setImagenUrl(guardado.getImagenUrl());
+        return dto;
     }
 }

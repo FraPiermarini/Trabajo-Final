@@ -19,5 +19,6 @@ public class JugadorResponseDto {
     private Integer numeroCamiseta;
     private Long categoriaId;
     private String nombreCategoria;
+    private String imagenUrl;
 
 }
