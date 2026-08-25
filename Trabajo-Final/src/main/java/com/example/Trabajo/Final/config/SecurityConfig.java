@@ -38,6 +38,10 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .headers(h -> h.frameOptions(f -> f.disable()))
             .authorizeHttpRequests(auth -> auth
+                    .requestMatchers("/swagger-ui/**",
+                                     "/swagger-ui.html",
+                                     "/v3/api-docs/**"
+                    ).permitAll()
                     .requestMatchers("/api/usuarios/registro").permitAll()
                     .requestMatchers("/api/usuarios/**").hasAnyRole("ADMIN")
                     .requestMatchers("/api/login").permitAll()

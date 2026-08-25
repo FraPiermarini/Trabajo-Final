@@ -28,33 +28,13 @@ public class EntrenadorServiceImpl implements EntrenadorService{
         nuevoEntrenador.setNombre(dto.getNombre());
         nuevoEntrenador.setApellido(dto.getApellido());
         nuevoEntrenador.setEdad(dto.getEdad());
-        Entrenador guardado = entrenadorRepository.save(nuevoEntrenador);
-
-        EntrenadorResponseDto respuesta = new EntrenadorResponseDto();
-        respuesta.setId(guardado.getId());
-        respuesta.setNombre(guardado.getNombre());
-        respuesta.setApellido(guardado.getApellido());
-        respuesta.setEdad(guardado.getEdad());
-        return respuesta;
+        return convertirDto(entrenadorRepository.save(nuevoEntrenador));
     }
 
     public List<EntrenadorResponseDto> obtenerEntrenadores(){
         List<Entrenador> entrenadores = entrenadorRepository.findAll();
         return entrenadores.stream().map(entrenador -> {
-            EntrenadorResponseDto respuesta = new EntrenadorResponseDto();
-            respuesta.setId(entrenador.getId());
-            respuesta.setNombre(entrenador.getNombre());
-            respuesta.setApellido(entrenador.getApellido());
-            respuesta.setEdad(entrenador.getEdad());
-            List<CategoriaDto> categorias = new ArrayList<>();
-            for (Categoria categoria : entrenador.getCategorias()) {
-                CategoriaDto dto = new CategoriaDto();
-                dto.setId(categoria.getId());
-                dto.setNombre(categoria.getNombre());
-                categorias.add(dto);
-            }
-            respuesta.setCategorias(categorias);
-                return respuesta;
+            return convertirDto(entrenador);
         }).toList();
     }
 
@@ -62,20 +42,7 @@ public class EntrenadorServiceImpl implements EntrenadorService{
         Entrenador entrenador = entrenadorRepository.findById(id)
             .orElseThrow(() -> new RecursoNoEncontradoException("Entrenador con id " + id + " no encontrado"));
         
-        EntrenadorResponseDto respuesta = new EntrenadorResponseDto();
-        respuesta.setId((entrenador.getId()));
-        respuesta.setNombre(entrenador.getNombre());
-        respuesta.setApellido(entrenador.getApellido());
-        respuesta.setEdad(entrenador.getEdad());
-        List<CategoriaDto> categorias = new ArrayList<>();
-        for (Categoria categoria : entrenador.getCategorias()) {
-            CategoriaDto dto = new CategoriaDto();
-            dto.setId(categoria.getId());
-            dto.setNombre(categoria.getNombre());
-            categorias.add(dto);
-        }
-        respuesta.setCategorias(categorias);
-        return respuesta;
+        return convertirDto(entrenador);
     }
     
     public void eliminarEntrenador(Long id){
@@ -89,22 +56,24 @@ public class EntrenadorServiceImpl implements EntrenadorService{
         entrenador.setNombre(dto.getNombre());
         entrenador.setApellido(dto.getApellido());
         entrenador.setEdad(dto.getEdad());
-        Entrenador entrenadorActualizado = entrenadorRepository.save(entrenador);
+        return convertirDto(entrenadorRepository.save(entrenador));
+    }
 
-        EntrenadorResponseDto respuesta = new EntrenadorResponseDto();
-        respuesta.setId(entrenadorActualizado.getId());
-        respuesta.setNombre(entrenadorActualizado.getNombre());
-        respuesta.setApellido(entrenadorActualizado.getApellido());
-        respuesta.setEdad(entrenadorActualizado.getEdad());
+    private EntrenadorResponseDto convertirDto(Entrenador e){
+        EntrenadorResponseDto dto = new EntrenadorResponseDto();
+        dto.setId(e.getId());
+        dto.setNombre(e.getNombre());
+        dto.setApellido(e.getApellido());
+        dto.setEdad(e.getEdad());
         List<CategoriaDto> categorias = new ArrayList<>();
-        for (Categoria categoria : entrenador.getCategorias()) {
+        for(Categoria categoria : e.getCategorias()){
             CategoriaDto categoriadto = new CategoriaDto();
             categoriadto.setId(categoria.getId());
             categoriadto.setNombre(categoria.getNombre());
             categorias.add(categoriadto);
         }
-        respuesta.setCategorias(categorias);
-        return respuesta;
+        dto.setCategorias(categorias);
+        return dto;
     }
 }
 

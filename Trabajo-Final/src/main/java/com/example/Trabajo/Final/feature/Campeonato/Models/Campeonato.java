@@ -1,5 +1,6 @@
 package com.example.Trabajo.Final.feature.Campeonato.Models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.Trabajo.Final.feature.Partido.Models.Partido;
@@ -34,6 +35,6 @@ public class Campeonato {
 
     @OneToMany(mappedBy = "campeonato")
     @JsonBackReference
-    private List<Partido> partidos;
+    private List<Partido> partidos =  new ArrayList<>();
 
 }

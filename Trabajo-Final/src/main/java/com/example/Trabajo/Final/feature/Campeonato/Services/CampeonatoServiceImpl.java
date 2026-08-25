@@ -28,56 +28,20 @@ public class CampeonatoServiceImpl implements CampeonatoService{
         Campeonato nuevoCampeonato = new Campeonato();
         nuevoCampeonato.setNombre(dto.getNombre());
         nuevoCampeonato.setAño(dto.getAño());
-        Campeonato guardado = campeonatoRepository.save(nuevoCampeonato);
-
-        CampeonatoResponseDto respuesta = new CampeonatoResponseDto();
-        respuesta.setId(guardado.getId());
-        respuesta.setNombre(guardado.getNombre());
-        respuesta.setAño(guardado.getAño());
-        return respuesta;
+        return convertirDto(campeonatoRepository.save(nuevoCampeonato));
     }
 
     public List<CampeonatoResponseDto> obtenerCampeonatos(){
         List<Campeonato> campeonatos = campeonatoRepository.findAll();
         return campeonatos.stream().map(campeonato -> {
-            CampeonatoResponseDto respuesta  = new CampeonatoResponseDto();
-            respuesta.setId(campeonato.getId());
-            respuesta.setNombre(campeonato.getNombre());
-            respuesta.setAño(campeonato.getAño());
-            List<PartidoDto> partidos = new ArrayList<>();
-            for (Partido partido : campeonato.getPartidos()){
-                PartidoDto dto = new PartidoDto();
-                dto.setId(partido.getId());
-                dto.setJornada(partido.getJornada());
-                dto.setRival(partido.getRival());
-                dto.setResultado(partido.getResultado());
-                dto.setLocal(partido.getLocal());
-                partidos.add(dto);
-            }
-            respuesta.setPartidos(partidos);
-            return respuesta;
+            return convertirDto(campeonato);
         }).toList();
     }
 
     public CampeonatoResponseDto obtenerCampeonato(Long id){
         Campeonato campeonato = campeonatoRepository.findById(id)
             .orElseThrow(() -> new RecursoNoEncontradoException("Campeonato con id " + id + " no encontrado"));
-        CampeonatoResponseDto  respuesta = new CampeonatoResponseDto();
-        respuesta.setId(campeonato.getId());
-        respuesta.setNombre(campeonato.getNombre());
-        respuesta.setAño(campeonato.getAño());
-        List<PartidoDto> partidos = new ArrayList<>();
-            for (Partido partido : campeonato.getPartidos()){
-                PartidoDto dto = new PartidoDto();
-                dto.setId(partido.getId());
-                dto.setJornada(partido.getJornada());
-                dto.setRival(partido.getRival());
-                dto.setResultado(partido.getResultado());
-                dto.setLocal(partido.getLocal());
-                partidos.add(dto);
-            }
-        respuesta.setPartidos(partidos);
-        return respuesta;
+        return convertirDto(campeonato);
     }
 
     public void eliminarCampeonato(Long id){
@@ -90,23 +54,25 @@ public class CampeonatoServiceImpl implements CampeonatoService{
             .orElseThrow(() -> new RecursoNoEncontradoException("Campeonato con id " + id + " no encontrado"));
         campeonato.setNombre(dto.getNombre());
         campeonato.setAño(dto.getAño());
-        Campeonato nuevoCampeonato = campeonatoRepository.save(campeonato);
-        CampeonatoResponseDto respuesta = new CampeonatoResponseDto();
-        respuesta.setId(nuevoCampeonato.getId());
-        respuesta.setNombre(nuevoCampeonato.getNombre());
-        respuesta.setAño(nuevoCampeonato.getAño());
-         List<PartidoDto> partidos = new ArrayList<>();
-            for (Partido partido : campeonato.getPartidos()){
-                PartidoDto partidodto = new PartidoDto();
-                partidodto.setId(partido.getId());
-                partidodto.setJornada(partido.getJornada());
-                partidodto.setRival(partido.getRival());
-                partidodto.setResultado(partido.getResultado());
-                partidodto.setLocal(partido.getLocal());
-                partidos.add(partidodto);
-            }
-        respuesta.setPartidos(partidos);
-        return respuesta;
+        return convertirDto(campeonatoRepository.save(campeonato));
+    }
 
+    private CampeonatoResponseDto convertirDto(Campeonato c){
+        CampeonatoResponseDto dto = new CampeonatoResponseDto();
+        dto.setId(c.getId());
+        dto.setNombre(c.getNombre());
+        dto.setAño(c.getAño());
+        List<PartidoDto> partidos = new ArrayList<>();
+        for(Partido partido : c.getPartidos()){
+            PartidoDto partidoDto = new PartidoDto();
+            partidoDto.setId(partido.getId());
+            partidoDto.setJornada(partido.getJornada());
+            partidoDto.setRival(partido.getRival());
+            partidoDto.setResultado(partido.getResultado());
+            partidoDto.setLocal(partido.getLocal());
+            partidos.add(partidoDto);
+        }
+        dto.setPartidos(partidos);
+        return dto;
     }
 }

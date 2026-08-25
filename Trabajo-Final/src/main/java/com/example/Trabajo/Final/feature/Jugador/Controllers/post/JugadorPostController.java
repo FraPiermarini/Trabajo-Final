@@ -10,6 +10,8 @@ import com.example.Trabajo.Final.feature.Jugador.Dtos.Request.JugadorRequestDto;
 import com.example.Trabajo.Final.feature.Jugador.Dtos.Response.JugadorResponseDto;
 import com.example.Trabajo.Final.feature.Jugador.Services.JugadorServiceImpl;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+@Tag(name = "Jugadores", description = "Operaciones relacionadas con los jugadores")
 @RestController
 @RequestMapping("/api/jugadores")
 public class JugadorPostController {

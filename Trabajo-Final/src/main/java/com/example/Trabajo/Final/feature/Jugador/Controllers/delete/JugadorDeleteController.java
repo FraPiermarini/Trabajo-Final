@@ -10,8 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Trabajo.Final.feature.Jugador.Services.JugadorServiceImpl;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
+@Tag(name = "Jugadores", description = "Operaciones relacionadas con los jugadores")
 @RestController
 @RequestMapping("/api/jugadores")
 @CrossOrigin(origins = "*")

@@ -68,69 +68,24 @@ public class PartidoServiceImpl implements PartidoService{
         estadisticaRepository.save(estadistica);
     }
 }
-
-    PartidoResponseDto respuesta = new PartidoResponseDto();
-    respuesta.setId(guardado.getId());
-    respuesta.setJornada(guardado.getJornada());
-    respuesta.setFecha(guardado.getFecha());
-    if(guardado.getCampeonato() != null){
-        respuesta.setCampeonatoId(guardado.getCampeonato().getId());
-    }
-    respuesta.setResultado(guardado.getResultado());
-    respuesta.setLocal(guardado.getLocal());
-    if(guardado.getCategoria() != null){
-       respuesta.setCategoriaId(guardado.getCategoria().getId());
-    }
-    return respuesta;
+    return convertirDto(partidoRepository.save(nuevoPartido));
     }
 
     public List<PartidoResponseDto> obtenerPartidos() {
-
     List<Partido> partidos = partidoRepository.findAll();
-
     return partidos.stream().map(partido -> {
 
-        PartidoResponseDto respuesta = new PartidoResponseDto();
-
-        respuesta.setId(partido.getId());
-        respuesta.setJornada(partido.getJornada());
-        respuesta.setFecha(partido.getFecha());
-        respuesta.setRival(partido.getRival());
-        respuesta.setResultado(partido.getResultado());
-        respuesta.setLocal(partido.getLocal());
-
-        if (partido.getCategoria() != null) {
-            respuesta.setCategoriaId(partido.getCategoria().getId());
-        }
-
-        if (partido.getCampeonato() != null) {
-            respuesta.setCampeonatoId(partido.getCampeonato().getId());
-        }
-
-        return respuesta;
+        return convertirDto(partido);
 
     }).toList();
-}
+    }
 
 
 
     public PartidoResponseDto obtenerPartido(Long id){
         Partido partido = partidoRepository.findById(id)
            .orElseThrow(() -> new RecursoNoEncontradoException("Partido con id " + id + " no encontrado"));
-        PartidoResponseDto respuesta = new PartidoResponseDto();
-        respuesta.setId(partido.getId());
-        respuesta.setJornada(partido.getJornada());
-        respuesta.setFecha(partido.getFecha());
-        respuesta.setRival(partido.getRival());
-        if(partido.getCampeonato() != null){
-        respuesta.setCampeonatoId(partido.getCampeonato().getId());
-        }
-        respuesta.setResultado(partido.getResultado());
-        respuesta.setLocal(partido.getLocal());
-        if(partido.getCategoria() != null){
-        respuesta.setCategoriaId(partido.getCategoria().getId());
-        }
-        return respuesta;
+        return convertirDto(partido);
     }
 
     public void eliminarPartido(Long id){
@@ -177,25 +132,7 @@ public class PartidoServiceImpl implements PartidoService{
             estadisticaRepository.save(estadistica);
         }
     }
-    Partido actualizado = partidoRepository.save(partido);
-    PartidoResponseDto respuesta = new PartidoResponseDto();
-
-    respuesta.setId(actualizado.getId());
-    respuesta.setJornada(actualizado.getJornada());
-    respuesta.setFecha(actualizado.getFecha());
-    respuesta.setRival(actualizado.getRival());
-    respuesta.setResultado(actualizado.getResultado());
-    respuesta.setLocal(actualizado.getLocal());
-
-    if (actualizado.getCampeonato() != null) {
-        respuesta.setCampeonatoId(actualizado.getCampeonato().getId());
-    }
-
-    if (actualizado.getCategoria() != null) {
-        respuesta.setCategoriaId(actualizado.getCategoria().getId());
-    }
-
-    return respuesta;
+    return convertirDto(partidoRepository.save(partido));
 }
 
   @Override 
@@ -211,6 +148,23 @@ public class PartidoServiceImpl implements PartidoService{
     respuesta.setId(partidoActualizado.getId());
     respuesta.setResultado(partidoActualizado.getResultado());
     return respuesta;
+  }
+
+  private PartidoResponseDto convertirDto(Partido p){
+    PartidoResponseDto dto = new PartidoResponseDto();
+    dto.setId(p.getId());
+    dto.setJornada(p.getJornada());
+    dto.setFecha(p.getFecha());
+    dto.setRival(p.getRival());
+    dto.setResultado(p.getResultado());
+    dto.setLocal(p.getLocal());
+    if(p.getCategoria() != null){
+        dto.setCategoriaId(p.getCategoria().getId());
+    }
+    if(p.getCampeonato() != null){
+        dto.setCampeonatoId(p.getCampeonato().getId());
+    }
+    return dto;
   }
 
 }

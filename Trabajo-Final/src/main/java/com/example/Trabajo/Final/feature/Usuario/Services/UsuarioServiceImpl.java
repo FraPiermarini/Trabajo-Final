@@ -50,5 +50,4 @@ public class UsuarioServiceImpl {
             return null;
         }
     }
-    
 }

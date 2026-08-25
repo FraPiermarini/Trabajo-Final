@@ -36,43 +36,13 @@ public class CategoriaServiceImpl implements CategoriaService{
         Entrenador entrenador = entrenadorRepository.findById(dto.getEntrenadorId())
             .orElseThrow(() -> new RecursoNoEncontradoException("Entrenador con id " + dto.getEntrenadorId() + " no encontrado"));
         nuevaCategoria.setEntrenador(entrenador); 
-        Categoria guardado = categoriaRepository.save(nuevaCategoria);
-
-        CategoriaResponseDto respuesta = new CategoriaResponseDto();
-        respuesta.setId(guardado.getId());
-        respuesta.setNombre(guardado.getNombre());
-        respuesta.setAño(guardado.getAño());
-        respuesta.setDescripcion(guardado.getDescripcion());
-        if (guardado.getEntrenador() != null) {
-        respuesta.setEntrenadorId(guardado.getEntrenador().getId());
-    }
-        return respuesta;
+        return convertirDto(categoriaRepository.save(nuevaCategoria));
     }
 
     public List<CategoriaResponseDto> obtenerCategorias(){
         List<Categoria> categorias =  categoriaRepository.findAll();
         return categorias.stream().map(categoria ->{
-            CategoriaResponseDto respuesta = new CategoriaResponseDto();
-            respuesta.setId(categoria.getId());
-            respuesta.setNombre(categoria.getNombre());
-            respuesta.setAño(categoria.getAño());
-            respuesta.setDescripcion(categoria.getDescripcion());
-            if(categoria.getEntrenador() != null){
-                respuesta.setEntrenadorId(categoria.getEntrenador().getId());
-                respuesta.setNombreEntrenador(categoria.getEntrenador().getNombre());
-            }
-            List<JugadorDto> jugadores = new ArrayList<>();
-            for (Jugador jugador : categoria.getJugadores()) {
-                JugadorDto dto = new JugadorDto();
-                dto.setId(jugador.getId());
-                dto.setNombre(jugador.getNombre());
-                dto.setApellido(jugador.getApellido());
-                dto.setPosicion(jugador.getPosicion());
-                dto.setNumeroCamiseta(jugador.getNumeroCamiseta());
-                jugadores.add(dto);
-            }
-            respuesta.setJugadores(jugadores);
-            return respuesta;
+            return convertirDto(categoria);
         }).toList();
     }
 
@@ -80,27 +50,7 @@ public class CategoriaServiceImpl implements CategoriaService{
     public CategoriaResponseDto obtenerCategoria(Long id){
         Categoria categoria = categoriaRepository.findById(id)
             .orElseThrow(() -> new RecursoNoEncontradoException("Categoría con id " + id + " no encontrada"));
-        CategoriaResponseDto respuesta = new CategoriaResponseDto();
-        respuesta.setId(categoria.getId());
-        respuesta.setNombre(categoria.getNombre());
-        respuesta.setAño(categoria.getAño());
-        respuesta.setDescripcion(categoria.getDescripcion());
-        if (categoria.getEntrenador() != null) {
-        respuesta.setEntrenadorId(categoria.getEntrenador().getId());
-        respuesta.setNombreEntrenador(categoria.getEntrenador().getNombre());
-        }
-        List<JugadorDto> jugadores = new ArrayList<>();
-        for (Jugador jugador : categoria.getJugadores()) {
-            JugadorDto dto = new JugadorDto();
-            dto.setId(jugador.getId());
-            dto.setNombre(jugador.getNombre());
-            dto.setApellido(jugador.getApellido());
-            dto.setPosicion(jugador.getPosicion());
-            dto.setNumeroCamiseta(jugador.getNumeroCamiseta());
-            jugadores.add(dto);
-        }
-        respuesta.setJugadores(jugadores);
-        return respuesta;
+        return convertirDto(categoria);
     } 
     
      public void eliminarCategoria(Long id) {
@@ -117,29 +67,31 @@ public class CategoriaServiceImpl implements CategoriaService{
         Entrenador entrenador = entrenadorRepository.findById(dto.getEntrenadorId())
             .orElseThrow(() -> new RecursoNoEncontradoException("Entrenador con id " + dto.getEntrenadorId() + " no encontrado"));
         categoria.setEntrenador(entrenador);
-        Categoria categoriaActualizada = categoriaRepository.save(categoria);
+        return convertirDto(categoriaRepository.save(categoria));
+    }
 
-        CategoriaResponseDto respuesta = new CategoriaResponseDto();
-        respuesta.setId(categoriaActualizada.getId());
-        respuesta.setNombre(categoriaActualizada.getNombre());
-        respuesta.setAño(categoriaActualizada.getAño());
-        respuesta.setDescripcion(categoriaActualizada.getDescripcion());
-        if (categoriaActualizada.getEntrenador() != null) {
-        respuesta.setEntrenadorId(categoria.getEntrenador().getId());
-        respuesta.setNombreEntrenador(categoria.getEntrenador().getNombre());
+    private CategoriaResponseDto convertirDto(Categoria c){
+        CategoriaResponseDto dto = new CategoriaResponseDto();
+        dto.setId(c.getId());
+        dto.setNombre(c.getNombre());
+        dto.setAño(c.getAño());
+        dto.setDescripcion(c.getDescripcion());
+        if(c.getEntrenador() != null){
+            dto.setEntrenadorId(c.getEntrenador().getId());
+            dto.setNombreEntrenador(c.getEntrenador().getNombre());
         }
         List<JugadorDto> jugadores = new ArrayList<>();
-        for (Jugador jugador : categoria.getJugadores()) {
-            JugadorDto jugadordto = new JugadorDto();
-            jugadordto.setId(jugador.getId());
-            jugadordto.setNombre(jugador.getNombre());
-            jugadordto.setApellido(jugador.getApellido());
-            jugadordto.setPosicion(jugador.getPosicion());
-            jugadordto.setNumeroCamiseta(jugador.getNumeroCamiseta());
-            jugadores.add(jugadordto);
+        for(Jugador jugador : c.getJugadores()){
+            JugadorDto jugadorDto = new JugadorDto();
+            jugadorDto.setId(jugador.getId());
+            jugadorDto.setNombre(jugador.getNombre());
+            jugadorDto.setApellido(jugador.getApellido());
+            jugadorDto.setPosicion(jugador.getPosicion());
+            jugadorDto.setNumeroCamiseta(jugador.getNumeroCamiseta());
+            jugadores.add(jugadorDto);
         }
-        respuesta.setJugadores(jugadores);
-        return respuesta;
+        dto.setJugadores(jugadores);
+        return dto;
     }
 
 }

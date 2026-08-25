@@ -12,8 +12,9 @@ import com.example.Trabajo.Final.feature.Jugador.Dtos.Request.JugadorPutDto;
 import com.example.Trabajo.Final.feature.Jugador.Dtos.Response.JugadorResponseDto;
 import com.example.Trabajo.Final.feature.Jugador.Services.Interface.JugadorService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-
+@Tag(name = "Jugadores", description = "Operaciones relacionadas con los jugadores")
 @RestController
 @RequestMapping("/api/jugadores")
 @CrossOrigin(origins = "*")

@@ -1,6 +1,7 @@
 package com.example.Trabajo.Final.feature.Partido.Models;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.Trabajo.Final.feature.Campeonato.Models.Campeonato;
@@ -58,6 +59,6 @@ public class Partido {
     private Categoria categoria;
 
     @OneToMany(mappedBy = "partido")
-    private List<Incidencia> incidencias;
+    private List<Incidencia> incidencias = new ArrayList<>();
 
 }

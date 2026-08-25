@@ -1,6 +1,7 @@
 package com.example.Trabajo.Final.feature.Jugador.Models;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.example.Trabajo.Final.feature.Categoria.Models.Categoria;
@@ -57,7 +58,7 @@ public class Jugador {
     private Categoria categoria;  
 
     @OneToMany(mappedBy = "jugador")
-    private List<Incidencia> incidencias;
+    private List<Incidencia> incidencias = new ArrayList<>();
 
     @Column(columnDefinition = "TEXT")
     private String imagenUrl;

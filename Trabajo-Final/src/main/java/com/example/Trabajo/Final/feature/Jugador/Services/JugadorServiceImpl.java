@@ -38,61 +38,20 @@ public class JugadorServiceImpl implements JugadorService{
         Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
             .orElseThrow(() -> new RecursoNoEncontradoException("Categoria con id " + dto.getCategoriaId() + " no encontrado"));
         nuevojugador.setCategoria(categoria);
-        Jugador guardado = jugadorRepository.save(nuevojugador);
-
-        JugadorResponseDto respuesta = new JugadorResponseDto();
-        respuesta.setId(guardado.getId());
-        respuesta.setNombre(guardado.getNombre());
-        respuesta.setApellido(guardado.getApellido());
-        respuesta.setDni(guardado.getDni());
-        respuesta.setFechaNacimiento(guardado.getFechaNacimiento());
-        respuesta.setPosicion(guardado.getPosicion());
-        respuesta.setNumeroCamiseta(guardado.getNumeroCamiseta());
-        if (guardado.getCategoria() != null) {
-            respuesta.setCategoriaId(guardado.getCategoria().getId());
-        }
-        respuesta.setImagenUrl(guardado.getImagenUrl());
-        return respuesta;
+        return convertirDto(jugadorRepository.save(nuevojugador));
     }
 
     public List<JugadorResponseDto> obtenerJugadores(){
         List<Jugador> jugadores = jugadorRepository.findAll();
         return jugadores.stream().map(jugador ->{
-            JugadorResponseDto respuesta = new JugadorResponseDto();
-            respuesta.setId(jugador.getId());
-            respuesta.setNombre(jugador.getNombre());
-            respuesta.setApellido(jugador.getApellido());
-            respuesta.setDni(jugador.getDni());
-            respuesta.setFechaNacimiento(jugador.getFechaNacimiento());
-            respuesta.setPosicion(jugador.getPosicion());
-            respuesta.setNumeroCamiseta(jugador.getNumeroCamiseta());
-            if(jugador.getCategoria() != null){
-                respuesta.setCategoriaId(jugador.getCategoria().getId());
-                respuesta.setNombreCategoria(jugador.getCategoria().getNombre());
-            }
-            respuesta.setImagenUrl(jugador.getImagenUrl());
-            return respuesta;
-
+            return convertirDto(jugador);
         }).toList();
     }
 
     public JugadorResponseDto obtenerJugador(Long id){
         Jugador jugador = jugadorRepository.findById(id)
             .orElseThrow(() -> new RecursoNoEncontradoException("Jugador con id " + id + " no encontrado"));
-        JugadorResponseDto respuesta = new JugadorResponseDto();
-        respuesta.setId(jugador.getId());
-        respuesta.setNombre(jugador.getNombre());
-        respuesta.setApellido(jugador.getApellido());
-        respuesta.setDni(jugador.getDni());
-        respuesta.setFechaNacimiento(jugador.getFechaNacimiento());
-        respuesta.setPosicion(jugador.getPosicion());
-        respuesta.setNumeroCamiseta(jugador.getNumeroCamiseta());
-        if (jugador.getCategoria() != null) {
-            respuesta.setCategoriaId(jugador.getCategoria().getId());
-            respuesta.setNombreCategoria(jugador.getCategoria().getNombre());
-        }
-        respuesta.setImagenUrl(jugador.getImagenUrl());
-        return respuesta;
+        return convertirDto(jugador);
     }
 
     public void eliminarJugador(Long id){
@@ -112,22 +71,7 @@ public class JugadorServiceImpl implements JugadorService{
         Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
             .orElseThrow(() -> new RecursoNoEncontradoException("Categoria con id " + dto.getCategoriaId() + " no encontrado"));
         jugador.setCategoria(categoria);
-        Jugador jugadorActualizado = jugadorRepository.save(jugador);
-        
-        JugadorResponseDto  respuesta = new JugadorResponseDto();
-        respuesta.setId(jugadorActualizado.getId());
-        respuesta.setNombre(jugadorActualizado.getNombre());
-        respuesta.setApellido(jugadorActualizado.getApellido());
-        respuesta.setDni(jugadorActualizado.getDni());
-        respuesta.setFechaNacimiento(jugadorActualizado.getFechaNacimiento());
-        respuesta.setPosicion(jugadorActualizado.getPosicion());
-        respuesta.setNumeroCamiseta(jugadorActualizado.getNumeroCamiseta());
-        if (jugadorActualizado.getCategoria() != null) {
-            respuesta.setCategoriaId(jugadorActualizado.getCategoria().getId());
-            respuesta.setNombreCategoria(jugadorActualizado.getCategoria().getNombre());
-        }
-        respuesta.setImagenUrl(jugadorActualizado.getImagenUrl());
-        return respuesta;
+        return convertirDto(jugadorRepository.save(jugador));
     }
 
     @Override
@@ -158,17 +102,23 @@ public class JugadorServiceImpl implements JugadorService{
         }catch(IOException e){
             throw new RuntimeException("Error al procesar la imagen");
         }
-        Jugador guardado = jugadorRepository.save(jugador);
+        return convertirDto(jugadorRepository.save(jugador));
+    }
+
+    private JugadorResponseDto convertirDto(Jugador j){
         JugadorResponseDto dto = new JugadorResponseDto();
-        dto.setId(guardado.getId());
-        dto.setNombre(guardado.getNombre());
-        dto.setApellido(guardado.getApellido());
-        dto.setDni(guardado.getDni());
-        dto.setFechaNacimiento(guardado.getFechaNacimiento());
-        dto.setPosicion(guardado.getPosicion());
-        dto.setNumeroCamiseta(guardado.getNumeroCamiseta());
-        dto.setCategoriaId(guardado.getCategoria().getId());
-        dto.setImagenUrl(guardado.getImagenUrl());
+        dto.setId(j.getId());
+        dto.setNombre(j.getNombre());
+        dto.setApellido(j.getApellido());
+        dto.setDni(j.getDni());
+        dto.setFechaNacimiento(j.getFechaNacimiento());
+        dto.setPosicion(j.getPosicion());
+        dto.setNumeroCamiseta(j.getNumeroCamiseta());
+        if(j.getCategoria() != null){
+            dto.setCategoriaId(j.getCategoria().getId());
+            dto.setNombreCategoria(j.getCategoria().getNombre());
+        }
+        dto.setImagenUrl(j.getImagenUrl());
         return dto;
     }
 }

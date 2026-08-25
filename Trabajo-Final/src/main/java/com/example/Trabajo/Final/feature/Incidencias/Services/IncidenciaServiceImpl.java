@@ -38,55 +38,20 @@ public class IncidenciaServiceImpl implements IncidenciaService{
         nuevaincidencia.setFecha(dto.getFecha());
         nuevaincidencia.setMotivo(dto.getMotivo());
         nuevaincidencia.setCantidadDias(dto.getCantidadDias());
-        Incidencia guardado = incidenciaRepository.save(nuevaincidencia);
-
-        IncidenciaResponseDto respuesta = new IncidenciaResponseDto();
-        respuesta.setId(guardado.getId());
-        if(guardado.getJugador() != null){
-            respuesta.setJugadorId(guardado.getJugador().getId());
-        }
-        if (guardado.getPartido() != null) {
-            respuesta.setPartidoId(guardado.getPartido().getId());
-        }
-        respuesta.setFecha(guardado.getFecha());
-        respuesta.setMotivo(guardado.getMotivo());
-        respuesta.setCantidadDias(guardado.getCantidadDias());
-        return respuesta;
+        return convertirDto(incidenciaRepository.save(nuevaincidencia));
     }
 
     public List<IncidenciaResponseDto> obtenerIncidencias(){
         List<Incidencia> incidencias = incidenciaRepository.findAll();
         return incidencias.stream().map(incidencia ->{
-            IncidenciaResponseDto respuesta = new IncidenciaResponseDto();
-            respuesta.setId(incidencia.getId());
-            if (incidencia.getJugador() != null) {
-                respuesta.setJugadorId(incidencia.getJugador().getId());
-            }
-            if(incidencia.getPartido() != null){
-                respuesta.setPartidoId(incidencia.getPartido().getId());
-            }
-            respuesta.setFecha(incidencia.getFecha());
-            respuesta.setMotivo(incidencia.getMotivo());
-            respuesta.setCantidadDias(incidencia.getCantidadDias());
-            return respuesta;
+            return convertirDto(incidencia);
         }).toList();
     }
 
     public IncidenciaResponseDto obtenerIncidencia(Long id){
         Incidencia incidencia = incidenciaRepository.findById(id)
             .orElseThrow(() -> new RecursoNoEncontradoException("Incidencia con id " + id + " no encontrado"));
-        IncidenciaResponseDto respuesta = new IncidenciaResponseDto();
-        respuesta.setId(incidencia.getId());
-        if(incidencia.getJugador() != null){
-            respuesta.setJugadorId(incidencia.getJugador().getId());
-        }
-        if(incidencia.getPartido() != null){
-            respuesta.setPartidoId(incidencia.getPartido().getId());
-        }
-        respuesta.setFecha(incidencia.getFecha());
-        respuesta.setMotivo(incidencia.getMotivo());
-        respuesta.setCantidadDias(incidencia.getCantidadDias());
-        return respuesta;
+        return convertirDto(incidencia);
     }
 
     public void eliminarIncidencia(Long id){
@@ -106,20 +71,7 @@ public class IncidenciaServiceImpl implements IncidenciaService{
         incidencia.setFecha(dto.getFecha());
         incidencia.setMotivo(dto.getMotivo());
         incidencia.setCantidadDias(dto.getCantidadDias());
-        Incidencia incidenciaActualizada = incidenciaRepository.save(incidencia);
-
-        IncidenciaResponseDto respuesta = new IncidenciaResponseDto();
-        respuesta.setId(incidenciaActualizada.getId());
-        if(incidenciaActualizada.getJugador() != null){
-            respuesta.setJugadorId(incidenciaActualizada.getJugador().getId());
-        }
-        if(incidenciaActualizada.getPartido() != null){
-            respuesta.setPartidoId(incidenciaActualizada.getPartido().getId());
-        }
-        respuesta.setFecha(incidenciaActualizada.getFecha());
-        respuesta.setMotivo(incidenciaActualizada.getMotivo());
-        respuesta.setCantidadDias(incidenciaActualizada.getCantidadDias());
-        return respuesta;
+        return convertirDto(incidenciaRepository.save(incidencia));
     }
 
     @Override
@@ -134,6 +86,21 @@ public class IncidenciaServiceImpl implements IncidenciaService{
         respuesta.setId(incidenciaActualizada.getId());
         respuesta.setCantidadDias(incidenciaActualizada.getCantidadDias());
         return respuesta;
+    }
+
+    private IncidenciaResponseDto convertirDto(Incidencia i){
+        IncidenciaResponseDto dto = new IncidenciaResponseDto();
+        dto.setId(i.getId());
+        if(i.getJugador() != null){
+            dto.setJugadorId(i.getJugador().getId());
+        }
+        if(i.getPartido() != null){
+            dto.setPartidoId(i.getPartido().getId());
+        }
+        dto.setFecha(i.getFecha());
+        dto.setMotivo(i.getMotivo());
+        dto.setCantidadDias(i.getCantidadDias());
+        return dto;
     }
 
 
