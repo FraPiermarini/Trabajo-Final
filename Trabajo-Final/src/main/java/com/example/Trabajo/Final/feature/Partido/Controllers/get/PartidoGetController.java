@@ -15,8 +15,9 @@ import com.example.Trabajo.Final.feature.Partido.Models.Partido;
 import com.example.Trabajo.Final.feature.Partido.Repositories.PartidoRepository;
 import com.example.Trabajo.Final.feature.Partido.Services.PartidoServiceImpl;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-
+@Tag(name = "Partido", description = "Operaciones relacionadas con partidos")
 @RestController
 @RequestMapping("/api/partidos")
 @CrossOrigin(origins = "*")

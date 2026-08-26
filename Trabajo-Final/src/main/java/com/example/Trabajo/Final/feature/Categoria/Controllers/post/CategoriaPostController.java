@@ -11,6 +11,8 @@ import com.example.Trabajo.Final.feature.Categoria.Dtos.Request.CategoriaRequest
 import com.example.Trabajo.Final.feature.Categoria.Dtos.Response.CategoriaResponseDto;
 import com.example.Trabajo.Final.feature.Categoria.Services.CategoriaServiceImpl;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+@Tag(name =  "Categorias", description = "Operaciones relacionadas con categoria")
 @RestController
 @RequestMapping("api/categorias")
 public class CategoriaPostController {

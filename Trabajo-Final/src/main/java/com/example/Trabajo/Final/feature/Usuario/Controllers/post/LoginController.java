@@ -12,6 +12,9 @@ import com.example.Trabajo.Final.feature.Usuario.Dtos.Response.LoginResponseDto;
 import com.example.Trabajo.Final.feature.Usuario.Models.Usuario;
 import com.example.Trabajo.Final.feature.Usuario.Repositories.UsuarioRepository;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+@Tag(name = "Usuarios", description =  "Operaciones relacionadas con usuarios")
 @RestController
 @RequestMapping("/api")
 public class LoginController {

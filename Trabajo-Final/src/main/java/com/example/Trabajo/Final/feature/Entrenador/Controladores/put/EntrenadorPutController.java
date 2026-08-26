@@ -12,9 +12,9 @@ import com.example.Trabajo.Final.feature.Entrenador.Dtos.Request.EntrenadorPutDt
 import com.example.Trabajo.Final.feature.Entrenador.Dtos.Response.EntrenadorResponseDto;
 import com.example.Trabajo.Final.feature.Entrenador.Services.Interface.EntrenadorService;
 
-
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-
+@Tag(name =  "Entrenadores", description = "Operaciones relacionadas con entrenador")
 @RestController
 @RequestMapping("/api/entrenadores")
 @CrossOrigin(origins = "*")

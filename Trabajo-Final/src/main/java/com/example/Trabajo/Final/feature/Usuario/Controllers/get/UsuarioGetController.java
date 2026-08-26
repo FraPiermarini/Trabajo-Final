@@ -16,8 +16,9 @@ import com.example.Trabajo.Final.feature.Usuario.Models.Usuario;
 import com.example.Trabajo.Final.feature.Usuario.Repositories.UsuarioRepository;
 import com.example.Trabajo.Final.feature.Usuario.Services.UsuarioServiceImpl;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-
+@Tag(name = "Usuarios", description =  "Operaciones relacionadas con usuarios")
 @RestController
 @RequestMapping("/api/usuarios")
 @CrossOrigin(origins = "*")

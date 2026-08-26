@@ -13,8 +13,9 @@ import com.example.Trabajo.Final.feature.Usuario.Dtos.Request.RegistroRequestDto
 import com.example.Trabajo.Final.feature.Usuario.Dtos.Response.RegistroResponseDto;
 import com.example.Trabajo.Final.feature.Usuario.Services.UsuarioServiceImpl;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-
+@Tag(name = "Usuarios", description =  "Operaciones relacionadas con usuarios")
 @RestController
 @RequestMapping("/api/usuarios")
 public class UsuarioPostController {

@@ -12,8 +12,9 @@ import com.example.Trabajo.Final.feature.Incidencias.Dtos.Request.IncidenciaPutD
 import com.example.Trabajo.Final.feature.Incidencias.Dtos.Response.IncidenciaResponseDto;
 import com.example.Trabajo.Final.feature.Incidencias.Services.Interface.IncidenciaService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-
+@Tag(name = "Incidencias", description = "Operaciones relacionadas con incidencias")
 @RestController
 @RequestMapping("/api/incidencias")
 @CrossOrigin(origins =  "*")

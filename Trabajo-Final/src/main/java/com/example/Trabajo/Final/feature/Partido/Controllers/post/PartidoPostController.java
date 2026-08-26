@@ -10,6 +10,8 @@ import com.example.Trabajo.Final.feature.Partido.Dtos.Request.PartidoRequestDto;
 import com.example.Trabajo.Final.feature.Partido.Dtos.Response.PartidoResponseDto;
 import com.example.Trabajo.Final.feature.Partido.Services.PartidoServiceImpl;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+@Tag(name = "Partido", description = "Operaciones relacionadas con partidos")
 @RestController
 @RequestMapping("/api/partidos")
 public class PartidoPostController {

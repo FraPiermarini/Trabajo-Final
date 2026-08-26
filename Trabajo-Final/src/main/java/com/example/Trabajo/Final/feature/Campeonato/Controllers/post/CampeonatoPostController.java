@@ -10,6 +10,8 @@ import com.example.Trabajo.Final.feature.Campeonato.Dtos.Request.CampeonatoReque
 import com.example.Trabajo.Final.feature.Campeonato.Dtos.Response.CampeonatoResponseDto;
 import com.example.Trabajo.Final.feature.Campeonato.Services.CampeonatoServiceImpl;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+@Tag(name =  "Campeonatos", description = "Operaciones relacionadas con campeonatos")
 @RestController
 @RequestMapping("/api/campeonatos")
 public class CampeonatoPostController {

@@ -15,8 +15,9 @@ import com.example.Trabajo.Final.feature.Estadistica.Models.Estadistica;
 import com.example.Trabajo.Final.feature.Estadistica.Repositories.EstadisticaRepository;
 import com.example.Trabajo.Final.feature.Estadistica.Services.EstadisticaServiceImpl;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-
+@Tag(name =  "Estadisticas", description = "Operaciones relacionadas con estadisticas")
 @RestController
 @RequestMapping("/api/estadisticas")
 @CrossOrigin(origins = "*")

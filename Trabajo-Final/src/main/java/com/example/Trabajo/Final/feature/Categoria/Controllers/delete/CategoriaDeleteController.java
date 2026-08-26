@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Trabajo.Final.feature.Categoria.Services.CategoriaServiceImpl;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-
+@Tag(name =  "Categorias", description = "Operaciones relacionadas con categoria")
 @RestController
 @RequestMapping("/api/categorias")
 @CrossOrigin(origins = "*")

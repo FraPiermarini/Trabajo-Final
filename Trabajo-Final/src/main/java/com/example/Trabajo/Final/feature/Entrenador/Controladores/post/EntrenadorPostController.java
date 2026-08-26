@@ -13,6 +13,8 @@ import com.example.Trabajo.Final.feature.Entrenador.Dtos.Request.EntrenadorReque
 import com.example.Trabajo.Final.feature.Entrenador.Dtos.Response.EntrenadorResponseDto;
 import com.example.Trabajo.Final.feature.Entrenador.Services.EntrenadorServiceImpl;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+@Tag(name =  "Entrenadores", description = "Operaciones relacionadas con entrenador")
 @RestController
 @RequestMapping("/api/entrenadores")
 

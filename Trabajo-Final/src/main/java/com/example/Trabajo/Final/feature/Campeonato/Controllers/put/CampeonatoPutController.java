@@ -14,8 +14,9 @@ import com.example.Trabajo.Final.feature.Campeonato.Services.Interface.Campeonat
 import com.example.Trabajo.Final.feature.Jugador.Dtos.Request.JugadorPutDto;
 import com.example.Trabajo.Final.feature.Jugador.Dtos.Response.JugadorResponseDto;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-
+@Tag(name =  "Campeonatos", description = "Operaciones relacionadas con campeonatos")
 @RestController
 @RequestMapping("/api/campeonatos")
 @CrossOrigin(origins = "*")

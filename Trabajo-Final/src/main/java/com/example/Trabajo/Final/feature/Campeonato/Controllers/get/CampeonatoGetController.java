@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.Trabajo.Final.feature.Campeonato.Dtos.Response.CampeonatoResponseDto;
 import com.example.Trabajo.Final.feature.Campeonato.Services.CampeonatoServiceImpl;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-
+@Tag(name =  "Campeonatos", description = "Operaciones relacionadas con campeonatos")
 @RestController
 @RequestMapping("/api/campeonatos")
 @CrossOrigin(origins = "*")

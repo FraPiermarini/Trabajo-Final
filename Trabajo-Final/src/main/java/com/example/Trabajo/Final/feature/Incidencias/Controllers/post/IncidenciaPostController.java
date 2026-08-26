@@ -11,6 +11,8 @@ import com.example.Trabajo.Final.feature.Incidencias.Dtos.Request.IncidenciaRequ
 import com.example.Trabajo.Final.feature.Incidencias.Dtos.Response.IncidenciaResponseDto;
 import com.example.Trabajo.Final.feature.Incidencias.Services.IncidenciaServiceImpl;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
+@Tag(name = "Incidencias", description = "Operaciones relacionadas con incidencias")
 @RestController
 @RequestMapping("/api/incidencias")
 public class IncidenciaPostController {

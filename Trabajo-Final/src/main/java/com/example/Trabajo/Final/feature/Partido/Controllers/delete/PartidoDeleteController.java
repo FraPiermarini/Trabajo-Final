@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.Trabajo.Final.feature.Partido.Services.PartidoServiceImpl;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-
+@Tag(name = "Partido", description = "Operaciones relacionadas con partidos")
 @RestController
 @RequestMapping("/api/partidos")
 @CrossOrigin(origins = "*")
