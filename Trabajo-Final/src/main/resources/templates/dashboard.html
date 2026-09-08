@@ -1,0 +1,1643 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: mainLayout(~{::#content})}"
+      lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Inicio</title>
+
+    <link rel="icon" href="data:,">
+
+</head>
+
+<body>
+
+<div id="content" class="max-w-[1200px] mx-auto space-y-10">
+
+
+    <!-- ========================================================= -->
+    <!-- ENCABEZADO + FOTO DEL COMPLEJO                            -->
+    <!-- ========================================================= -->
+
+    <section class="relative overflow-hidden rounded-[2.5rem] border border-slate-800 bg-[#0f172a] shadow-2xl">
+
+        <div class="relative h-[390px] w-full">
+
+            <img
+                src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhb6XuzcgplvNWn1cuaxrrUUCnFC9H1NNNaqyImaOWwbcfqwcCsLh_BKKqmsiwK1FGKZu5u8_-K19ECrhbThErTeBoyEGiZsbXkL-obsERuGTC0ka6Z735F9S-uMCBP1fIeTfg00LcYGZ5SFtRpANDK0eA2J5xMICwXKRP-_4x0gdwzkM8xb23mduJj6A0/s5152/ComplejoDeportivo.jpg"
+                alt="Complejo Deportivo Justiniano Posse"
+                class="absolute inset-0 h-full w-full object-cover"
+            >
+
+            <div class="absolute inset-0 bg-gradient-to-b from-[#0a0f1d]/90 via-[#0a0f1d]/35 to-[#0a0f1d]/95"></div>
+
+            <div class="absolute inset-0 bg-gradient-to-r from-[#0a0f1d]/75 via-transparent to-[#0a0f1d]/60"></div>
+
+
+            <!-- INFORMACIÓN DEL CLUB -->
+
+            <div class="relative z-10 flex h-full items-start justify-center pt-10 px-6">
+
+                <div class="flex flex-col items-center text-center">
+
+
+                    <!-- ESCUDO -->
+
+                    <div class="w-28 h-28
+                                        md:w-32 md:h-32
+                                        rounded-full
+                                        overflow-hidden
+                                        bg-white
+                                        border-4
+                                        border-emerald-500
+                                        shadow-2xl
+                                        flex
+                                        items-center
+                                        justify-center">
+
+                                <img
+                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFoWW9Qj6yO6eX2UjfyWmJNxQw_9EheO0KJF-zaevWvl1fBtSP_zBFzYk&s=10"
+                                    alt="Escudo Complejo Deportivo Justiniano Posse"
+                                    class="w-full
+                                           h-full
+                                           object-cover
+                                           object-center">
+
+                            </div>
+
+
+                    <p class="mb-1 text-xs font-black uppercase tracking-[0.45em] text-emerald-400">
+
+                        Complejo Deportivo
+
+                    </p>
+
+
+                    <h1 class="text-4xl font-black uppercase italic tracking-tight text-white drop-shadow-2xl md:text-5xl">
+
+                        Justiniano Posse
+
+                    </h1>
+
+
+                    <div class="mt-5 flex items-center gap-3">
+
+                        <span class="h-px w-10 bg-emerald-500/60"></span>
+
+                        <p class="text-[10px] font-bold uppercase tracking-[0.3em] text-slate-300">
+
+                            Sistema de gestión y estadísticas deportivas
+
+                        </p>
+
+                        <span class="h-px w-10 bg-emerald-500/60"></span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========================================================= -->
+    <!-- EL CLUB EN NÚMEROS                                        -->
+    <!-- ========================================================= -->
+
+    <section>
+
+        <div class="mb-5">
+
+            <p class="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500">
+
+                Información general
+
+            </p>
+
+
+            <h2 class="mt-1 text-2xl font-black uppercase italic tracking-tight text-white">
+
+                El club en números
+
+            </h2>
+
+        </div>
+
+
+        <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+
+
+            <!-- ================================================= -->
+            <!-- JUGADORES -->
+            <!-- ================================================= -->
+
+            <div class="group relative overflow-hidden rounded-[2rem] border border-slate-800 bg-[#0f172a] p-7 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/40">
+
+                <div class="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-emerald-500/5 transition-all duration-300 group-hover:bg-emerald-500/10"></div>
+
+
+                <div class="relative flex items-center justify-between">
+
+                    <div>
+
+                        <p class="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500">
+
+                            Deportistas
+
+                        </p>
+
+
+                        <h3
+                            id="cantidadJugadores"
+                            class="mt-2 text-4xl font-black tracking-tight text-white"
+                        >
+
+                            —
+
+                        </h3>
+
+
+                        <p class="mt-1 text-xs font-bold text-slate-500">
+
+                            Jugadores registrados
+
+                        </p>
+
+                    </div>
+
+
+                    <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/10">
+
+                        <i class="fa-solid fa-user-group text-xl text-emerald-400"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- CATEGORÍAS -->
+            <!-- ================================================= -->
+
+            <div class="group relative overflow-hidden rounded-[2rem] border border-slate-800 bg-[#0f172a] p-7 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/40">
+
+                <div class="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-emerald-500/5 transition-all duration-300 group-hover:bg-emerald-500/10"></div>
+
+
+                <div class="relative flex items-center justify-between">
+
+                    <div>
+
+                        <p class="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500">
+
+                            Divisiones
+
+                        </p>
+
+
+                        <h3
+                            id="cantidadCategorias"
+                            class="mt-2 text-4xl font-black tracking-tight text-white"
+                        >
+
+                            —
+
+                        </h3>
+
+
+                        <p class="mt-1 text-xs font-bold text-slate-500">
+
+                            Categorías registradas
+
+                        </p>
+
+                    </div>
+
+
+                    <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/10">
+
+                        <i class="fa-solid fa-layer-group text-xl text-emerald-400"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- ENTRENADORES -->
+            <!-- ================================================= -->
+
+            <div class="group relative overflow-hidden rounded-[2rem] border border-slate-800 bg-[#0f172a] p-7 transition-all duration-300 hover:-translate-y-1 hover:border-emerald-500/40">
+
+                <div class="absolute -right-8 -top-8 h-28 w-28 rounded-full bg-emerald-500/5 transition-all duration-300 group-hover:bg-emerald-500/10"></div>
+
+
+                <div class="relative flex items-center justify-between">
+
+                    <div>
+
+                        <p class="text-[10px] font-black uppercase tracking-[0.25em] text-slate-500">
+
+                            Cuerpo técnico
+
+                        </p>
+
+
+                        <h3
+                            id="cantidadEntrenadores"
+                            class="mt-2 text-4xl font-black tracking-tight text-white"
+                        >
+
+                            —
+
+                        </h3>
+
+
+                        <p class="mt-1 text-xs font-bold text-slate-500">
+
+                            Entrenadores registrados
+
+                        </p>
+
+                    </div>
+
+
+                    <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-emerald-500/10">
+
+                        <i class="fa-solid fa-user-tie text-xl text-emerald-400"></i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========================================================= -->
+    <!-- ÚLTIMOS PARTIDOS                                          -->
+    <!-- ========================================================= -->
+
+    <section>
+
+        <div class="mb-5 flex items-end justify-between">
+
+            <div>
+
+                <p class="text-[10px] font-black uppercase tracking-[0.3em] text-emerald-500">
+
+                    Actividad deportiva
+
+                </p>
+
+
+                <h2 class="mt-1 text-2xl font-black uppercase italic tracking-tight text-white">
+
+                    Últimos partidos
+
+                </h2>
+
+
+                <p class="mt-1 text-sm text-slate-500">
+
+                    Los tres encuentros más recientes registrados.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div
+            id="ultimosPartidos"
+            class="space-y-4"
+        >
+
+            <!-- LOADING -->
+
+            <div class="rounded-[2rem] border border-slate-800 bg-[#0f172a] p-8 text-center">
+
+                <i class="fa-solid fa-spinner fa-spin text-xl text-emerald-500"></i>
+
+
+                <p class="mt-3 text-xs font-bold uppercase tracking-widest text-slate-500">
+
+                    Cargando partidos...
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========================================================= -->
+    <!-- PIE INSTITUCIONAL                                         -->
+    <!-- ========================================================= -->
+
+    <section class="border-t border-slate-800/70 pt-8 pb-2">
+
+        <div class="text-center">
+
+            <div class="mb-3 flex items-center justify-center gap-3">
+
+                <span class="h-px w-12 bg-slate-800"></span>
+
+                <i class="fa-solid fa-futbol text-sm text-emerald-500"></i>
+
+                <span class="h-px w-12 bg-slate-800"></span>
+
+            </div>
+
+
+            <h3 class="text-sm font-black uppercase italic tracking-[0.2em] text-slate-400">
+
+                Gestión y estadísticas deportivas
+
+            </h3>
+
+
+            <p class="mx-auto mt-2 max-w-xl text-xs leading-relaxed text-slate-600">
+
+                Plataforma destinada a centralizar la información,
+                seguimiento y rendimiento de las distintas categorías
+                del club Complejo Deportivo Justiniano Posse.
+
+            </p>
+
+        </div>
+
+    </section>
+
+
+    <!-- ========================================================= -->
+    <!-- JAVASCRIPT                                                 -->
+    <!-- ========================================================= -->
+
+    <script>
+
+        // =========================================================
+        // JWT
+        // =========================================================
+
+        function getJwt() {
+
+            const cookie =
+                document.cookie
+                    .split('; ')
+                    .find(row =>
+                        row.startsWith('token=')
+                    );
+
+            return cookie
+                ? cookie.substring(6)
+                : null;
+
+        }
+
+
+        // =========================================================
+        // ESCAPAR HTML
+        // =========================================================
+
+        function escapeHtml(str) {
+
+            const div =
+                document.createElement('div');
+
+            div.textContent =
+                str ?? '';
+
+            return div.innerHTML;
+
+        }
+
+
+        // =========================================================
+        // FORMATEAR FECHA
+        // =========================================================
+
+        function formatearFecha(fecha) {
+
+            if (!fecha) {
+
+                return '';
+
+            }
+
+
+            const partes =
+                fecha.split('-');
+
+
+            if (partes.length !== 3) {
+
+                return fecha;
+
+            }
+
+
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+
+        }
+
+
+        // =========================================================
+        // OBTENER LISTA
+        // =========================================================
+
+        function obtenerLista(data) {
+
+            if (Array.isArray(data)) {
+
+                return data;
+
+            }
+
+
+            if (
+                data &&
+                Array.isArray(data.content)
+            ) {
+
+                return data.content;
+
+            }
+
+
+            if (
+                data &&
+                typeof data === 'object'
+            ) {
+
+                return [data];
+
+            }
+
+
+            return [];
+
+        }
+
+
+        // =========================================================
+        // CARGAR JUGADORES
+        // =========================================================
+
+        async function cargarJugadores() {
+
+            const token =
+                getJwt();
+
+
+            if (!token) {
+
+                console.error(
+                    'No se encontró el JWT.'
+                );
+
+                return;
+
+            }
+
+
+            try {
+
+                const res =
+                    await fetch(
+                        '/api/jugadores',
+                        {
+
+                            method: 'GET',
+
+                            headers: {
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            }
+
+                        }
+                    );
+
+
+                console.log(
+                    'Jugadores status:',
+                    res.status
+                );
+
+
+                if (!res.ok) {
+
+                    throw new Error(
+                        'Error al obtener jugadores.'
+                    );
+
+                }
+
+
+                const data =
+                    await res.json();
+
+
+                console.log(
+                    'Respuesta /api/jugadores:',
+                    data
+                );
+
+
+                const jugadores =
+                    obtenerLista(data);
+
+
+                document.getElementById(
+                    'cantidadJugadores'
+                ).textContent =
+                    jugadores.length;
+
+
+            } catch (error) {
+
+                console.error(
+                    'Error al cargar jugadores:',
+                    error
+                );
+
+
+                document.getElementById(
+                    'cantidadJugadores'
+                ).textContent =
+                    '0';
+
+            }
+
+        }
+
+
+        // =========================================================
+        // CARGAR CATEGORÍAS
+        // =========================================================
+
+        async function cargarCategorias() {
+
+            const token =
+                getJwt();
+
+
+            if (!token) {
+
+                console.error(
+                    'No se encontró el JWT.'
+                );
+
+                return [];
+
+            }
+
+
+            try {
+
+                const res =
+                    await fetch(
+                        '/api/categorias',
+                        {
+
+                            method: 'GET',
+
+                            headers: {
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            }
+
+                        }
+                    );
+
+
+                console.log(
+                    'Categorías status:',
+                    res.status
+                );
+
+
+                if (!res.ok) {
+
+                    throw new Error(
+                        'Error al obtener categorías.'
+                    );
+
+                }
+
+
+                const data =
+                    await res.json();
+
+
+                console.log(
+                    'Respuesta /api/categorias:',
+                    data
+                );
+
+
+                const categorias =
+                    obtenerLista(data);
+
+
+                document.getElementById(
+                    'cantidadCategorias'
+                ).textContent =
+                    categorias.length;
+
+
+                return categorias;
+
+
+            } catch (error) {
+
+                console.error(
+                    'Error al cargar categorías:',
+                    error
+                );
+
+
+                document.getElementById(
+                    'cantidadCategorias'
+                ).textContent =
+                    '0';
+
+
+                return [];
+
+            }
+
+        }
+
+
+        // =========================================================
+        // CARGAR ENTRENADORES
+        // =========================================================
+
+        async function cargarEntrenadores() {
+
+            const token =
+                getJwt();
+
+
+            if (!token) {
+
+                console.error(
+                    'No se encontró el JWT.'
+                );
+
+                return;
+
+            }
+
+
+            try {
+
+                const res =
+                    await fetch(
+                        '/api/entrenadores',
+                        {
+
+                            method: 'GET',
+
+                            headers: {
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            }
+
+                        }
+                    );
+
+
+                console.log(
+                    'Entrenadores status:',
+                    res.status
+                );
+
+
+                if (!res.ok) {
+
+                    throw new Error(
+                        'Error al obtener entrenadores.'
+                    );
+
+                }
+
+
+                const data =
+                    await res.json();
+
+
+                console.log(
+                    'Respuesta /api/entrenadores:',
+                    data
+                );
+
+
+                const entrenadores =
+                    obtenerLista(data);
+
+
+                document.getElementById(
+                    'cantidadEntrenadores'
+                ).textContent =
+                    entrenadores.length;
+
+
+            } catch (error) {
+
+                console.error(
+                    'Error al cargar entrenadores:',
+                    error
+                );
+
+
+                document.getElementById(
+                    'cantidadEntrenadores'
+                ).textContent =
+                    '0';
+
+            }
+
+        }
+
+
+        // =========================================================
+        // CARGAR ÚLTIMOS PARTIDOS
+        // =========================================================
+
+        async function cargarUltimosPartidos() {
+
+            const lista =
+                document.getElementById(
+                    'ultimosPartidos'
+                );
+
+
+            const token =
+                getJwt();
+
+
+            if (!token) {
+
+                lista.innerHTML = `
+
+                    <div class="rounded-[2rem]
+                                border
+                                border-slate-800
+                                bg-[#0f172a]
+                                p-8
+                                text-center">
+
+                        <p class="text-red-500
+                                  font-bold">
+
+                            Sesión expirada.
+
+                        </p>
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            try {
+
+                // =================================================
+                // PARTIDOS
+                // =================================================
+
+                const resPartidos =
+                    await fetch(
+                        '/api/partidos',
+                        {
+
+                            method: 'GET',
+
+                            headers: {
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            }
+
+                        }
+                    );
+
+
+                console.log(
+                    'Partidos status:',
+                    resPartidos.status
+                );
+
+
+                if (!resPartidos.ok) {
+
+                    if (
+                        resPartidos.status === 401 ||
+                        resPartidos.status === 403
+                    ) {
+
+                        throw new Error(
+                            'No tenés permisos para consultar los partidos.'
+                        );
+
+                    }
+
+
+                    throw new Error(
+                        'Error al obtener los partidos.'
+                    );
+
+                }
+
+
+                const partidosData =
+                    await resPartidos.json();
+
+
+                console.log(
+                    'Respuesta /api/partidos:',
+                    partidosData
+                );
+
+
+                let partidos =
+                    obtenerLista(partidosData);
+
+
+                // =================================================
+                // CATEGORÍAS
+                // =================================================
+
+                const resCategorias =
+                    await fetch(
+                        '/api/categorias',
+                        {
+
+                            method: 'GET',
+
+                            headers: {
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            }
+
+                        }
+                    );
+
+
+                console.log(
+                    'Categorías para partidos status:',
+                    resCategorias.status
+                );
+
+
+                let categorias = [];
+
+
+                if (resCategorias.ok) {
+
+                    const categoriasData =
+                        await resCategorias.json();
+
+
+                    console.log(
+                        'Categorías para partidos:',
+                        categoriasData
+                    );
+
+
+                    categorias =
+                        obtenerLista(
+                            categoriasData
+                        );
+
+                }
+
+
+                // =================================================
+                // ORDENAR POR FECHA
+                // =================================================
+
+                partidos.sort(
+                    (a, b) => {
+
+                        const fechaA =
+                            a.fecha
+                                ? new Date(
+                                    a.fecha + 'T00:00:00'
+                                  ).getTime()
+                                : 0;
+
+
+                        const fechaB =
+                            b.fecha
+                                ? new Date(
+                                    b.fecha + 'T00:00:00'
+                                  ).getTime()
+                                : 0;
+
+
+                        return fechaB - fechaA;
+
+                    }
+                );
+
+
+                // =================================================
+                // ÚLTIMOS 3
+                // =================================================
+
+                partidos =
+                    partidos.slice(
+                        0,
+                        3
+                    );
+
+
+                lista.innerHTML = '';
+
+
+                // =================================================
+                // SIN PARTIDOS
+                // =================================================
+
+                if (partidos.length === 0) {
+
+                    lista.innerHTML = `
+
+                        <div class="rounded-[2rem]
+                                    border
+                                    border-slate-800
+                                    bg-[#0f172a]
+                                    p-8
+                                    text-center">
+
+                            <div class="mx-auto
+                                        mb-4
+                                        flex
+                                        h-14
+                                        w-14
+                                        items-center
+                                        justify-center
+                                        rounded-2xl
+                                        bg-slate-800">
+
+                                <i class="fa-solid
+                                          fa-futbol
+                                          text-xl
+                                          text-slate-600">
+                                </i>
+
+                            </div>
+
+
+                            <p class="text-slate-500
+                                      font-bold">
+
+                                No hay partidos registrados.
+
+                            </p>
+
+
+                            <p class="mt-2
+                                      text-xs
+                                      text-slate-700">
+
+                                Creá un partido para comenzar.
+
+                            </p>
+
+                        </div>
+
+                    `;
+
+                    return;
+
+                }
+
+
+                // =================================================
+                // CREAR TARJETAS
+                // =================================================
+
+                partidos.forEach(
+                    partido => {
+
+                        lista.innerHTML +=
+                            crearTarjetaPartido(
+                                partido,
+                                categorias
+                            );
+
+                    }
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    'Error al cargar partidos:',
+                    error
+                );
+
+
+                lista.innerHTML = `
+
+                    <div class="rounded-[2rem]
+                                border
+                                border-red-500/20
+                                bg-red-500/10
+                                p-8
+                                text-center
+                                text-red-500">
+
+                        <i class="fa-solid
+                                  fa-circle-exclamation
+                                  text-xl">
+                        </i>
+
+
+                        <p class="mt-3
+                                  font-black">
+
+                            ERROR AL CARGAR LOS PARTIDOS
+
+                        </p>
+
+
+                        <p class="mt-2
+                                  text-xs
+                                  text-red-400">
+
+                            ${escapeHtml(
+                                error.message
+                            )}
+
+                        </p>
+
+                    </div>
+
+                `;
+
+            }
+
+        }
+
+
+        // =========================================================
+        // CREAR TARJETA DE PARTIDO
+        // =========================================================
+
+        function crearTarjetaPartido(
+            partido,
+            categorias
+        ) {
+
+            // =====================================================
+            // LOCAL / VISITANTE
+            // =====================================================
+
+            const esLocal =
+                partido.local === true ||
+                partido.local === "true";
+
+
+            const condicion =
+                esLocal
+                    ? 'Local'
+                    : 'Visitante';
+
+
+            const condicionClase =
+                esLocal
+                    ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+                    : 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+
+
+            // =====================================================
+            // CATEGORÍA
+            // =====================================================
+
+            const categoria =
+                categorias.find(
+                    c =>
+                        String(c.id) ===
+                        String(partido.categoriaId)
+                );
+
+
+            const nombreCategoria =
+                categoria
+                    ? categoria.nombre
+                    : `Categoría ${partido.categoriaId ?? '-'}`;
+
+
+            // =====================================================
+            // RESULTADO
+            // =====================================================
+
+            const resultado =
+                partido.resultado || 'VS';
+
+
+            const tieneResultado =
+                String(
+                    partido.resultado || ''
+                ).trim() !== '';
+
+
+            // =====================================================
+            // FECHA
+            // =====================================================
+
+            const fecha =
+                formatearFecha(
+                    partido.fecha
+                );
+
+
+            // =====================================================
+            // CLUB LOCAL
+            // =====================================================
+
+            const clubLocal =
+                esLocal
+                    ? `
+
+                        <div class="text-center w-32">
+
+                            <div class="w-20 h-20
+                                        mx-auto
+                                        rounded-full
+                                        overflow-hidden
+                                        bg-white
+                                        border-2
+                                        border-emerald-500
+                                        flex
+                                        items-center
+                                        justify-center
+                                        mb-2">
+
+                                <img
+                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFoWW9Qj6yO6eX2UjfyWmJNxQw_9EheO0KJF-zaevWvl1fBtSP_zBFzYk&s=10"
+                                    alt="CDJP"
+                                    class="w-full
+                                           h-full
+                                           object-contain
+                                           p-1">
+
+                            </div>
+
+
+                            <p class="font-black
+                                      italic
+                                      text-sm
+                                      text-white">
+
+                                CDJP
+
+                            </p>
+
+                        </div>
+
+                    `
+                    : `
+
+                        <div class="text-center w-32">
+
+                            <div class="w-20 h-20
+                                        bg-slate-800
+                                        rounded-full
+                                        flex
+                                        items-center
+                                        justify-center
+                                        mx-auto
+                                        mb-2
+                                        text-2xl
+                                        font-black
+                                        text-slate-600">
+
+                                ${escapeHtml(
+                                    (partido.rival || '?')
+                                        .charAt(0)
+                                        .toUpperCase()
+                                )}
+
+                            </div>
+
+
+                            <p class="font-black
+                                      italic
+                                      text-sm
+                                      text-slate-500
+                                      uppercase">
+
+                                ${escapeHtml(
+                                    partido.rival || ''
+                                )}
+
+                            </p>
+
+                        </div>
+
+                    `;
+
+
+            // =====================================================
+            // CLUB VISITANTE
+            // =====================================================
+
+            const clubVisitante =
+                esLocal
+                    ? `
+
+                        <div class="text-center w-32">
+
+                            <div class="w-20 h-20
+                                        bg-slate-800
+                                        rounded-full
+                                        flex
+                                        items-center
+                                        justify-center
+                                        mx-auto
+                                        mb-2
+                                        text-2xl
+                                        font-black
+                                        text-slate-600">
+
+                                ${escapeHtml(
+                                    (partido.rival || '?')
+                                        .charAt(0)
+                                        .toUpperCase()
+                                )}
+
+                            </div>
+
+
+                            <p class="font-black
+                                      italic
+                                      text-sm
+                                      text-slate-500
+                                      uppercase">
+
+                                ${escapeHtml(
+                                    partido.rival || ''
+                                )}
+
+                            </p>
+
+                        </div>
+
+                    `
+                    : `
+
+                        <div class="text-center w-32">
+
+                            <div class="w-20 h-20
+                                        mx-auto
+                                        rounded-full
+                                        overflow-hidden
+                                        bg-white
+                                        border-2
+                                        border-emerald-500
+                                        flex
+                                        items-center
+                                        justify-center
+                                        mb-2">
+
+                                <img
+                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFoWW9Qj6yO6eX2UjfyWmJNxQw_9EheO0KJF-zaevWvl1fBtSP_zBFzYk&s=10"
+                                    alt="CDJP"
+                                    class="w-full
+                                           h-full
+                                           object-contain
+                                           p-1">
+
+                            </div>
+
+
+                            <p class="font-black
+                                      italic
+                                      text-sm
+                                      text-white">
+
+                                CDJP
+
+                            </p>
+
+                        </div>
+
+                    `;
+
+
+            // =====================================================
+            // CARD
+            // =====================================================
+
+            return `
+
+                <div class="group
+                            relative
+                            overflow-hidden
+                            rounded-[2rem]
+                            border
+                            border-slate-800
+                            bg-[#0f172a]
+                            p-6
+                            transition-all
+                            duration-300
+                            hover:-translate-y-1
+                            hover:border-emerald-500/40">
+
+
+                    <!-- DETALLE DECORATIVO -->
+
+                    <div class="absolute
+                                -right-10
+                                -top-10
+                                h-28
+                                w-28
+                                rounded-full
+                                bg-emerald-500/5
+                                transition-all
+                                duration-300
+                                group-hover:bg-emerald-500/10">
+                    </div>
+
+
+                    <!-- CABECERA -->
+
+                    <div class="relative
+                                mb-6
+                                flex
+                                flex-col
+                                gap-3
+                                sm:flex-row
+                                sm:items-center
+                                sm:justify-between">
+
+
+                        <div class="flex
+                                    items-center
+                                    gap-2">
+
+                            <span class="h-2
+                                         w-2
+                                         rounded-full
+                                         bg-emerald-500">
+                            </span>
+
+
+                            <span class="text-[10px]
+                                         font-black
+                                         uppercase
+                                         tracking-widest
+                                         text-slate-400">
+
+                                ${escapeHtml(fecha)}
+
+                                ·
+
+                                Jornada
+                                ${escapeHtml(
+                                    partido.jornada || ''
+                                )}
+
+                            </span>
+
+                        </div>
+
+
+                        <span class="${condicionClase}
+                                     w-fit
+                                     rounded-full
+                                     border
+                                     px-4
+                                     py-1
+                                     text-[10px]
+                                     font-black
+                                     uppercase">
+
+                            ${condicion}
+
+                        </span>
+
+                    </div>
+
+
+                    <!-- PARTIDO -->
+
+                    <div class="relative
+                                flex
+                                items-center
+                                justify-center
+                                gap-5
+                                md:gap-14">
+
+
+                        ${clubLocal}
+
+
+                        <!-- RESULTADO -->
+
+                        <div class="shrink-0
+                                    text-center">
+
+                            <div class="text-3xl
+                                        font-black
+                                        italic
+                                        text-emerald-500
+                                        md:text-4xl">
+
+                                ${escapeHtml(resultado)}
+
+                            </div>
+
+
+                            <p class="mt-1
+                                      text-[9px]
+                                      font-black
+                                      uppercase
+                                      tracking-widest
+                                      text-slate-600">
+
+                                ${tieneResultado
+                                    ? 'Resultado'
+                                    : 'Sin resultado'}
+
+                            </p>
+
+                        </div>
+
+
+                        ${clubVisitante}
+
+                    </div>
+
+
+                    <!-- INFORMACIÓN -->
+
+                    <div class="relative
+                                mt-6
+                                flex
+                                flex-col
+                                gap-3
+                                border-t
+                                border-slate-800
+                                pt-5
+                                sm:flex-row
+                                sm:items-center
+                                sm:justify-between">
+
+
+                        <div class="flex
+                                    items-center
+                                    gap-2">
+
+                            <i class="fa-solid
+                                      fa-layer-group
+                                      text-xs
+                                      text-emerald-500">
+                            </i>
+
+
+                            <span class="text-xs
+                                         font-bold
+                                         text-slate-300">
+
+                                ${escapeHtml(
+                                    nombreCategoria
+                                )}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="flex
+                                    items-center
+                                    gap-2">
+
+                            <i class="fa-solid
+                                      fa-trophy
+                                      text-xs
+                                      text-emerald-500">
+                            </i>
+
+
+                            <span class="text-xs
+                                         font-bold
+                                         text-slate-500">
+
+                                Campeonato
+                                ${escapeHtml(
+                                    partido.campeonatoId ?? '-'
+                                )}
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            `;
+
+        }
+
+
+        // =========================================================
+        // INICIO
+        // =========================================================
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            function () {
+
+                const token =
+                    getJwt();
+
+
+                if (!token) {
+
+                    console.error(
+                        'No se encontró el JWT.'
+                    );
+
+
+                    window.location.href =
+                        '/login';
+
+
+                    return;
+
+                }
+
+
+                // =================================================
+                // CARGAR DATOS
+                // =================================================
+
+                cargarJugadores();
+
+                cargarCategorias();
+
+                cargarEntrenadores();
+
+                cargarUltimosPartidos();
+
+            }
+        );
+
+    </script>
+
+</div>
+
+</body>
+
+</html>

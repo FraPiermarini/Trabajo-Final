@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: mainLayout(~{::#content})}"
+      lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Entrenadores</title>
+</head>
+
+<body>
+
+<div id="content" class="max-w-[1200px] mx-auto">
+
+    <!-- HEADER -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+
+        <div>
+            <h1 class="text-4xl font-black text-white tracking-tight italic uppercase">
+                Entrenadores
+            </h1>
+
+            <p class="text-emerald-500 font-bold mt-1">
+                El cuerpo técnico del Complejo Deportivo Justiniano Posse.
+            </p>
+        </div>
+
+        <a th:href="@{/entrenadores/nuevo}"
+           class="bg-[#10b981] hover:bg-[#059669] text-slate-900 px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-emerald-500/20 transition-all transform active:scale-95">
+
+            <i class="fa-solid fa-plus"></i>
+
+            <span>Agregar entrenador</span>
+
+        </a>
+
+    </div>
+
+
+    <!-- LISTADO -->
+
+    <div id="entrenadoresGrid"
+         class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- LOADING -->
+
+        <div id="loading"
+             class="col-span-full py-20 text-center">
+
+            <div class="inline-block animate-spin w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full"></div>
+
+        </div>
+
+    </div>
+
+
+    <!--
+        IMPORTANTE: el <script> tiene que quedar DENTRO de #content.
+        El layout usa th:replace="~{layout :: mainLayout(~{::#content})}",
+        que solo toma lo que está adentro del elemento #content. Si el
+        script queda afuera (como sibling después del </div> de cierre),
+        Thymeleaf nunca lo manda al navegador y la página se queda
+        cargando para siempre porque cargarEntrenadores() jamás se llama.
+    -->
+    <script>
+
+        // ============================================================
+        // OBTENER JWT
+        // ============================================================
+
+        function getJwt() {
+
+            const cookie = document.cookie
+                .split('; ')
+                .find(row => row.startsWith('token='));
+
+            if (!cookie) {
+                return null;
+            }
+
+            return cookie.substring(6);
+        }
+
+
+        // ============================================================
+        // ESCAPAR HTML (evita romper el markup con comillas / < >)
+        // ============================================================
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str ?? '';
+            return div.innerHTML;
+        }
+
+
+        // ============================================================
+        // CARGAR ENTRENADORES
+        // ============================================================
+
+        async function cargarEntrenadores() {
+
+            const grid = document.getElementById('entrenadoresGrid');
+
+            const token = getJwt();
+
+
+            if (!token) {
+
+                grid.innerHTML = `
+                    <div class="col-span-full py-20 text-center
+                                border-2 border-dashed border-slate-800
+                                rounded-[2rem]">
+
+                        <p class="text-red-500 font-bold">
+                            Sesión expirada.
+                        </p>
+
+                    </div>
+                `;
+
+                return;
+            }
+
+
+            try {
+
+                const res = await fetch('/api/entrenadores', {
+
+                    method: 'GET',
+
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                        'Accept': 'application/json'
+                    }
+
+                });
+
+
+                // ----------------------------------------------------
+                // ERROR HTTP
+                // ----------------------------------------------------
+
+                if (!res.ok) {
+
+                    if (res.status === 401 || res.status === 403) {
+
+                        grid.innerHTML = `
+                            <div class="col-span-full py-20 text-center">
+
+                                <p class="text-red-500 font-bold">
+                                    No tenés permisos para ver los entrenadores.
+                                </p>
+
+                            </div>
+                        `;
+
+                        return;
+                    }
+
+                    const errText = await res.text();
+                    console.error('Respuesta con error:', res.status, errText);
+
+                    throw new Error(
+                        'Error HTTP ' + res.status
+                    );
+                }
+
+
+                // ----------------------------------------------------
+                // RESPUESTA
+                // ----------------------------------------------------
+
+                const data = await res.json();
+                console.log('Respuesta cruda de /api/entrenadores:', data);
+
+                // Soporta tanto array directo como respuesta paginada { content: [...] }
+                let entrenadores = [];
+                if (Array.isArray(data)) {
+                    entrenadores = data;
+                } else if (data && Array.isArray(data.content)) {
+                    entrenadores = data.content;
+                } else if (data && typeof data === 'object') {
+                    entrenadores = [data];
+                }
+
+
+                grid.innerHTML = '';
+
+
+                // ----------------------------------------------------
+                // SIN ENTRENADORES
+                // ----------------------------------------------------
+
+                if (entrenadores.length === 0) {
+
+                    grid.innerHTML = `
+                        <div class="col-span-full py-20 text-center
+                                    border-2 border-dashed border-slate-800
+                                    rounded-[2rem]
+                                    text-slate-500 font-bold">
+
+                            No hay entrenadores registrados.
+
+                        </div>
+                    `;
+
+                    return;
+                }
+
+
+                // ----------------------------------------------------
+                // MOSTRAR ENTRENADORES
+                // ----------------------------------------------------
+
+                entrenadores.forEach(e => {
+
+                    const nombre = e.nombre || '';
+                    const apellido = e.apellido || '';
+                    const edad = e.edad ?? 'N/D';
+
+                    const inicialNombre =
+                        nombre.charAt(0).toUpperCase();
+
+                    const inicialApellido =
+                        apellido.charAt(0).toUpperCase();
+
+                    const card = document.createElement('div');
+                    card.className = `bg-[#0f172a]
+                                       border border-slate-800
+                                       p-6 rounded-[2rem]
+                                       flex items-center gap-6
+                                       hover:border-emerald-500/30
+                                       transition-all group`;
+
+                    card.innerHTML = `
+
+                        <!-- AVATAR -->
+
+                        <div class="w-20 h-20
+                                    bg-emerald-500/10
+                                    rounded-full
+                                    border-2 border-emerald-500/20
+                                    flex items-center justify-center
+                                    text-2xl font-black
+                                    text-emerald-500
+                                    shadow-lg
+                                    shadow-emerald-500/5">
+
+                            ${escapeHtml(inicialNombre)}${escapeHtml(inicialApellido)}
+
+                        </div>
+
+
+                        <!-- INFORMACIÓN -->
+
+                        <div class="flex-1">
+
+                            <h3 class="text-xl font-black
+                                       text-white leading-tight">
+
+                                ${escapeHtml(nombre)} ${escapeHtml(apellido)}
+
+                            </h3>
+
+
+                            <p class="text-xs text-slate-500
+                                      font-bold uppercase
+                                      tracking-widest mt-1">
+
+                                Edad: ${escapeHtml(String(edad))} años
+
+                            </p>
+
+                        </div>
+
+
+                        <!-- ACCIONES -->
+
+                        <div class="flex flex-col gap-2">
+
+
+                            <!-- EDITAR -->
+
+                            <a href="/entrenadores/nuevo?id=${e.id}"
+                               class="w-10 h-10
+                                      flex items-center justify-center
+                                      rounded-xl bg-slate-800
+                                      text-slate-400
+                                      hover:text-white
+                                      transition-all">
+
+                                <i class="fa-solid fa-pen-to-square"></i>
+
+                            </a>
+
+
+                            <!-- ELIMINAR -->
+
+                            <button type="button"
+                                    class="btn-eliminar w-10 h-10
+                                           rounded-xl bg-slate-800
+                                           text-slate-400
+                                           hover:text-red-500
+                                           transition-all"
+                                    data-id="${e.id}"
+                                    data-nombre="${escapeHtml(nombre + ' ' + apellido)}">
+
+                                <i class="fa-solid fa-trash"></i>
+
+                            </button>
+
+                        </div>
+
+                    `;
+
+                    grid.appendChild(card);
+
+                });
+
+                // Delegación de eventos para los botones "eliminar"
+                // (evita romper el onclick si el nombre tiene comillas, ej: O'Connor)
+                grid.querySelectorAll('.btn-eliminar').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        eliminarEntrenador(btn.dataset.id, btn.dataset.nombre);
+                    });
+                });
+
+            } catch (error) {
+
+                console.error(
+                    'Error al cargar entrenadores:',
+                    error
+                );
+
+                grid.innerHTML = `
+                    <div class="col-span-full py-20 text-center">
+
+                        <p class="text-red-500 font-bold">
+                            Error al cargar los entrenadores.
+                        </p>
+
+                    </div>
+                `;
+            }
+        }
+
+
+        // ============================================================
+        // ELIMINAR ENTRENADOR
+        // ============================================================
+
+        async function eliminarEntrenador(id, nombre) {
+
+            if (!confirm(`¿Eliminar a ${nombre}?`)) {
+                return;
+            }
+
+
+            const token = getJwt();
+
+
+            if (!token) {
+
+                alert("Sesión expirada.");
+
+                window.location.href = "/login";
+
+                return;
+            }
+
+
+            try {
+
+                const res = await fetch(
+                    `/api/entrenadores/${id}`,
+                    {
+                        method: 'DELETE',
+
+                        headers: {
+                            'Authorization': 'Bearer ' + token
+                        }
+                    }
+                );
+
+
+                if (res.ok) {
+
+                    // Volvemos a cargar la lista
+                    cargarEntrenadores();
+
+                } else {
+
+                    alert("No se pudo eliminar el entrenador.");
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Error eliminando entrenador:",
+                    error
+                );
+
+                alert("Error de conexión.");
+
+            }
+
+        }
+
+
+        // ============================================================
+        // INICIAR
+        // ============================================================
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            function () {
+                cargarEntrenadores();
+            }
+        );
+
+    </script>
+
+</div>
+
+</body>
+
+</html>

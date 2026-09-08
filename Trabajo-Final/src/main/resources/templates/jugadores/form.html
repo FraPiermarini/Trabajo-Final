@@ -1,0 +1,1534 @@
+```html
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: mainLayout(~{::#content})}"
+      lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo Jugador</title>
+    <link rel="icon" href="data:,">
+</head>
+
+<body>
+
+<div id="content" class="max-w-[1200px] mx-auto">
+
+    <!-- ========================================================= -->
+    <!-- HEADER -->
+    <!-- ========================================================= -->
+
+    <div class="flex items-center gap-4 mb-10">
+
+        <a th:href="@{/jugadores}"
+           class="w-11 h-11 flex items-center justify-center
+                  bg-[#0f172a] border border-slate-800 rounded-xl
+                  text-slate-400 hover:text-emerald-500
+                  hover:border-emerald-500/30 transition-all">
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+        </a>
+
+        <div>
+
+            <h1 id="formTitle"
+                class="text-4xl font-black text-white
+                       tracking-tight italic uppercase">
+
+                Nuevo Jugador
+
+            </h1>
+
+            <p class="text-emerald-500 font-bold mt-1">
+
+                Completá la ficha técnica del deportista.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- FORMULARIO -->
+    <!-- ========================================================= -->
+
+    <form id="jugadorForm" class="space-y-8">
+
+        <input type="hidden" id="jugadorId">
+
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+
+            <!-- ================================================= -->
+            <!-- FOTO -->
+            <!-- ================================================= -->
+
+            <div class="lg:col-span-1">
+
+                <div class="bg-[#0f172a]
+                            border border-slate-800
+                            p-8 rounded-[2.5rem]
+                            text-center">
+
+                    <div class="mb-6">
+
+                        <h3 class="text-xs font-black
+                                   text-slate-500 uppercase
+                                   tracking-[0.25em]">
+
+                            Foto de perfil
+
+                        </h3>
+
+                        <p class="text-slate-600 text-xs mt-2">
+
+                            Imagen del jugador
+
+                        </p>
+
+                    </div>
+
+
+                    <!-- PREVIEW -->
+
+                    <div id="imagePreviewContainer"
+                         class="relative w-48 h-48 mx-auto mb-6
+                                border-2 border-dashed border-slate-700
+                                rounded-[2rem]
+                                flex items-center justify-center
+                                overflow-hidden bg-[#0a0f1d]">
+
+                        <img id="imagePreview"
+                             src=""
+                             class="hidden w-full h-full object-cover">
+
+                        <div id="imagePlaceholder"
+                             class="text-center">
+
+                            <i class="fa-solid fa-camera
+                                      text-4xl text-slate-700">
+                            </i>
+
+                            <p class="text-[10px] text-slate-600
+                                      font-black uppercase
+                                      tracking-widest mt-3">
+
+                                Sin imagen
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- INPUT -->
+
+                    <input type="file"
+                           id="fotoInput"
+                           accept="image/*"
+                           class="hidden">
+
+
+                    <button type="button"
+                            onclick="document.getElementById('fotoInput').click()"
+                            class="w-full
+                                   bg-emerald-500/10
+                                   hover:bg-emerald-500
+                                   text-emerald-500
+                                   hover:text-slate-900
+                                   border border-emerald-500/20
+                                   py-3 rounded-xl
+                                   font-black text-xs
+                                   uppercase tracking-widest
+                                   transition-all">
+
+                        <i class="fa-solid fa-upload mr-2"></i>
+
+                        Seleccionar imagen
+
+                    </button>
+
+                    <p class="text-[10px] text-slate-600 mt-3">
+
+                        JPG, PNG o WEBP
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- DATOS -->
+            <!-- ================================================= -->
+
+            <div class="lg:col-span-2 space-y-8">
+
+
+                <!-- ================================================= -->
+                <!-- DATOS PERSONALES -->
+                <!-- ================================================= -->
+
+                <div class="bg-[#0f172a]
+                            border border-slate-800
+                            rounded-[2.5rem] p-8">
+
+                    <div class="flex items-center gap-3 mb-8">
+
+                        <div class="w-10 h-10 rounded-xl
+                                    bg-emerald-500/10
+                                    flex items-center justify-center
+                                    text-emerald-500">
+
+                            <i class="fa-solid fa-user"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h3 class="font-black text-white
+                                       uppercase italic">
+
+                                Datos personales
+
+                            </h3>
+
+                            <p class="text-[10px] text-slate-600
+                                      font-bold uppercase
+                                      tracking-widest">
+
+                                Información básica
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+
+                        <!-- NOMBRE -->
+
+                        <div>
+
+                            <label
+                                class="block text-[10px]
+                                       font-black text-slate-500
+                                       uppercase tracking-widest mb-2">
+
+                                Nombre
+
+                            </label>
+
+                            <input type="text"
+                                   id="nombre"
+                                   required
+                                   class="w-full
+                                          bg-[#0a0f1d]
+                                          border border-slate-800
+                                          text-slate-200
+                                          px-4 py-3
+                                          rounded-xl
+                                          outline-none
+                                          focus:ring-2
+                                          focus:ring-emerald-500
+                                          focus:border-transparent
+                                          transition-all"
+                                   placeholder="Nombre del jugador">
+
+                        </div>
+
+
+                        <!-- APELLIDO -->
+
+                        <div>
+
+                            <label
+                                class="block text-[10px]
+                                       font-black text-slate-500
+                                       uppercase tracking-widest mb-2">
+
+                                Apellido
+
+                            </label>
+
+                            <input type="text"
+                                   id="apellido"
+                                   required
+                                   class="w-full
+                                          bg-[#0a0f1d]
+                                          border border-slate-800
+                                          text-slate-200
+                                          px-4 py-3
+                                          rounded-xl
+                                          outline-none
+                                          focus:ring-2
+                                          focus:ring-emerald-500
+                                          focus:border-transparent
+                                          transition-all"
+                                   placeholder="Apellido del jugador">
+
+                        </div>
+
+
+                        <!-- DNI -->
+
+                        <div>
+
+                            <label
+                                class="block text-[10px]
+                                       font-black text-slate-500
+                                       uppercase tracking-widest mb-2">
+
+                                DNI
+
+                            </label>
+
+                            <input type="text"
+                                   id="dni"
+                                   required
+                                   maxlength="8"
+                                   inputmode="numeric"
+                                   class="w-full
+                                          bg-[#0a0f1d]
+                                          border border-slate-800
+                                          text-slate-200
+                                          px-4 py-3
+                                          rounded-xl
+                                          outline-none
+                                          focus:ring-2
+                                          focus:ring-emerald-500
+                                          focus:border-transparent
+                                          transition-all"
+                                   placeholder="Ej: 45123456">
+
+                        </div>
+
+
+                        <!-- FECHA NACIMIENTO -->
+
+                        <div>
+
+                            <label
+                                class="block text-[10px]
+                                       font-black text-slate-500
+                                       uppercase tracking-widest mb-2">
+
+                                Fecha de nacimiento
+
+                            </label>
+
+                            <input type="date"
+                                   id="fechaNacimiento"
+                                   required
+                                   class="w-full
+                                          bg-[#0a0f1d]
+                                          border border-slate-800
+                                          text-slate-200
+                                          px-4 py-3
+                                          rounded-xl
+                                          outline-none
+                                          focus:ring-2
+                                          focus:ring-emerald-500
+                                          focus:border-transparent
+                                          transition-all">
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- DATOS DEPORTIVOS -->
+                <!-- ================================================= -->
+
+                <div class="bg-[#0f172a]
+                            border border-slate-800
+                            rounded-[2.5rem] p-8">
+
+                    <div class="flex items-center gap-3 mb-8">
+
+                        <div class="w-10 h-10 rounded-xl
+                                    bg-emerald-500/10
+                                    flex items-center justify-center
+                                    text-emerald-500">
+
+                            <i class="fa-solid fa-futbol"></i>
+
+                        </div>
+
+                        <div>
+
+                            <h3 class="font-black text-white
+                                       uppercase italic">
+
+                                Datos deportivos
+
+                            </h3>
+
+                            <p class="text-[10px] text-slate-600
+                                      font-bold uppercase
+                                      tracking-widest">
+
+                                Información del plantel
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+
+                        <!-- POSICIÓN -->
+
+                        <div>
+
+                            <label
+                                class="block text-[10px]
+                                       font-black text-slate-500
+                                       uppercase tracking-widest mb-2">
+
+                                Posición
+
+                            </label>
+
+                            <input type="text"
+                                   id="posicion"
+                                   required
+                                   placeholder="Ej: Delantero"
+                                   class="w-full
+                                          bg-[#0a0f1d]
+                                          border border-slate-800
+                                          text-slate-200
+                                          px-4 py-3
+                                          rounded-xl
+                                          outline-none
+                                          focus:ring-2
+                                          focus:ring-emerald-500
+                                          focus:border-transparent
+                                          transition-all">
+
+                        </div>
+
+
+                        <!-- CAMISETA -->
+
+                        <div>
+
+                            <label
+                                class="block text-[10px]
+                                       font-black text-slate-500
+                                       uppercase tracking-widest mb-2">
+
+                                N° camiseta
+
+                            </label>
+
+                            <input type="number"
+                                   id="numeroCamiseta"
+                                   required
+                                   min="1"
+                                   max="99"
+                                   class="w-full
+                                          bg-[#0a0f1d]
+                                          border border-slate-800
+                                          text-slate-200
+                                          px-4 py-3
+                                          rounded-xl
+                                          outline-none
+                                          focus:ring-2
+                                          focus:ring-emerald-500
+                                          focus:border-transparent
+                                          transition-all"
+                                   placeholder="Ej: 9">
+
+                        </div>
+
+
+                        <!-- CATEGORÍA -->
+
+                        <div class="md:col-span-2">
+
+                            <label
+                                for="categoriaId"
+                                class="block text-[10px]
+                                       font-black text-slate-500
+                                       uppercase tracking-widest mb-2">
+
+                                Categoría
+
+                            </label>
+
+                            <select id="categoriaId"
+                                    required
+                                    class="w-full
+                                           bg-[#0a0f1d]
+                                           border border-slate-800
+                                           text-slate-200
+                                           px-4 py-3
+                                           rounded-xl
+                                           outline-none
+                                           focus:ring-2
+                                           focus:ring-emerald-500
+                                           focus:border-transparent
+                                           transition-all">
+
+                                <option value="">
+                                    Seleccione una categoría...
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ================================================= -->
+                <!-- BOTONES -->
+                <!-- ================================================= -->
+
+                <div class="flex justify-end gap-3">
+
+                    <a th:href="@{/jugadores}"
+                       class="px-6 py-3 rounded-xl
+                              border border-slate-800
+                              bg-[#0f172a]
+                              text-slate-400
+                              hover:text-white
+                              hover:border-slate-700
+                              font-bold transition-all">
+
+                        Cancelar
+
+                    </a>
+
+
+                    <button type="submit"
+                            id="submitButton"
+                            class="px-8 py-3 rounded-xl
+                                   bg-emerald-500
+                                   hover:bg-emerald-400
+                                   text-slate-900
+                                   font-black uppercase
+                                   text-xs tracking-widest
+                                   shadow-lg
+                                   shadow-emerald-500/20
+                                   transition-all">
+
+                        <i class="fa-solid fa-floppy-disk mr-2"></i>
+
+                        Guardar jugador
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </form>
+
+
+    <!-- ========================================================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ========================================================= -->
+
+    <script>
+
+
+        // =========================================================
+        // OBTENER JWT
+        // =========================================================
+
+        function getJwt() {
+
+            const cookie =
+                document.cookie
+                    .split('; ')
+                    .find(row =>
+                        row.startsWith('token=')
+                    );
+
+            return cookie
+                ? cookie.substring(6)
+                : null;
+        }
+
+
+        // =========================================================
+        // CARGAR CATEGORÍAS
+        // =========================================================
+
+        async function cargarCategorias() {
+
+            const select =
+                document.getElementById('categoriaId');
+
+            const token =
+                getJwt();
+
+
+            if (!token) {
+
+                alert("Sesión expirada.");
+
+                window.location.href =
+                    "/login";
+
+                return false;
+            }
+
+
+            try {
+
+                const res =
+                    await fetch(
+                        '/api/categorias',
+                        {
+
+                            method: 'GET',
+
+                            headers: {
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            }
+
+                        }
+                    );
+
+
+                // =================================================
+                // ERROR HTTP
+                // =================================================
+
+                if (!res.ok) {
+
+                    if (
+                        res.status === 401 ||
+                        res.status === 403
+                    ) {
+
+                        throw new Error(
+                            "No tenés permisos para consultar las categorías."
+                        );
+                    }
+
+
+                    throw new Error(
+                        "No se pudieron cargar las categorías."
+                    );
+                }
+
+
+                const data =
+                    await res.json();
+
+
+                console.log(
+                    "Respuesta /api/categorias:",
+                    data
+                );
+
+
+                // =================================================
+                // SOPORTAR ARRAY O PAGINACIÓN
+                // =================================================
+
+                let categorias = [];
+
+
+                if (Array.isArray(data)) {
+
+                    categorias = data;
+
+                } else if (
+                    data &&
+                    Array.isArray(data.content)
+                ) {
+
+                    categorias =
+                        data.content;
+
+                } else if (
+                    data &&
+                    typeof data === 'object'
+                ) {
+
+                    categorias = [data];
+
+                }
+
+
+                // =================================================
+                // LIMPIAR SELECT
+                // =================================================
+
+                select.innerHTML = `
+
+                    <option value="">
+                        Seleccione una categoría...
+                    </option>
+
+                `;
+
+
+                // =================================================
+                // SIN CATEGORÍAS
+                // =================================================
+
+                if (categorias.length === 0) {
+
+                    select.innerHTML = `
+
+                        <option value="">
+                            No hay categorías registradas
+                        </option>
+
+                    `;
+
+                    console.warn(
+                        "No hay categorías registradas."
+                    );
+
+                    return false;
+                }
+
+
+                // =================================================
+                // AGREGAR CATEGORÍAS
+                // =================================================
+
+                categorias.forEach(categoria => {
+
+                    if (!categoria.id) {
+                        return;
+                    }
+
+
+                    const option =
+                        document.createElement('option');
+
+
+                    option.value =
+                        categoria.id;
+
+
+                    option.textContent =
+                        `${categoria.nombre || 'Sin nombre'}`
+                        + (
+                            categoria.año
+                                ? ` - ${categoria.año}`
+                                : ''
+                        );
+
+
+                    select.appendChild(option);
+
+                });
+
+
+                return true;
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error cargando categorías:",
+                    error
+                );
+
+
+                alert(
+                    error.message ||
+                    "No se pudieron cargar las categorías."
+                );
+
+
+                return false;
+            }
+        }
+
+
+        // =========================================================
+        // CARGAR JUGADOR PARA EDITAR
+        // =========================================================
+
+        async function cargarDatosJugador(id) {
+
+            const token =
+                getJwt();
+
+
+            if (!token) {
+
+                alert("Sesión expirada.");
+
+                window.location.href =
+                    "/login";
+
+                return;
+            }
+
+
+            try {
+
+                const res =
+                    await fetch(
+                        `/api/jugadores/${id}`,
+                        {
+
+                            method: 'GET',
+
+                            headers: {
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            }
+
+                        }
+                    );
+
+
+                if (!res.ok) {
+
+                    if (
+                        res.status === 401 ||
+                        res.status === 403
+                    ) {
+
+                        throw new Error(
+                            "No tenés permisos para consultar el jugador."
+                        );
+                    }
+
+
+                    throw new Error(
+                        "No se pudo cargar el jugador."
+                    );
+                }
+
+
+                const jugador =
+                    await res.json();
+
+
+                console.log(
+                    "Jugador obtenido:",
+                    jugador
+                );
+
+
+                // =================================================
+                // DATOS PERSONALES
+                // =================================================
+
+                document.getElementById(
+                    'jugadorId'
+                ).value =
+                    jugador.id || '';
+
+
+                document.getElementById(
+                    'nombre'
+                ).value =
+                    jugador.nombre || '';
+
+
+                document.getElementById(
+                    'apellido'
+                ).value =
+                    jugador.apellido || '';
+
+
+                document.getElementById(
+                    'dni'
+                ).value =
+                    jugador.dni || '';
+
+
+                document.getElementById(
+                    'fechaNacimiento'
+                ).value =
+                    jugador.fechaNacimiento || '';
+
+
+                // =================================================
+                // DATOS DEPORTIVOS
+                // =================================================
+
+                document.getElementById(
+                    'posicion'
+                ).value =
+                    jugador.posicion || '';
+
+
+                document.getElementById(
+                    'numeroCamiseta'
+                ).value =
+                    jugador.numeroCamiseta ?? '';
+
+
+                // =================================================
+                // CATEGORÍA
+                // =================================================
+
+                let categoriaId =
+                    jugador.categoriaId;
+
+
+                /*
+                 * Por si el backend devuelve
+                 * el objeto categoría.
+                 */
+
+                if (
+                    !categoriaId &&
+                    jugador.categoria
+                ) {
+
+                    categoriaId =
+                        jugador.categoria.id;
+
+                }
+
+
+                if (categoriaId) {
+
+                    document.getElementById(
+                        'categoriaId'
+                    ).value =
+                        String(categoriaId);
+
+                }
+
+
+                // =================================================
+                // IMAGEN
+                // =================================================
+
+                if (jugador.imagenUrl) {
+
+                    mostrarPreview(
+                        jugador.imagenUrl
+                    );
+
+                }
+
+
+                // =================================================
+                // CAMBIAR INTERFAZ A EDICIÓN
+                // =================================================
+
+                document.getElementById(
+                    'formTitle'
+                ).innerText =
+                    "Editar Jugador";
+
+
+                document.getElementById(
+                    'submitButton'
+                ).innerHTML =
+                    '<i class="fa-solid fa-pen-to-square mr-2"></i> Actualizar jugador';
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error cargando jugador:",
+                    error
+                );
+
+
+                alert(
+                    error.message ||
+                    "No se pudo cargar el jugador."
+                );
+
+            }
+
+        }
+
+
+        // =========================================================
+        // PREVIEW IMAGEN
+        // =========================================================
+
+        document.getElementById(
+            'fotoInput'
+        ).addEventListener(
+            'change',
+            function (e) {
+
+                const file =
+                    e.target.files[0];
+
+
+                if (!file) {
+                    return;
+                }
+
+
+                if (!file.type.startsWith('image/')) {
+
+                    alert(
+                        "Seleccioná una imagen válida."
+                    );
+
+                    this.value = '';
+
+                    return;
+                }
+
+
+                mostrarPreview(
+                    URL.createObjectURL(file)
+                );
+
+            }
+        );
+
+
+        // =========================================================
+        // MOSTRAR PREVIEW
+        // =========================================================
+
+        function mostrarPreview(url) {
+
+            const image =
+                document.getElementById(
+                    'imagePreview'
+                );
+
+
+            const placeholder =
+                document.getElementById(
+                    'imagePlaceholder'
+                );
+
+
+            image.src =
+                url;
+
+
+            image.classList.remove(
+                'hidden'
+            );
+
+
+            placeholder.classList.add(
+                'hidden'
+            );
+
+        }
+
+
+        // =========================================================
+        // INICIALIZAR
+        // =========================================================
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            async function () {
+
+                /*
+                 * Primero cargamos las categorías.
+                 * Esto es importante para que cuando
+                 * carguemos un jugador en modo edición
+                 * podamos seleccionar su categoría.
+                 */
+
+                const categoriasCargadas =
+                    await cargarCategorias();
+
+
+                /*
+                 * Comprobamos si estamos editando.
+                 */
+
+                const params =
+                    new URLSearchParams(
+                        window.location.search
+                    );
+
+
+                const id =
+                    params.get('id');
+
+
+                if (id) {
+
+                    if (categoriasCargadas) {
+
+                        await cargarDatosJugador(id);
+
+                    } else {
+
+                        alert(
+                            "No se puede editar el jugador porque no se pudieron cargar las categorías."
+                        );
+
+                    }
+
+                }
+
+            }
+        );
+
+
+        // =========================================================
+        // GUARDAR / ACTUALIZAR JUGADOR
+        // =========================================================
+
+        document.getElementById(
+            'jugadorForm'
+        ).addEventListener(
+            'submit',
+            async function (e) {
+
+                e.preventDefault();
+
+
+                const token =
+                    getJwt();
+
+
+                if (!token) {
+
+                    alert("Sesión expirada.");
+
+                    window.location.href =
+                        "/login";
+
+                    return;
+                }
+
+
+                // =================================================
+                // DATOS
+                // =================================================
+
+                const id =
+                    document.getElementById(
+                        'jugadorId'
+                    ).value;
+
+
+                const nombre =
+                    document.getElementById(
+                        'nombre'
+                    ).value.trim();
+
+
+                const apellido =
+                    document.getElementById(
+                        'apellido'
+                    ).value.trim();
+
+
+                const dni =
+                    document.getElementById(
+                        'dni'
+                    ).value.trim();
+
+
+                const fechaNacimiento =
+                    document.getElementById(
+                        'fechaNacimiento'
+                    ).value;
+
+
+                const posicion =
+                    document.getElementById(
+                        'posicion'
+                    ).value.trim();
+
+
+                const numeroCamiseta =
+                    document.getElementById(
+                        'numeroCamiseta'
+                    ).value;
+
+
+                const categoriaId =
+                    document.getElementById(
+                        'categoriaId'
+                    ).value;
+
+
+                // =================================================
+                // VALIDACIONES
+                // =================================================
+
+                if (!nombre) {
+
+                    alert(
+                        "El nombre es obligatorio."
+                    );
+
+                    return;
+                }
+
+
+                if (!apellido) {
+
+                    alert(
+                        "El apellido es obligatorio."
+                    );
+
+                    return;
+                }
+
+
+                if (!dni) {
+
+                    alert(
+                        "El DNI es obligatorio."
+                    );
+
+                    return;
+                }
+
+
+                if (!fechaNacimiento) {
+
+                    alert(
+                        "La fecha de nacimiento es obligatoria."
+                    );
+
+                    return;
+                }
+
+
+                if (!posicion) {
+
+                    alert(
+                        "La posición es obligatoria."
+                    );
+
+                    return;
+                }
+
+
+                if (!numeroCamiseta) {
+
+                    alert(
+                        "El número de camiseta es obligatorio."
+                    );
+
+                    return;
+                }
+
+
+                if (!categoriaId) {
+
+                    alert(
+                        "Debés seleccionar una categoría."
+                    );
+
+                    return;
+                }
+
+
+                // =================================================
+                // OBJETO
+                // =================================================
+
+                const jugadorData = {
+
+                    nombre: nombre,
+
+                    apellido: apellido,
+
+                    dni: dni,
+
+                    fechaNacimiento:
+                        fechaNacimiento,
+
+                    posicion: posicion,
+
+                    numeroCamiseta:
+                        Number(numeroCamiseta),
+
+                    categoriaId:
+                        Number(categoriaId)
+
+                };
+
+
+                console.log(
+                    "Enviando jugador:",
+                    jugadorData
+                );
+
+
+                // =================================================
+                // BOTÓN
+                // =================================================
+
+                const boton =
+                    document.getElementById(
+                        'submitButton'
+                    );
+
+
+                boton.disabled =
+                    true;
+
+
+                boton.innerHTML =
+                    '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Guardando...';
+
+
+                try {
+
+                    // =================================================
+                    // GUARDAR JUGADOR
+                    // =================================================
+
+                    const url =
+                        id
+                            ? `/api/jugadores/${id}`
+                            : '/api/jugadores';
+
+
+                    const method =
+                        id
+                            ? 'PUT'
+                            : 'POST';
+
+
+                    const res =
+                        await fetch(
+                            url,
+                            {
+
+                                method: method,
+
+                                headers: {
+
+                                    'Content-Type':
+                                        'application/json',
+
+                                    'Authorization':
+                                        'Bearer ' + token,
+
+                                    'Accept':
+                                        'application/json'
+
+                                },
+
+                                body:
+                                    JSON.stringify(
+                                        jugadorData
+                                    )
+
+                            }
+                        );
+
+
+                    // =================================================
+                    // ERROR
+                    // =================================================
+
+                    if (!res.ok) {
+
+                        let mensaje =
+                            "No se pudo guardar el jugador.";
+
+
+                        try {
+
+                            const errorData =
+                                await res.json();
+
+
+                            if (
+                                errorData.mensaje
+                            ) {
+
+                                mensaje =
+                                    errorData.mensaje;
+
+                            } else if (
+                                errorData.message
+                            ) {
+
+                                mensaje =
+                                    errorData.message;
+                            }
+
+
+                        } catch (_) {
+
+                            const texto =
+                                await res.text();
+
+
+                            if (texto) {
+
+                                console.error(
+                                    "Respuesta del servidor:",
+                                    texto
+                                );
+
+                            }
+
+                        }
+
+
+                        throw new Error(
+                            mensaje
+                        );
+
+                    }
+
+
+                    // =================================================
+                    // RESPUESTA
+                    // =================================================
+
+                    const savedJugador =
+                        await res.json();
+
+
+                    console.log(
+                        "Jugador guardado:",
+                        savedJugador
+                    );
+
+
+                    // =================================================
+                    // SUBIR IMAGEN
+                    // =================================================
+
+                    const fotoFile =
+                        document.getElementById(
+                            'fotoInput'
+                        ).files[0];
+
+
+                    if (fotoFile) {
+
+                        const formData =
+                            new FormData();
+
+
+                        formData.append(
+                            'imagen',
+                            fotoFile
+                        );
+
+
+                        const imagenRes =
+                            await fetch(
+                                `/api/jugadores/${savedJugador.id}/imagen`,
+                                {
+
+                                    method: 'POST',
+
+                                    headers: {
+
+                                        'Authorization':
+                                            'Bearer ' + token
+
+                                    },
+
+                                    body:
+                                        formData
+
+                                }
+                            );
+
+
+                        if (!imagenRes.ok) {
+
+                            throw new Error(
+                                "El jugador se guardó, pero no se pudo subir la imagen."
+                            );
+
+                        }
+
+                    }
+
+
+                    // =================================================
+                    // ÉXITO
+                    // =================================================
+
+                    alert(
+                        id
+                            ? "Jugador actualizado correctamente."
+                            : "Jugador creado correctamente."
+                    );
+
+
+                    window.location.href =
+                        "/jugadores";
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Error guardando jugador:",
+                        error
+                    );
+
+
+                    alert(
+                        error.message ||
+                        "Error al guardar el jugador."
+                    );
+
+
+                    boton.disabled =
+                        false;
+
+
+                    boton.innerHTML =
+                        '<i class="fa-solid fa-floppy-disk mr-2"></i> ' +
+                        (
+                            id
+                                ? "Actualizar jugador"
+                                : "Guardar jugador"
+                        );
+
+                }
+
+            }
+        );
+
+    </script>
+
+</div>
+
+</body>
+
+</html>
+

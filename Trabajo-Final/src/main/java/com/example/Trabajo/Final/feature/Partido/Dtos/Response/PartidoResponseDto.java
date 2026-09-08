@@ -26,4 +26,6 @@ public class PartidoResponseDto {
 
     private Long categoriaId;
 
+    private Long entrenadorId;
+
 }

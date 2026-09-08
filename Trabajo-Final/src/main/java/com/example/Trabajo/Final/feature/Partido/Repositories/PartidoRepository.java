@@ -9,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.example.Trabajo.Final.feature.Partido.Models.Partido;
+import com.example.Trabajo.Final.feature.Entrenador.Models.Entrenador;
+
 
 @Repository
 public interface PartidoRepository extends JpaRepository<Partido, Long>{
@@ -21,4 +23,6 @@ public interface PartidoRepository extends JpaRepository<Partido, Long>{
     List<Partido> buscarPartidosEntreFechas(@Param("inicio") LocalDate inicio, @Param("fin") LocalDate fin);
 
     List<Partido> findByCampeonatoId(Long campeonatoId);
+    List<Partido> findByEntrenadorId(Long entrenadorId);
+    List<Partido> findByCategoriaId(Long categoriaId);
 }

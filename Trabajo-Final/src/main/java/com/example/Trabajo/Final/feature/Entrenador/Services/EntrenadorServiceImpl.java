@@ -66,12 +66,14 @@ public class EntrenadorServiceImpl implements EntrenadorService{
         dto.setApellido(e.getApellido());
         dto.setEdad(e.getEdad());
         List<CategoriaDto> categorias = new ArrayList<>();
+        if(e.getCategorias() != null){
         for(Categoria categoria : e.getCategorias()){
             CategoriaDto categoriadto = new CategoriaDto();
             categoriadto.setId(categoria.getId());
             categoriadto.setNombre(categoria.getNombre());
             categorias.add(categoriadto);
         }
+    }
         dto.setCategorias(categorias);
         return dto;
     }

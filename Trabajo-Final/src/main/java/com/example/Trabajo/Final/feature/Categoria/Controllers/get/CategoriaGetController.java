@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @Tag(name =  "Categorias", description = "Operaciones relacionadas con categoria")
 @RestController
 @RequestMapping("/api/categorias")
-@CrossOrigin(origins = "¨*")
+@CrossOrigin(origins = "*")
 @RequiredArgsConstructor
 public class CategoriaGetController {
     private final CategoriaServiceImpl categoriaServiceImpl;

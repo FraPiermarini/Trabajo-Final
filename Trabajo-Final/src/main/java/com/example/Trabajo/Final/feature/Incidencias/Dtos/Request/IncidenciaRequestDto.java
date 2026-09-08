@@ -12,12 +12,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class IncidenciaRequestDto {
-    @NotBlank(message =  "El id del jugador es obligatorio")
+    @NotNull(message =  "El id del jugador es obligatorio")
     private Long jugadorId;
 
     private Long partidoId;
 
-    @NotBlank(message = "La fecha es obligatoria")
+    @NotNull(message = "La fecha es obligatoria")
     private LocalDate fecha;
 
     @NotBlank(message = "El motivo es obligatorio")

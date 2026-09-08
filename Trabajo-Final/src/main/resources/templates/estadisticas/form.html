@@ -1,0 +1,1889 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: mainLayout(~{::#content})}"
+      lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Estadística</title>
+    <link rel="icon" href="data:,">
+</head>
+
+<body>
+
+<div id="content" class="max-w-[1200px] mx-auto">
+
+<!-- ========================================================= -->
+
+<!-- HEADER -->
+
+<!-- ========================================================= -->
+
+<div class="flex items-center gap-4 mb-10">
+
+```
+<a th:href="@{/estadisticas}"
+   class="w-11 h-11 flex items-center justify-center
+          bg-[#0f172a] border border-slate-800 rounded-xl
+          text-slate-400 hover:text-emerald-500
+          hover:border-emerald-500/30 transition-all">
+
+    <i class="fa-solid fa-arrow-left"></i>
+
+</a>
+
+<div>
+
+    <h1 id="formTitle"
+        class="text-4xl font-black text-white
+               tracking-tight italic uppercase">
+
+        Nueva Estadística
+
+    </h1>
+
+    <p id="formDescription"
+       class="text-emerald-500 font-bold mt-1">
+
+        Registrá el rendimiento de un jugador en un partido.
+
+    </p>
+
+</div>
+```
+
+</div>
+
+<!-- ========================================================= -->
+
+<!-- FORMULARIO -->
+
+<!-- ========================================================= -->
+
+<form id="estadisticaForm" class="space-y-8">
+
+```
+<!-- ID OCULTO -->
+
+<input type="hidden"
+       id="estadisticaId">
+
+
+<!-- ========================================================= -->
+<!-- PARTIDO Y JUGADOR -->
+<!-- ========================================================= -->
+
+<div class="bg-[#0f172a]
+            border border-slate-800
+            rounded-[2.5rem] p-8">
+
+    <div class="flex items-center gap-3 mb-8">
+
+        <div class="w-10 h-10 rounded-xl
+                    bg-emerald-500/10
+                    flex items-center justify-center
+                    text-emerald-500">
+
+            <i class="fa-solid fa-futbol"></i>
+
+        </div>
+
+        <div>
+
+            <h3 class="font-black text-white
+                       uppercase italic">
+
+                Partido y jugador
+
+            </h3>
+
+            <p class="text-[10px] text-slate-600
+                      font-bold uppercase
+                      tracking-widest">
+
+                Seleccioná primero la categoría
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+
+        <!-- ================================================= -->
+        <!-- CATEGORIA -->
+        <!-- ================================================= -->
+
+        <div>
+
+            <label for="categoriaId"
+                   class="block text-[10px]
+                          font-black text-slate-500
+                          uppercase tracking-widest mb-2">
+
+                Categoría
+
+            </label>
+
+            <select id="categoriaId"
+                    required
+                    class="w-full
+                           bg-[#0a0f1d]
+                           border border-slate-800
+                           text-slate-200
+                           px-4 py-3
+                           rounded-xl
+                           outline-none
+                           focus:ring-2
+                           focus:ring-emerald-500
+                           focus:border-transparent
+                           transition-all">
+
+                <option value="">
+                    Cargando categorías...
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- PARTIDO -->
+        <!-- ================================================= -->
+
+        <div>
+
+            <label for="partidoId"
+                   class="block text-[10px]
+                          font-black text-slate-500
+                          uppercase tracking-widest mb-2">
+
+                Partido
+
+            </label>
+
+            <select id="partidoId"
+                    required
+                    disabled
+                    class="w-full
+                           bg-[#0a0f1d]
+                           border border-slate-800
+                           text-slate-200
+                           px-4 py-3
+                           rounded-xl
+                           outline-none
+                           focus:ring-2
+                           focus:ring-emerald-500
+                           focus:border-transparent
+                           transition-all
+                           disabled:opacity-50
+                           disabled:cursor-not-allowed">
+
+                <option value="">
+                    Seleccione primero una categoría...
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- JUGADOR -->
+        <!-- ================================================= -->
+
+        <div>
+
+            <label for="jugadorId"
+                   class="block text-[10px]
+                          font-black text-slate-500
+                          uppercase tracking-widest mb-2">
+
+                Jugador
+
+            </label>
+
+            <select id="jugadorId"
+                    required
+                    disabled
+                    class="w-full
+                           bg-[#0a0f1d]
+                           border border-slate-800
+                           text-slate-200
+                           px-4 py-3
+                           rounded-xl
+                           outline-none
+                           focus:ring-2
+                           focus:ring-emerald-500
+                           focus:border-transparent
+                           transition-all
+                           disabled:opacity-50
+                           disabled:cursor-not-allowed">
+
+                <option value="">
+                    Seleccione primero una categoría...
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- RENDIMIENTO -->
+<!-- ========================================================= -->
+
+<div class="bg-[#0f172a]
+            border border-slate-800
+            rounded-[2.5rem] p-8">
+
+    <div class="flex items-center gap-3 mb-8">
+
+        <div class="w-10 h-10 rounded-xl
+                    bg-emerald-500/10
+                    flex items-center justify-center
+                    text-emerald-500">
+
+            <i class="fa-solid fa-chart-simple"></i>
+
+        </div>
+
+        <div>
+
+            <h3 class="font-black text-white
+                       uppercase italic">
+
+                Rendimiento
+
+            </h3>
+
+            <p class="text-[10px] text-slate-600
+                      font-bold uppercase
+                      tracking-widest">
+
+                Datos estadísticos del partido
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+
+
+        <!-- MINUTOS -->
+
+        <div>
+
+            <label for="minutos"
+                   class="block text-[10px]
+                          font-black text-slate-500
+                          uppercase tracking-widest mb-2">
+
+                Minutos
+
+            </label>
+
+            <input type="number"
+                   id="minutos"
+                   min="0"
+                   value="0"
+                   required
+                   class="w-full
+                          bg-[#0a0f1d]
+                          border border-slate-800
+                          text-slate-200
+                          px-4 py-3
+                          rounded-xl
+                          outline-none
+                          focus:ring-2
+                          focus:ring-emerald-500
+                          focus:border-transparent
+                          transition-all">
+
+        </div>
+
+
+        <!-- GOLES -->
+
+        <div>
+
+            <label for="goles"
+                   class="block text-[10px]
+                          font-black text-slate-500
+                          uppercase tracking-widest mb-2">
+
+                Goles
+
+            </label>
+
+            <input type="number"
+                   id="goles"
+                   min="0"
+                   value="0"
+                   required
+                   class="w-full
+                          bg-[#0a0f1d]
+                          border border-slate-800
+                          text-slate-200
+                          px-4 py-3
+                          rounded-xl
+                          outline-none
+                          focus:ring-2
+                          focus:ring-emerald-500
+                          focus:border-transparent
+                          transition-all">
+
+        </div>
+
+
+        <!-- ASISTENCIAS -->
+
+        <div>
+
+            <label for="asistencias"
+                   class="block text-[10px]
+                          font-black text-slate-500
+                          uppercase tracking-widest mb-2">
+
+                Asistencias
+
+            </label>
+
+            <input type="number"
+                   id="asistencias"
+                   min="0"
+                   value="0"
+                   required
+                   class="w-full
+                          bg-[#0a0f1d]
+                          border border-slate-800
+                          text-slate-200
+                          px-4 py-3
+                          rounded-xl
+                          outline-none
+                          focus:ring-2
+                          focus:ring-emerald-500
+                          focus:border-transparent
+                          transition-all">
+
+        </div>
+
+
+        <!-- ROJAS -->
+
+        <div>
+
+            <label for="rojas"
+                   class="block text-[10px]
+                          font-black text-slate-500
+                          uppercase tracking-widest mb-2">
+
+                Tarjetas rojas
+
+            </label>
+
+            <input type="number"
+                   id="rojas"
+                   min="0"
+                   value="0"
+                   required
+                   class="w-full
+                          bg-[#0a0f1d]
+                          border border-slate-800
+                          text-slate-200
+                          px-4 py-3
+                          rounded-xl
+                          outline-none
+                          focus:ring-2
+                          focus:ring-emerald-500
+                          focus:border-transparent
+                          transition-all">
+
+        </div>
+
+
+        <!-- AMARILLAS -->
+
+        <div>
+
+            <label for="amarillas"
+                   class="block text-[10px]
+                          font-black text-slate-500
+                          uppercase tracking-widest mb-2">
+
+                Tarjetas amarillas
+
+            </label>
+
+            <input type="number"
+                   id="amarillas"
+                   min="0"
+                   value="0"
+                   required
+                   class="w-full
+                          bg-[#0a0f1d]
+                          border border-slate-800
+                          text-slate-200
+                          px-4 py-3
+                          rounded-xl
+                          outline-none
+                          focus:ring-2
+                          focus:ring-emerald-500
+                          focus:border-transparent
+                          transition-all">
+
+        </div>
+
+
+        <!-- TITULAR -->
+
+        <div class="flex items-center">
+
+            <label class="flex items-center gap-3 cursor-pointer">
+
+                <input type="checkbox"
+                       id="titular"
+                       class="w-5 h-5 rounded
+                              border-slate-600
+                              bg-[#0a0f1d]
+                              text-emerald-500
+                              focus:ring-emerald-500">
+
+                <span class="text-slate-300 font-medium">
+
+                    Fue titular
+
+                </span>
+
+            </label>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- BOTONES -->
+<!-- ========================================================= -->
+
+<div class="flex justify-end gap-3">
+
+    <a th:href="@{/estadisticas}"
+       class="px-6 py-3 rounded-xl
+              border border-slate-800
+              bg-[#0f172a]
+              text-slate-400
+              hover:text-white
+              hover:border-slate-700
+              font-bold transition-all">
+
+        Cancelar
+
+    </a>
+
+
+    <button type="submit"
+            id="submitButton"
+            class="px-8 py-3 rounded-xl
+                   bg-emerald-500
+                   hover:bg-emerald-400
+                   text-slate-900
+                   font-black uppercase
+                   text-xs tracking-widest
+                   shadow-lg
+                   shadow-emerald-500/20
+                   transition-all">
+
+        <i class="fa-solid fa-floppy-disk mr-2"></i>
+
+        Guardar estadística
+
+    </button>
+
+</div>
+```
+
+</form>
+
+<!-- ========================================================= -->
+
+<!-- JAVASCRIPT -->
+
+<!-- ========================================================= -->
+
+<script>
+
+
+    // =========================================================
+    // VARIABLES
+    // =========================================================
+
+    let partidosDisponibles = [];
+
+    let jugadoresDisponibles = [];
+
+
+    // =========================================================
+    // OBTENER JWT
+    // =========================================================
+
+    function getJwt() {
+
+        const cookie =
+            document.cookie
+                .split('; ')
+                .find(row =>
+                    row.startsWith('token=')
+                );
+
+        return cookie
+            ? cookie.substring(6)
+            : null;
+    }
+
+
+    // =========================================================
+    // NORMALIZAR RESPUESTA
+    // =========================================================
+
+    function obtenerArray(data) {
+
+        if (Array.isArray(data)) {
+
+            return data;
+
+        }
+
+        if (
+            data &&
+            Array.isArray(data.content)
+        ) {
+
+            return data.content;
+
+        }
+
+        if (
+            data &&
+            typeof data === 'object'
+        ) {
+
+            return [data];
+
+        }
+
+        return [];
+
+    }
+
+
+    // =========================================================
+    // CARGAR CATEGORÍAS
+    // =========================================================
+
+    async function cargarCategorias() {
+
+        const select =
+            document.getElementById('categoriaId');
+
+        const token =
+            getJwt();
+
+
+        if (!token) {
+
+            alert("Sesión expirada.");
+
+            window.location.href =
+                "/login";
+
+            return false;
+        }
+
+
+        try {
+
+            const res =
+                await fetch(
+                    '/api/categorias',
+                    {
+
+                        method: 'GET',
+
+                        headers: {
+
+                            'Authorization':
+                                'Bearer ' + token,
+
+                            'Accept':
+                                'application/json'
+
+                        }
+
+                    }
+                );
+
+
+            if (!res.ok) {
+
+                if (
+                    res.status === 401 ||
+                    res.status === 403
+                ) {
+
+                    throw new Error(
+                        "No tenés permisos para consultar las categorías."
+                    );
+
+                }
+
+                throw new Error(
+                    "No se pudieron cargar las categorías."
+                );
+
+            }
+
+
+            const data =
+                await res.json();
+
+
+            console.log(
+                "Respuesta /api/categorias:",
+                data
+            );
+
+
+            const categorias =
+                obtenerArray(data);
+
+
+            select.innerHTML = `
+
+                <option value="">
+                    Seleccione una categoría...
+                </option>
+
+            `;
+
+
+            if (categorias.length === 0) {
+
+                select.innerHTML = `
+
+                    <option value="">
+                        No hay categorías registradas
+                    </option>
+
+                `;
+
+                return false;
+            }
+
+
+            categorias.forEach(categoria => {
+
+                if (!categoria.id) {
+                    return;
+                }
+
+
+                const option =
+                    document.createElement('option');
+
+
+                option.value =
+                    categoria.id;
+
+
+                const nombre =
+                    categoria.nombre ??
+                    categoria.descripcion ??
+                    `Categoría #${categoria.id}`;
+
+
+                option.textContent =
+                    nombre;
+
+
+                select.appendChild(option);
+
+            });
+
+
+            return true;
+
+
+        } catch (error) {
+
+            console.error(
+                "Error cargando categorías:",
+                error
+            );
+
+
+            select.innerHTML = `
+
+                <option value="">
+                    Error al cargar categorías
+                </option>
+
+            `;
+
+
+            alert(
+                error.message ||
+                "No se pudieron cargar las categorías."
+            );
+
+
+            return false;
+
+        }
+
+    }
+
+
+    // =========================================================
+    // CARGAR TODOS LOS PARTIDOS
+    // =========================================================
+
+    async function cargarPartidos() {
+
+        const token =
+            getJwt();
+
+
+        if (!token) {
+
+            alert("Sesión expirada.");
+
+            window.location.href =
+                "/login";
+
+            return false;
+        }
+
+
+        try {
+
+            const res =
+                await fetch(
+                    '/api/partidos',
+                    {
+
+                        method: 'GET',
+
+                        headers: {
+
+                            'Authorization':
+                                'Bearer ' + token,
+
+                            'Accept':
+                                'application/json'
+
+                        }
+
+                    }
+                );
+
+
+            if (!res.ok) {
+
+                if (
+                    res.status === 401 ||
+                    res.status === 403
+                ) {
+
+                    throw new Error(
+                        "No tenés permisos para consultar los partidos."
+                    );
+
+                }
+
+                throw new Error(
+                    "No se pudieron cargar los partidos."
+                );
+
+            }
+
+
+            const data =
+                await res.json();
+
+
+            console.log(
+                "Respuesta /api/partidos:",
+                data
+            );
+
+
+            partidosDisponibles =
+                obtenerArray(data);
+
+
+            return true;
+
+
+        } catch (error) {
+
+            console.error(
+                "Error cargando partidos:",
+                error
+            );
+
+
+            alert(
+                error.message ||
+                "No se pudieron cargar los partidos."
+            );
+
+
+            return false;
+
+        }
+
+    }
+
+
+    // =========================================================
+    // CARGAR TODOS LOS JUGADORES
+    // =========================================================
+
+    async function cargarJugadores() {
+
+        const token =
+            getJwt();
+
+
+        if (!token) {
+
+            alert("Sesión expirada.");
+
+            window.location.href =
+                "/login";
+
+            return false;
+        }
+
+
+        try {
+
+            const res =
+                await fetch(
+                    '/api/jugadores',
+                    {
+
+                        method: 'GET',
+
+                        headers: {
+
+                            'Authorization':
+                                'Bearer ' + token,
+
+                            'Accept':
+                                'application/json'
+
+                        }
+
+                    }
+                );
+
+
+            if (!res.ok) {
+
+                if (
+                    res.status === 401 ||
+                    res.status === 403
+                ) {
+
+                    throw new Error(
+                        "No tenés permisos para consultar los jugadores."
+                    );
+
+                }
+
+                throw new Error(
+                    "No se pudieron cargar los jugadores."
+                );
+
+            }
+
+
+            const data =
+                await res.json();
+
+
+            console.log(
+                "Respuesta /api/jugadores:",
+                data
+            );
+
+
+            jugadoresDisponibles =
+                obtenerArray(data);
+
+
+            return true;
+
+
+        } catch (error) {
+
+            console.error(
+                "Error cargando jugadores:",
+                error
+            );
+
+
+            alert(
+                error.message ||
+                "No se pudieron cargar los jugadores."
+            );
+
+
+            return false;
+
+        }
+
+    }
+
+
+    // =========================================================
+    // MOSTRAR PARTIDOS DE LA CATEGORÍA
+    // =========================================================
+
+    function mostrarPartidosPorCategoria(categoriaId) {
+
+        const select =
+            document.getElementById('partidoId');
+
+
+        select.innerHTML = `
+
+            <option value="">
+                Seleccione un partido...
+            </option>
+
+        `;
+
+
+        select.disabled = true;
+
+
+        if (!categoriaId) {
+
+            select.innerHTML = `
+
+                <option value="">
+                    Seleccione primero una categoría...
+                </option>
+
+            `;
+
+            return;
+
+        }
+
+
+        const partidosFiltrados =
+            partidosDisponibles.filter(partido =>
+                String(partido.categoriaId) ===
+                String(categoriaId)
+            );
+
+
+        if (partidosFiltrados.length === 0) {
+
+            select.innerHTML = `
+
+                <option value="">
+                    No hay partidos en esta categoría
+                </option>
+
+            `;
+
+            return;
+
+        }
+
+
+        partidosFiltrados.forEach(partido => {
+
+            if (!partido.id) {
+                return;
+            }
+
+
+            const option =
+                document.createElement('option');
+
+
+            option.value =
+                partido.id;
+
+
+            const condicion =
+                partido.local === true
+                    ? "Local"
+                    : "Visitante";
+
+
+            option.textContent =
+                `${partido.fecha || 'Sin fecha'} - `
+                + `${condicion} vs `
+                + `${partido.rival || 'Sin rival'}`;
+
+
+            select.appendChild(option);
+
+        });
+
+
+        select.disabled = false;
+
+    }
+
+
+    // =========================================================
+    // MOSTRAR JUGADORES DE LA CATEGORÍA
+    // =========================================================
+
+    function mostrarJugadoresPorCategoria(categoriaId) {
+
+        const select =
+            document.getElementById('jugadorId');
+
+
+        select.innerHTML = `
+
+            <option value="">
+                Seleccione un jugador...
+            </option>
+
+        `;
+
+
+        select.disabled = true;
+
+
+        if (!categoriaId) {
+
+            select.innerHTML = `
+
+                <option value="">
+                    Seleccione primero una categoría...
+                </option>
+
+            `;
+
+            return;
+
+        }
+
+
+        const jugadoresFiltrados =
+            jugadoresDisponibles.filter(jugador =>
+                String(jugador.categoriaId) ===
+                String(categoriaId)
+            );
+
+
+        if (jugadoresFiltrados.length === 0) {
+
+            select.innerHTML = `
+
+                <option value="">
+                    No hay jugadores en esta categoría
+                </option>
+
+            `;
+
+            return;
+
+        }
+
+
+        jugadoresFiltrados.forEach(jugador => {
+
+            if (!jugador.id) {
+                return;
+            }
+
+
+            const option =
+                document.createElement('option');
+
+
+            option.value =
+                jugador.id;
+
+
+            const nombre =
+                jugador.nombre ??
+                jugador.nombres ??
+                "";
+
+
+            const apellido =
+                jugador.apellido ??
+                jugador.apellidos ??
+                "";
+
+
+            option.textContent =
+                `${nombre} ${apellido}`.trim()
+                || `Jugador #${jugador.id}`;
+
+
+            select.appendChild(option);
+
+        });
+
+
+        select.disabled = false;
+
+    }
+
+
+    // =========================================================
+    // CAMBIO DE CATEGORÍA
+    // =========================================================
+
+    document.getElementById(
+        'categoriaId'
+    ).addEventListener(
+        'change',
+        function () {
+
+            const categoriaId =
+                this.value;
+
+
+            mostrarPartidosPorCategoria(
+                categoriaId
+            );
+
+
+            mostrarJugadoresPorCategoria(
+                categoriaId
+            );
+
+        }
+    );
+
+
+    // =========================================================
+    // CARGAR ESTADÍSTICA PARA EDITAR
+    // =========================================================
+
+    async function cargarDatosEstadistica(id) {
+
+        const token =
+            getJwt();
+
+
+        if (!token) {
+
+            alert("Sesión expirada.");
+
+            window.location.href =
+                "/login";
+
+            return;
+
+        }
+
+
+        try {
+
+            const res =
+                await fetch(
+                    `/api/estadisticas/${id}`,
+                    {
+
+                        method: 'GET',
+
+                        headers: {
+
+                            'Authorization':
+                                'Bearer ' + token,
+
+                            'Accept':
+                                'application/json'
+
+                        }
+
+                    }
+                );
+
+
+            if (!res.ok) {
+
+                if (
+                    res.status === 401 ||
+                    res.status === 403
+                ) {
+
+                    throw new Error(
+                        "No tenés permisos para consultar la estadística."
+                    );
+
+                }
+
+
+                if (res.status === 404) {
+
+                    throw new Error(
+                        "No se encontró la estadística."
+                    );
+
+                }
+
+
+                throw new Error(
+                    "No se pudo cargar la estadística."
+                );
+
+            }
+
+
+            const estadistica =
+                await res.json();
+
+
+            console.log(
+                "Estadística obtenida:",
+                estadistica
+            );
+
+
+            // =================================================
+            // ID
+            // =================================================
+
+            document.getElementById(
+                'estadisticaId'
+            ).value =
+                estadistica.id || id;
+
+
+            // =================================================
+            // BUSCAR PARTIDO
+            // =================================================
+
+            const partido =
+                partidosDisponibles.find(
+                    p =>
+                        String(p.id) ===
+                        String(estadistica.partidoId)
+                );
+
+
+            // =================================================
+            // CATEGORÍA
+            // =================================================
+
+            if (
+                partido &&
+                partido.categoriaId
+            ) {
+
+                const categoriaSelect =
+                    document.getElementById(
+                        'categoriaId'
+                    );
+
+
+                categoriaSelect.value =
+                    String(
+                        partido.categoriaId
+                    );
+
+
+                mostrarPartidosPorCategoria(
+                    partido.categoriaId
+                );
+
+
+                mostrarJugadoresPorCategoria(
+                    partido.categoriaId
+                );
+
+            }
+
+
+            // =================================================
+            // PARTIDO
+            // =================================================
+
+            document.getElementById(
+                'partidoId'
+            ).value =
+                String(
+                    estadistica.partidoId ?? ''
+                );
+
+
+            // =================================================
+            // JUGADOR
+            // =================================================
+
+            document.getElementById(
+                'jugadorId'
+            ).value =
+                String(
+                    estadistica.jugadorId ?? ''
+                );
+
+
+            // =================================================
+            // RENDIMIENTO
+            // =================================================
+
+            document.getElementById(
+                'minutos'
+            ).value =
+                estadistica.minutos ?? 0;
+
+
+            document.getElementById(
+                'goles'
+            ).value =
+                estadistica.goles ?? 0;
+
+
+            document.getElementById(
+                'asistencias'
+            ).value =
+                estadistica.asistencias ?? 0;
+
+
+            document.getElementById(
+                'rojas'
+            ).value =
+                estadistica.rojas ?? 0;
+
+
+            document.getElementById(
+                'amarillas'
+            ).value =
+                estadistica.amarillas ?? 0;
+
+
+            document.getElementById(
+                'titular'
+            ).checked =
+                estadistica.titular === true;
+
+
+            // =================================================
+            // CAMBIAR INTERFAZ
+            // =================================================
+
+            document.getElementById(
+                'formTitle'
+            ).innerText =
+                "Editar Estadística";
+
+
+            document.getElementById(
+                'formDescription'
+            ).innerText =
+                "Modificá el rendimiento de un jugador en un partido.";
+
+
+            document.getElementById(
+                'submitButton'
+            ).innerHTML =
+                '<i class="fa-solid fa-pen-to-square mr-2"></i> Actualizar estadística';
+
+
+        } catch (error) {
+
+            console.error(
+                "Error cargando estadística:",
+                error
+            );
+
+
+            alert(
+                error.message ||
+                "No se pudo cargar la estadística."
+            );
+
+        }
+
+    }
+
+
+    // =========================================================
+    // INICIALIZAR
+    // =========================================================
+
+    document.addEventListener(
+        'DOMContentLoaded',
+        async function () {
+
+            const token =
+                getJwt();
+
+
+            if (!token) {
+
+                alert("Sesión expirada.");
+
+                window.location.href =
+                    "/login";
+
+                return;
+
+            }
+
+
+            // =================================================
+            // DETECTAR SI ES EDICIÓN
+            // =================================================
+
+            const params =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+
+            const id =
+                params.get('id');
+
+
+            // =================================================
+            // CARGAR CATEGORÍAS, PARTIDOS Y JUGADORES
+            // =================================================
+
+            const categoriasCargadas =
+                await cargarCategorias();
+
+
+            if (!categoriasCargadas) {
+                return;
+            }
+
+
+            await Promise.all([
+
+                cargarPartidos(),
+
+                cargarJugadores()
+
+            ]);
+
+
+            // =================================================
+            // SI HAY ID, CARGAR ESTADÍSTICA
+            // =================================================
+
+            if (id) {
+
+                await cargarDatosEstadistica(id);
+
+            }
+
+        }
+    );
+
+
+    // =========================================================
+    // GUARDAR / ACTUALIZAR ESTADÍSTICA
+    // =========================================================
+
+    document.getElementById(
+        'estadisticaForm'
+    ).addEventListener(
+        'submit',
+        async function (e) {
+
+            e.preventDefault();
+
+
+            const token =
+                getJwt();
+
+
+            if (!token) {
+
+                alert("Sesión expirada.");
+
+                window.location.href =
+                    "/login";
+
+                return;
+
+            }
+
+
+            // =================================================
+            // ID
+            // =================================================
+
+            const id =
+                document.getElementById(
+                    'estadisticaId'
+                ).value;
+
+
+            // =================================================
+            // DATOS
+            // =================================================
+
+            const partidoId =
+                document.getElementById(
+                    'partidoId'
+                ).value;
+
+
+            const jugadorId =
+                document.getElementById(
+                    'jugadorId'
+                ).value;
+
+
+            const minutos =
+                document.getElementById(
+                    'minutos'
+                ).value;
+
+
+            const goles =
+                document.getElementById(
+                    'goles'
+                ).value;
+
+
+            const asistencias =
+                document.getElementById(
+                    'asistencias'
+                ).value;
+
+
+            const rojas =
+                document.getElementById(
+                    'rojas'
+                ).value;
+
+
+            const amarillas =
+                document.getElementById(
+                    'amarillas'
+                ).value;
+
+
+            const titular =
+                document.getElementById(
+                    'titular'
+                ).checked;
+
+
+            // =================================================
+            // VALIDACIONES
+            // =================================================
+
+            if (!partidoId) {
+
+                alert(
+                    "Debés seleccionar un partido."
+                );
+
+                return;
+
+            }
+
+
+            if (!jugadorId) {
+
+                alert(
+                    "Debés seleccionar un jugador."
+                );
+
+                return;
+
+            }
+
+
+            // =================================================
+            // OBJETO
+            // =================================================
+
+            const estadisticaData = {
+
+                jugadorId:
+                    Number(jugadorId),
+
+                partidoId:
+                    Number(partidoId),
+
+                minutos:
+                    Number(minutos),
+
+                goles:
+                    Number(goles),
+
+                asistencias:
+                    Number(asistencias),
+
+                rojas:
+                    Number(rojas),
+
+                amarillas:
+                    Number(amarillas),
+
+                titular:
+                    titular
+
+            };
+
+
+            console.log(
+                "Enviando estadística:",
+                estadisticaData
+            );
+
+
+            // =================================================
+            // BOTÓN
+            // =================================================
+
+            const boton =
+                document.getElementById(
+                    'submitButton'
+                );
+
+
+            boton.disabled =
+                true;
+
+
+            boton.innerHTML =
+                '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Guardando...';
+
+
+            try {
+
+                // =================================================
+                // URL Y MÉTODO
+                // =================================================
+
+                const url =
+                    id
+                        ? `/api/estadisticas/${id}`
+                        : '/api/estadisticas';
+
+
+                const method =
+                    id
+                        ? 'PUT'
+                        : 'POST';
+
+
+                console.log(
+                    "Método:",
+                    method
+                );
+
+
+                console.log(
+                    "URL:",
+                    url
+                );
+
+
+                // =================================================
+                // REQUEST
+                // =================================================
+
+                const res =
+                    await fetch(
+                        url,
+                        {
+
+                            method:
+                                method,
+
+                            headers: {
+
+                                'Content-Type':
+                                    'application/json',
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    estadisticaData
+                                )
+
+                        }
+                    );
+
+
+                // =================================================
+                // ERROR
+                // =================================================
+
+                if (!res.ok) {
+
+                    let mensaje =
+                        id
+                            ? "No se pudo actualizar la estadística."
+                            : "No se pudo crear la estadística.";
+
+
+                    try {
+
+                        const errorData =
+                            await res.json();
+
+
+                        if (
+                            errorData.mensaje
+                        ) {
+
+                            mensaje =
+                                errorData.mensaje;
+
+                        } else if (
+                            errorData.message
+                        ) {
+
+                            mensaje =
+                                errorData.message;
+
+                        }
+
+                    } catch (_) {
+
+                        try {
+
+                            const texto =
+                                await res.text();
+
+
+                            if (texto) {
+
+                                console.error(
+                                    "Respuesta del servidor:",
+                                    texto
+                                );
+
+                            }
+
+                        } catch (_) {}
+
+                    }
+
+
+                    throw new Error(
+                        mensaje
+                    );
+
+                }
+
+
+                // =================================================
+                // RESPUESTA
+                // =================================================
+
+                let savedEstadistica =
+                    null;
+
+
+                try {
+
+                    savedEstadistica =
+                        await res.json();
+
+
+                } catch (_) {
+
+                    console.log(
+                        "La respuesta no contiene JSON."
+                    );
+
+                }
+
+
+                console.log(
+                    "Estadística guardada:",
+                    savedEstadistica
+                );
+
+
+                // =================================================
+                // ÉXITO
+                // =================================================
+
+                alert(
+                    id
+                        ? "Estadística actualizada correctamente."
+                        : "Estadística creada correctamente."
+                );
+
+
+                window.location.href =
+                    "/estadisticas";
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error guardando estadística:",
+                    error
+                );
+
+
+                alert(
+                    error.message ||
+                    "Error al guardar la estadística."
+                );
+
+
+                boton.disabled =
+                    false;
+
+
+                boton.innerHTML =
+                    '<i class="fa-solid fa-floppy-disk mr-2"></i> ' +
+                    (
+                        id
+                            ? "Actualizar estadística"
+                            : "Guardar estadística"
+                    );
+
+            }
+
+        }
+    );
+
+</script>
+
+</div>
+
+</body>
+
+</html>

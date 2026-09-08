@@ -1,0 +1,3081 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: mainLayout(~{::#content})}"
+      lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Incidencias</title>
+
+    <link rel="icon" href="data:,">
+
+</head>
+
+<body>
+
+<div id="content" class="max-w-[1200px] mx-auto">
+
+
+    <!-- ========================================================= -->
+    <!-- HEADER -->
+    <!-- ========================================================= -->
+
+    <div class="flex flex-col md:flex-row
+                md:items-center justify-between
+                gap-6 mb-8">
+
+        <div>
+
+            <h1 class="text-4xl font-black text-white
+                       tracking-tight italic uppercase">
+
+                Incidencias
+
+            </h1>
+
+            <p class="text-emerald-500 font-bold mt-1">
+
+                Lesiones, sanciones y ausencias de los jugadores.
+
+            </p>
+
+        </div>
+
+
+        <div>
+
+            <a th:href="@{/incidencias/nuevo}"
+               class="px-6 py-3
+                      rounded-xl
+                      bg-emerald-500
+                      hover:bg-emerald-400
+                      text-slate-900
+                      font-black
+                      uppercase
+                      text-xs
+                      tracking-widest
+                      shadow-lg
+                      shadow-emerald-500/20
+                      transition-all">
+
+                <i class="fa-solid fa-plus mr-2"></i>
+
+                Nueva incidencia
+
+            </a>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- FILTROS -->
+    <!-- ========================================================= -->
+
+    <div class="bg-[#0f172a]
+                border border-slate-800
+                rounded-2xl
+                p-4
+                mb-8">
+
+        <div class="flex flex-col lg:flex-row gap-3">
+
+
+            <!-- BUSCAR JUGADOR -->
+
+            <div class="relative flex-1">
+
+                <i class="fa-solid fa-user
+                          absolute left-4 top-1/2
+                          -translate-y-1/2
+                          text-emerald-500
+                          text-xs">
+                </i>
+
+
+                <input
+                    id="inputJugador"
+                    type="text"
+                    placeholder="Buscar por jugador..."
+                    autocomplete="off"
+                    class="w-full
+                           bg-slate-900
+                           border border-slate-800
+                           text-white
+                           placeholder-slate-600
+                           rounded-xl
+                           pl-11 pr-4
+                           py-3
+                           text-sm
+                           font-medium
+                           outline-none
+                           focus:border-emerald-500
+                           transition-all">
+
+            </div>
+
+
+            <!-- BUSCAR PARTIDO -->
+
+            <div class="relative flex-1">
+
+                <i class="fa-solid fa-futbol
+                          absolute left-4 top-1/2
+                          -translate-y-1/2
+                          text-emerald-500
+                          text-xs">
+                </i>
+
+
+                <input
+                    id="inputPartido"
+                    type="text"
+                    placeholder="Buscar por partido..."
+                    autocomplete="off"
+                    class="w-full
+                           bg-slate-900
+                           border border-slate-800
+                           text-white
+                           placeholder-slate-600
+                           rounded-xl
+                           pl-11 pr-4
+                           py-3
+                           text-sm
+                           font-medium
+                           outline-none
+                           focus:border-emerald-500
+                           transition-all">
+
+            </div>
+
+
+            <!-- TODOS -->
+
+            <button
+                id="btnTodos"
+                type="button"
+                class="bg-emerald-500
+                       hover:bg-emerald-400
+                       text-slate-900
+                       px-6 py-3
+                       rounded-xl
+                       font-black
+                       text-xs
+                       uppercase
+                       tracking-widest
+                       transition-all
+                       whitespace-nowrap">
+
+                Todos
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- TITULO LISTADO -->
+    <!-- ========================================================= -->
+
+    <div class="flex items-center justify-between mb-5">
+
+        <div>
+
+            <h2 id="tituloListado"
+                class="text-lg
+                       font-black
+                       text-white
+                       uppercase
+                       tracking-tight">
+
+                Últimas incidencias
+
+            </h2>
+
+
+            <p id="subtituloListado"
+               class="text-slate-600
+                      text-xs
+                      font-bold
+                      mt-1">
+
+                Mostrando las últimas 3 incidencias registradas.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- TABLA -->
+    <!-- ========================================================= -->
+
+    <div class="bg-[#0f172a]
+                border border-slate-800
+                rounded-[2rem]
+                overflow-hidden">
+
+
+        <div class="overflow-x-auto">
+
+            <table class="w-full">
+
+                <thead class="bg-slate-800/60">
+
+                <tr class="text-left">
+
+
+                    <!-- JUGADOR -->
+
+                    <th class="px-6 py-4
+                               text-[10px]
+                               font-black
+                               text-slate-500
+                               uppercase
+                               tracking-widest">
+
+                        Jugador
+
+                    </th>
+
+
+                    <!-- PARTIDO -->
+
+                    <th class="px-6 py-4
+                               text-[10px]
+                               font-black
+                               text-slate-500
+                               uppercase
+                               tracking-widest">
+
+                        Partido
+
+                    </th>
+
+
+                    <!-- FECHA -->
+
+                    <th class="px-6 py-4
+                               text-[10px]
+                               font-black
+                               text-slate-500
+                               uppercase
+                               tracking-widest">
+
+                        Fecha
+
+                    </th>
+
+
+                    <!-- MOTIVO -->
+
+                    <th class="px-6 py-4
+                               text-[10px]
+                               font-black
+                               text-slate-500
+                               uppercase
+                               tracking-widest">
+
+                        Motivo
+
+                    </th>
+
+
+                    <!-- DÍAS -->
+
+                    <th class="px-6 py-4
+                               text-center
+                               text-[10px]
+                               font-black
+                               text-slate-500
+                               uppercase
+                               tracking-widest">
+
+                        Días
+
+                    </th>
+
+
+                    <!-- ACCIONES -->
+
+                    <th class="px-6 py-4
+                               text-right
+                               text-[10px]
+                               font-black
+                               text-slate-500
+                               uppercase
+                               tracking-widest">
+
+                        Acciones
+
+                    </th>
+
+                </tr>
+
+                </thead>
+
+
+                <tbody id="tablaIncidencias"
+                       class="divide-y divide-slate-800">
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- ===================================================== -->
+        <!-- LOADING -->
+        <!-- ===================================================== -->
+
+        <div id="loading"
+             class="py-20 text-center">
+
+            <div class="inline-block
+                        animate-spin
+                        w-10 h-10
+                        border-4
+                        border-emerald-500
+                        border-t-transparent
+                        rounded-full">
+            </div>
+
+
+            <p class="text-slate-500
+                      mt-4
+                      font-bold
+                      uppercase
+                      tracking-widest
+                      text-xs">
+
+                Cargando incidencias...
+
+            </p>
+
+        </div>
+
+
+        <!-- ===================================================== -->
+        <!-- VACÍO -->
+        <!-- ===================================================== -->
+
+        <div id="estadoVacio"
+             class="hidden
+                    text-center
+                    py-20">
+
+            <div class="w-16 h-16
+                        mx-auto mb-5
+                        rounded-2xl
+                        bg-slate-800
+                        flex items-center
+                        justify-center">
+
+                <i class="fa-solid fa-notes-medical
+                          text-2xl
+                          text-slate-600">
+                </i>
+
+            </div>
+
+
+            <h3 class="text-lg
+                       font-black
+                       text-white">
+
+                No hay incidencias
+
+            </h3>
+
+
+            <p class="text-slate-500 mt-2">
+
+                No se encontraron incidencias con esos filtros.
+
+            </p>
+
+
+            <a th:href="@{/incidencias/nuevo}"
+               class="inline-block
+                      mt-5
+                      px-5 py-3
+                      rounded-xl
+                      bg-emerald-500
+                      text-slate-900
+                      font-bold
+                      hover:bg-emerald-400
+                      transition">
+
+                Crear incidencia
+
+            </a>
+
+        </div>
+
+
+        <!-- ===================================================== -->
+        <!-- ERROR -->
+        <!-- ===================================================== -->
+
+        <div id="estadoError"
+             class="hidden
+                    m-6
+                    p-6
+                    bg-red-500/10
+                    border border-red-500/20
+                    rounded-2xl
+                    text-center">
+
+            <i class="fa-solid fa-circle-exclamation
+                      text-red-500 text-2xl mb-3">
+            </i>
+
+
+            <p id="textoError"
+               class="text-red-400 font-bold">
+
+                Error al cargar las incidencias.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- MODAL EDITAR INCIDENCIA - PUT -->
+    <!-- ========================================================= -->
+
+    <div id="modalEditar"
+         class="hidden fixed inset-0 z-50
+                bg-black/70 backdrop-blur-sm
+                flex items-center justify-center
+                p-4">
+
+        <div class="bg-[#0f172a]
+                    border border-slate-800
+                    rounded-[2rem]
+                    w-full max-w-2xl
+                    max-h-[90vh]
+                    overflow-y-auto
+                    shadow-2xl">
+
+
+            <!-- HEADER MODAL -->
+
+            <div class="flex items-center justify-between
+                        p-6 border-b border-slate-800">
+
+                <div>
+
+                    <h2 class="text-xl
+                               font-black
+                               text-white
+                               uppercase
+                               italic">
+
+                        Editar incidencia
+
+                    </h2>
+
+                    <p class="text-xs
+                              text-slate-500
+                              font-bold
+                              mt-1">
+
+                        Modificá los datos de la incidencia.
+
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    onclick="cerrarModalEditar()"
+                    class="w-10 h-10
+                           rounded-xl
+                           bg-slate-800
+                           text-slate-400
+                           hover:text-white
+                           hover:bg-slate-700
+                           transition-all">
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                </button>
+
+            </div>
+
+
+            <!-- FORM PUT -->
+
+            <form id="editarIncidenciaForm"
+                  class="p-6 space-y-6">
+
+
+                <!-- ID OCULTO -->
+
+                <input
+                    type="hidden"
+                    id="editarId">
+
+
+                <!-- JUGADOR Y PARTIDO -->
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+
+
+                    <!-- JUGADOR -->
+
+                    <div>
+
+                        <label for="editarJugadorId"
+                               class="block
+                                      text-[10px]
+                                      font-black
+                                      text-slate-500
+                                      uppercase
+                                      tracking-widest
+                                      mb-2">
+
+                            Jugador
+
+                        </label>
+
+
+                        <select
+                            id="editarJugadorId"
+                            required
+                            class="w-full
+                                   bg-[#0a0f1d]
+                                   border border-slate-800
+                                   text-slate-200
+                                   px-4 py-3
+                                   rounded-xl
+                                   outline-none
+                                   focus:ring-2
+                                   focus:ring-emerald-500
+                                   focus:border-transparent
+                                   transition-all">
+
+                        </select>
+
+                    </div>
+
+
+                    <!-- PARTIDO -->
+
+                    <div>
+
+                        <label for="editarPartidoId"
+                               class="block
+                                      text-[10px]
+                                      font-black
+                                      text-slate-500
+                                      uppercase
+                                      tracking-widest
+                                      mb-2">
+
+                            Partido
+
+                        </label>
+
+
+                        <select
+                            id="editarPartidoId"
+                            class="w-full
+                                   bg-[#0a0f1d]
+                                   border border-slate-800
+                                   text-slate-200
+                                   px-4 py-3
+                                   rounded-xl
+                                   outline-none
+                                   focus:ring-2
+                                   focus:ring-emerald-500
+                                   focus:border-transparent
+                                   transition-all">
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- FECHA -->
+
+                <div>
+
+                    <label for="editarFecha"
+                           class="block
+                                  text-[10px]
+                                  font-black
+                                  text-slate-500
+                                  uppercase
+                                  tracking-widest
+                                  mb-2">
+
+                        Fecha
+
+                    </label>
+
+
+                    <input
+                        type="date"
+                        id="editarFecha"
+                        required
+                        class="w-full
+                               bg-[#0a0f1d]
+                               border border-slate-800
+                               text-slate-200
+                               px-4 py-3
+                               rounded-xl
+                               outline-none
+                               focus:ring-2
+                               focus:ring-emerald-500
+                               focus:border-transparent
+                               transition-all">
+
+                </div>
+
+
+                <!-- MOTIVO -->
+
+                <div>
+
+                    <label for="editarMotivo"
+                           class="block
+                                  text-[10px]
+                                  font-black
+                                  text-slate-500
+                                  uppercase
+                                  tracking-widest
+                                  mb-2">
+
+                        Motivo
+
+                    </label>
+
+
+                    <input
+                        type="text"
+                        id="editarMotivo"
+                        required
+                        placeholder="Ej: Lesión muscular"
+                        class="w-full
+                               bg-[#0a0f1d]
+                               border border-slate-800
+                               text-slate-200
+                               px-4 py-3
+                               rounded-xl
+                               outline-none
+                               focus:ring-2
+                               focus:ring-emerald-500
+                               focus:border-transparent
+                               transition-all">
+
+                </div>
+
+
+                <!-- DÍAS -->
+
+                <div>
+
+                    <label for="editarCantidadDias"
+                           class="block
+                                  text-[10px]
+                                  font-black
+                                  text-slate-500
+                                  uppercase
+                                  tracking-widest
+                                  mb-2">
+
+                        Cantidad de días
+
+                    </label>
+
+
+                    <input
+                        type="number"
+                        id="editarCantidadDias"
+                        min="0"
+                        required
+                        class="w-full
+                               bg-[#0a0f1d]
+                               border border-slate-800
+                               text-slate-200
+                               px-4 py-3
+                               rounded-xl
+                               outline-none
+                               focus:ring-2
+                               focus:ring-emerald-500
+                               focus:border-transparent
+                               transition-all">
+
+                </div>
+
+
+                <!-- BOTONES -->
+
+                <div class="flex justify-end gap-3 pt-2">
+
+                    <button
+                        type="button"
+                        onclick="cerrarModalEditar()"
+                        class="px-5 py-3
+                               rounded-xl
+                               bg-slate-800
+                               border border-slate-700
+                               text-slate-400
+                               hover:text-white
+                               font-bold
+                               transition-all">
+
+                        Cancelar
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        id="btnGuardarEdicion"
+                        class="px-6 py-3
+                               rounded-xl
+                               bg-emerald-500
+                               hover:bg-emerald-400
+                               text-slate-900
+                               font-black
+                               uppercase
+                               text-xs
+                               tracking-widest
+                               transition-all">
+
+                        <i class="fa-solid fa-floppy-disk mr-2"></i>
+
+                        Guardar cambios
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- MODAL PATCH DÍAS -->
+    <!-- ========================================================= -->
+
+    <div id="modalDias"
+         class="hidden fixed inset-0 z-50
+                bg-black/70 backdrop-blur-sm
+                flex items-center justify-center
+                p-4">
+
+        <div class="bg-[#0f172a]
+                    border border-slate-800
+                    rounded-[2rem]
+                    w-full max-w-md
+                    shadow-2xl">
+
+
+            <!-- HEADER -->
+
+            <div class="flex items-center justify-between
+                        p-6 border-b border-slate-800">
+
+                <div>
+
+                    <h2 class="text-xl
+                               font-black
+                               text-white
+                               uppercase
+                               italic">
+
+                        Actualizar días
+
+                    </h2>
+
+                    <p class="text-xs
+                              text-slate-500
+                              font-bold
+                              mt-1">
+
+                        Modificá solamente la cantidad de días.
+
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    onclick="cerrarModalDias()"
+                    class="w-10 h-10
+                           rounded-xl
+                           bg-slate-800
+                           text-slate-400
+                           hover:text-white
+                           hover:bg-slate-700
+                           transition-all">
+
+                    <i class="fa-solid fa-xmark"></i>
+
+                </button>
+
+            </div>
+
+
+            <!-- FORM PATCH -->
+
+            <form id="diasForm"
+                  class="p-6">
+
+
+                <input
+                    type="hidden"
+                    id="diasIncidenciaId">
+
+
+                <label for="diasPatch"
+                       class="block
+                              text-[10px]
+                              font-black
+                              text-slate-500
+                              uppercase
+                              tracking-widest
+                              mb-2">
+
+                    Cantidad de días
+
+                </label>
+
+
+                <input
+                    type="number"
+                    id="diasPatch"
+                    min="0"
+                    required
+                    class="w-full
+                           bg-[#0a0f1d]
+                           border border-slate-800
+                           text-slate-200
+                           px-4 py-3
+                           rounded-xl
+                           outline-none
+                           focus:ring-2
+                           focus:ring-emerald-500
+                           focus:border-transparent
+                           transition-all">
+
+
+                <div class="flex justify-end gap-3 mt-6">
+
+                    <button
+                        type="button"
+                        onclick="cerrarModalDias()"
+                        class="px-5 py-3
+                               rounded-xl
+                               bg-slate-800
+                               border border-slate-700
+                               text-slate-400
+                               hover:text-white
+                               font-bold
+                               transition-all">
+
+                        Cancelar
+
+                    </button>
+
+
+                    <button
+                        type="submit"
+                        id="btnGuardarDias"
+                        class="px-6 py-3
+                               rounded-xl
+                               bg-emerald-500
+                               hover:bg-emerald-400
+                               text-slate-900
+                               font-black
+                               uppercase
+                               text-xs
+                               tracking-widest
+                               transition-all">
+
+                        <i class="fa-solid fa-rotate mr-2"></i>
+
+                        Actualizar
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ========================================================= -->
+
+    <script>
+
+
+        // =========================================================
+        // VARIABLES
+        // =========================================================
+
+        let jugadores = [];
+
+        let partidos = [];
+
+        let incidencias = [];
+
+
+        // =========================================================
+        // JWT
+        // =========================================================
+
+        function getJwt() {
+
+            const cookie =
+                document.cookie
+                    .split('; ')
+                    .find(row =>
+                        row.startsWith('token=')
+                    );
+
+
+            return cookie
+                ? cookie.substring(6)
+                : null;
+
+        }
+
+
+        // =========================================================
+        // ESCAPAR HTML
+        // =========================================================
+
+        function escapeHtml(str) {
+
+            const div =
+                document.createElement('div');
+
+
+            div.textContent =
+                str ?? '';
+
+
+            return div.innerHTML;
+
+        }
+
+
+        // =========================================================
+        // NORMALIZAR RESPUESTA
+        // =========================================================
+
+        function normalizarLista(data) {
+
+            if (Array.isArray(data)) {
+
+                return data;
+
+            }
+
+
+            if (
+                data &&
+                Array.isArray(data.content)
+            ) {
+
+                return data.content;
+
+            }
+
+
+            if (
+                data &&
+                Array.isArray(data.data)
+            ) {
+
+                return data.data;
+
+            }
+
+
+            if (
+                data &&
+                typeof data === 'object'
+            ) {
+
+                return [data];
+
+            }
+
+
+            return [];
+
+        }
+
+
+        // =========================================================
+        // FORMATEAR FECHA
+        // =========================================================
+
+        function formatearFecha(fecha) {
+
+            if (!fecha) {
+
+                return 'Sin fecha';
+
+            }
+
+
+            const partes =
+                String(fecha).split('-');
+
+
+            if (partes.length !== 3) {
+
+                return fecha;
+
+            }
+
+
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+
+        }
+
+
+        // =========================================================
+        // CARGAR DATOS
+        // =========================================================
+
+        async function cargarDatos() {
+
+            const token =
+                getJwt();
+
+
+            if (!token) {
+
+                window.location.href =
+                    "/login";
+
+                return;
+
+            }
+
+
+            const loading =
+                document.getElementById(
+                    "loading"
+                );
+
+
+            const errorEstado =
+                document.getElementById(
+                    "estadoError"
+                );
+
+
+            errorEstado.classList.add(
+                "hidden"
+            );
+
+
+            loading.classList.remove(
+                "hidden"
+            );
+
+
+            try {
+
+
+                // =================================================
+                // INCIDENCIAS
+                // =================================================
+
+                const incidenciasResponse =
+                    await fetch(
+                        "/api/incidencias",
+                        {
+
+                            method: "GET",
+
+                            headers: {
+
+                                "Authorization":
+                                    "Bearer " + token,
+
+                                "Accept":
+                                    "application/json"
+
+                            }
+
+                        }
+                    );
+
+
+                if (
+                    incidenciasResponse.status === 401 ||
+                    incidenciasResponse.status === 403
+                ) {
+
+                    throw new Error(
+                        "No tenés permisos para consultar las incidencias."
+                    );
+
+                }
+
+
+                if (!incidenciasResponse.ok) {
+
+                    throw new Error(
+                        "Error al obtener las incidencias."
+                    );
+
+                }
+
+
+                const incidenciasData =
+                    await incidenciasResponse.json();
+
+
+                console.log(
+                    "Respuesta /api/incidencias:",
+                    incidenciasData
+                );
+
+
+                incidencias =
+                    normalizarLista(
+                        incidenciasData
+                    );
+
+
+                // =================================================
+                // JUGADORES
+                // =================================================
+
+                const jugadoresResponse =
+                    await fetch(
+                        "/api/jugadores",
+                        {
+
+                            method: "GET",
+
+                            headers: {
+
+                                "Authorization":
+                                    "Bearer " + token,
+
+                                "Accept":
+                                    "application/json"
+
+                            }
+
+                        }
+                    );
+
+
+                if (
+                    jugadoresResponse.status === 401 ||
+                    jugadoresResponse.status === 403
+                ) {
+
+                    throw new Error(
+                        "No tenés permisos para consultar los jugadores."
+                    );
+
+                }
+
+
+                if (jugadoresResponse.ok) {
+
+                    const jugadoresData =
+                        await jugadoresResponse.json();
+
+
+                    console.log(
+                        "Respuesta /api/jugadores:",
+                        jugadoresData
+                    );
+
+
+                    jugadores =
+                        normalizarLista(
+                            jugadoresData
+                        );
+
+                } else {
+
+                    jugadores = [];
+
+                }
+
+
+                // =================================================
+                // PARTIDOS
+                // =================================================
+
+                const partidosResponse =
+                    await fetch(
+                        "/api/partidos",
+                        {
+
+                            method: "GET",
+
+                            headers: {
+
+                                "Authorization":
+                                    "Bearer " + token,
+
+                                "Accept":
+                                    "application/json"
+
+                            }
+
+                        }
+                    );
+
+
+                if (
+                    partidosResponse.status === 401 ||
+                    partidosResponse.status === 403
+                ) {
+
+                    throw new Error(
+                        "No tenés permisos para consultar los partidos."
+                    );
+
+                }
+
+
+                if (partidosResponse.ok) {
+
+                    const partidosData =
+                        await partidosResponse.json();
+
+
+                    console.log(
+                        "Respuesta /api/partidos:",
+                        partidosData
+                    );
+
+
+                    partidos =
+                        normalizarLista(
+                            partidosData
+                        );
+
+                } else {
+
+                    partidos = [];
+
+                }
+
+
+                console.log(
+                    "Incidencias normalizadas:",
+                    incidencias
+                );
+
+
+                console.log(
+                    "Jugadores normalizados:",
+                    jugadores
+                );
+
+
+                console.log(
+                    "Partidos normalizados:",
+                    partidos
+                );
+
+
+                mostrarIncidencias();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error cargando incidencias:",
+                    error
+                );
+
+
+                loading.classList.add(
+                    "hidden"
+                );
+
+
+                errorEstado.classList.remove(
+                    "hidden"
+                );
+
+
+                document.getElementById(
+                    "textoError"
+                ).textContent =
+                    error.message ||
+                    "No se pudieron cargar las incidencias.";
+
+            }
+
+        }
+
+
+        // =========================================================
+        // OBTENER JUGADOR
+        // =========================================================
+
+        function obtenerJugador(id) {
+
+            return jugadores.find(
+                jugador =>
+                    Number(jugador.id) ===
+                    Number(id)
+            );
+
+        }
+
+
+        // =========================================================
+        // NOMBRE JUGADOR
+        // =========================================================
+
+        function nombreJugador(id) {
+
+            const jugador =
+                obtenerJugador(id);
+
+
+            if (!jugador) {
+
+                return `Jugador #${id}`;
+
+            }
+
+
+            const nombre =
+                jugador.nombre ??
+                jugador.nombres ??
+                "";
+
+
+            const apellido =
+                jugador.apellido ??
+                jugador.apellidos ??
+                "";
+
+
+            const completo =
+                `${nombre} ${apellido}`.trim();
+
+
+            return completo ||
+                   `Jugador #${id}`;
+
+        }
+
+
+        // =========================================================
+        // OBTENER PARTIDO
+        // =========================================================
+
+        function obtenerPartido(id) {
+
+            return partidos.find(
+                partido =>
+                    Number(partido.id) ===
+                    Number(id)
+            );
+
+        }
+
+
+        // =========================================================
+        // DESCRIPCIÓN PARTIDO
+        // =========================================================
+
+        function descripcionPartido(id) {
+
+            if (!id) {
+
+                return "Sin partido";
+
+            }
+
+
+            const partido =
+                obtenerPartido(id);
+
+
+            if (!partido) {
+
+                return `Partido #${id}`;
+
+            }
+
+
+            const esLocal =
+                partido.local === true ||
+                partido.local === "true";
+
+
+            const condicion =
+                esLocal
+                    ? "Local"
+                    : "Visitante";
+
+
+            const fecha =
+                formatearFecha(
+                    partido.fecha
+                );
+
+
+            const rival =
+                partido.rival ||
+                "Rival";
+
+
+            return `${fecha} · ${condicion} vs ${rival}`;
+
+        }
+
+
+        // =========================================================
+        // TEXTO BUSCABLE JUGADOR
+        // =========================================================
+
+        function textoJugador(id) {
+
+            const jugador =
+                obtenerJugador(id);
+
+
+            if (!jugador) {
+
+                return `jugador ${id}`
+                    .toLowerCase();
+
+            }
+
+
+            const nombre =
+                jugador.nombre ??
+                jugador.nombres ??
+                "";
+
+
+            const apellido =
+                jugador.apellido ??
+                jugador.apellidos ??
+                "";
+
+
+            return `${nombre} ${apellido} ${id}`
+                .toLowerCase();
+
+        }
+
+
+        // =========================================================
+        // TEXTO BUSCABLE PARTIDO
+        // =========================================================
+
+        function textoPartido(id) {
+
+            if (!id) {
+
+                return "sin partido";
+
+            }
+
+
+            const partido =
+                obtenerPartido(id);
+
+
+            if (!partido) {
+
+                return `partido ${id}`
+                    .toLowerCase();
+
+            }
+
+
+            const rival =
+                partido.rival || "";
+
+
+            const jornada =
+                partido.jornada || "";
+
+
+            const fecha =
+                partido.fecha || "";
+
+
+            const descripcion =
+                descripcionPartido(id);
+
+
+            return `
+
+                ${rival}
+
+                ${jornada}
+
+                ${fecha}
+
+                ${descripcion}
+
+                ${id}
+
+            `.toLowerCase();
+
+        }
+
+
+        // =========================================================
+        // MOSTRAR INCIDENCIAS
+        // =========================================================
+
+        function mostrarIncidencias() {
+
+            const tabla =
+                document.getElementById(
+                    "tablaIncidencias"
+                );
+
+
+            const loading =
+                document.getElementById(
+                    "loading"
+                );
+
+
+            const vacio =
+                document.getElementById(
+                    "estadoVacio"
+                );
+
+
+            const inputJugador =
+                document.getElementById(
+                    "inputJugador"
+                );
+
+
+            const inputPartido =
+                document.getElementById(
+                    "inputPartido"
+                );
+
+
+            loading.classList.add(
+                "hidden"
+            );
+
+
+            tabla.innerHTML =
+                "";
+
+
+            const textoJugadorFiltro =
+                inputJugador.value
+                    .trim()
+                    .toLowerCase();
+
+
+            const textoPartidoFiltro =
+                inputPartido.value
+                    .trim()
+                    .toLowerCase();
+
+
+            const hayBusqueda =
+                textoJugadorFiltro !== "" ||
+                textoPartidoFiltro !== "";
+
+
+            let filtradas =
+                [...incidencias];
+
+
+            // =====================================================
+            // FILTRO JUGADOR
+            // =====================================================
+
+            if (textoJugadorFiltro !== "") {
+
+                filtradas =
+                    filtradas.filter(
+                        incidencia =>
+
+                            textoJugador(
+                                incidencia.jugadorId
+                            ).includes(
+                                textoJugadorFiltro
+                            )
+
+                    );
+
+            }
+
+
+            // =====================================================
+            // FILTRO PARTIDO
+            // =====================================================
+
+            if (textoPartidoFiltro !== "") {
+
+                filtradas =
+                    filtradas.filter(
+                        incidencia =>
+
+                            textoPartido(
+                                incidencia.partidoId
+                            ).includes(
+                                textoPartidoFiltro
+                            )
+
+                    );
+
+            }
+
+
+            // =====================================================
+            // ORDENAR POR FECHA
+            // =====================================================
+
+            filtradas.sort(
+                (a, b) => {
+
+                    const fechaA =
+                        a.fecha
+                            ? new Date(
+                                a.fecha +
+                                "T00:00:00"
+                              ).getTime()
+                            : 0;
+
+
+                    const fechaB =
+                        b.fecha
+                            ? new Date(
+                                b.fecha +
+                                "T00:00:00"
+                              ).getTime()
+                            : 0;
+
+
+                    if (
+                        fechaB !== fechaA
+                    ) {
+
+                        return fechaB - fechaA;
+
+                    }
+
+
+                    return Number(
+                        b.id || 0
+                    ) -
+                    Number(
+                        a.id || 0
+                    );
+
+                }
+            );
+
+
+            // =====================================================
+            // SIN BÚSQUEDA → ÚLTIMAS 3
+            // =====================================================
+
+            if (!hayBusqueda) {
+
+                filtradas =
+                    filtradas.slice(
+                        0,
+                        3
+                    );
+
+
+                document.getElementById(
+                    "tituloListado"
+                ).textContent =
+                    "Últimas incidencias";
+
+
+                document.getElementById(
+                    "subtituloListado"
+                ).textContent =
+                    "Mostrando las últimas 3 incidencias registradas.";
+
+            }
+
+
+            // =====================================================
+            // CON BÚSQUEDA → TODAS
+            // =====================================================
+
+            else {
+
+                document.getElementById(
+                    "tituloListado"
+                ).textContent =
+                    "Resultados de búsqueda";
+
+
+                document.getElementById(
+                    "subtituloListado"
+                ).textContent =
+                    `${filtradas.length} incidencia${filtradas.length === 1 ? "" : "s"} encontrada${filtradas.length === 1 ? "" : "s"}.`;
+
+            }
+
+
+            // =====================================================
+            // SIN RESULTADOS
+            // =====================================================
+
+            if (
+                filtradas.length === 0
+            ) {
+
+                vacio.classList.remove(
+                    "hidden"
+                );
+
+
+                const titulo =
+                    document.querySelector(
+                        "#estadoVacio h3"
+                    );
+
+
+                const descripcion =
+                    document.querySelector(
+                        "#estadoVacio p"
+                    );
+
+
+                if (hayBusqueda) {
+
+                    titulo.textContent =
+                        "No se encontraron resultados";
+
+
+                    descripcion.textContent =
+                        "Probá con otro jugador o partido.";
+
+                } else {
+
+                    titulo.textContent =
+                        "No hay incidencias";
+
+
+                    descripcion.textContent =
+                        "Todavía no se cargaron incidencias.";
+
+                }
+
+
+                return;
+
+            }
+
+
+            vacio.classList.add(
+                "hidden"
+            );
+
+
+            // =====================================================
+            // CREAR FILAS
+            // =====================================================
+
+            filtradas.forEach(
+                incidencia => {
+
+                    const fila =
+                        document.createElement(
+                            "tr"
+                        );
+
+
+                    fila.className =
+                        "hover:bg-slate-800/40 transition";
+
+
+                    fila.innerHTML = `
+
+                        <!-- JUGADOR -->
+
+                        <td class="px-6 py-5">
+
+                            <div class="flex items-center gap-3">
+
+                                <div class="w-10 h-10
+                                            rounded-xl
+                                            bg-emerald-500/10
+                                            flex items-center
+                                            justify-center
+                                            text-emerald-500">
+
+                                    <i class="fa-solid fa-user"></i>
+
+                                </div>
+
+
+                                <div>
+
+                                    <p class="font-black text-white">
+
+                                        ${escapeHtml(
+                                            nombreJugador(
+                                                incidencia.jugadorId
+                                            )
+                                        )}
+
+                                    </p>
+
+
+                                    <p class="text-[10px]
+                                              text-slate-600
+                                              font-bold">
+
+                                        ID #${escapeHtml(
+                                            incidencia.jugadorId
+                                        )}
+
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </td>
+
+
+                        <!-- PARTIDO -->
+
+                        <td class="px-6 py-5">
+
+                            <span class="text-sm
+                                         font-bold
+                                         text-slate-300">
+
+                                ${escapeHtml(
+                                    descripcionPartido(
+                                        incidencia.partidoId
+                                    )
+                                )}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- FECHA -->
+
+                        <td class="px-6 py-5">
+
+                            <span class="text-sm
+                                         font-bold
+                                         text-slate-300">
+
+                                ${escapeHtml(
+                                    formatearFecha(
+                                        incidencia.fecha
+                                    )
+                                )}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- MOTIVO -->
+
+                        <td class="px-6 py-5">
+
+                            <span class="inline-flex
+                                         px-3 py-1
+                                         rounded-full
+                                         text-[10px]
+                                         font-black
+                                         uppercase
+                                         bg-red-500/10
+                                         text-red-400">
+
+                                ${escapeHtml(
+                                    incidencia.motivo ||
+                                    "Sin motivo"
+                                )}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- DÍAS -->
+
+                        <td class="px-6 py-5
+                                   text-center">
+
+                            <span class="inline-flex
+                                         items-center
+                                         justify-center
+                                         min-w-10
+                                         px-3 py-1
+                                         rounded-full
+                                         bg-emerald-500/10
+                                         text-emerald-400
+                                         font-black">
+
+                                ${incidencia.cantidadDias ?? 0}
+
+                            </span>
+
+                        </td>
+
+
+                        <!-- ACCIONES -->
+
+                        <td class="px-6 py-5 text-right">
+
+                            <div class="flex
+                                        justify-end
+                                        gap-2">
+
+
+                                <!-- EDITAR PUT -->
+
+                                <button
+                                    type="button"
+                                    onclick="abrirModalEditar(${incidencia.id})"
+                                    title="Editar incidencia"
+                                    class="w-10 h-10
+                                           rounded-xl
+                                           bg-slate-800
+                                           text-slate-400
+                                           hover:bg-emerald-500/10
+                                           hover:text-emerald-500
+                                           transition-all">
+
+                                    <i class="fa-solid fa-pen"></i>
+
+                                </button>
+
+
+                                <!-- PATCH DÍAS -->
+
+                                <button
+                                    type="button"
+                                    onclick="abrirModalDias(${incidencia.id})"
+                                    title="Modificar días"
+                                    class="w-10 h-10
+                                           rounded-xl
+                                           bg-slate-800
+                                           text-slate-400
+                                           hover:bg-blue-500/10
+                                           hover:text-blue-400
+                                           transition-all">
+
+                                    <i class="fa-solid fa-calendar-days"></i>
+
+                                </button>
+
+
+                                <!-- ELIMINAR -->
+
+                                <button
+                                    type="button"
+                                    onclick="eliminarIncidencia(${incidencia.id ?? 0})"
+                                    title="Eliminar incidencia"
+                                    class="w-10 h-10
+                                           rounded-xl
+                                           bg-slate-800
+                                           text-slate-400
+                                           hover:bg-red-500/10
+                                           hover:text-red-500
+                                           transition-all">
+
+                                    <i class="fa-solid fa-trash-can"></i>
+
+                                </button>
+
+                            </div>
+
+                        </td>
+
+                    `;
+
+
+                    tabla.appendChild(
+                        fila
+                    );
+
+                }
+            );
+
+        }
+
+
+        // =========================================================
+        // CARGAR SELECT DE JUGADORES
+        // =========================================================
+
+        function cargarSelectJugadores(
+            jugadorSeleccionado
+        ) {
+
+            const select =
+                document.getElementById(
+                    "editarJugadorId"
+                );
+
+
+            select.innerHTML = `
+
+                <option value="">
+                    Seleccione un jugador...
+                </option>
+
+            `;
+
+
+            jugadores.forEach(
+                jugador => {
+
+                    if (!jugador.id) {
+
+                        return;
+
+                    }
+
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+
+                    option.value =
+                        jugador.id;
+
+
+                    const nombre =
+                        jugador.nombre ??
+                        jugador.nombres ??
+                        "";
+
+
+                    const apellido =
+                        jugador.apellido ??
+                        jugador.apellidos ??
+                        "";
+
+
+                    option.textContent =
+                        `${nombre} ${apellido}`.trim()
+                        || `Jugador #${jugador.id}`;
+
+
+                    if (
+                        Number(jugador.id) ===
+                        Number(jugadorSeleccionado)
+                    ) {
+
+                        option.selected =
+                            true;
+
+                    }
+
+
+                    select.appendChild(
+                        option
+                    );
+
+                }
+            );
+
+        }
+
+
+        // =========================================================
+        // CARGAR SELECT DE PARTIDOS
+        // =========================================================
+
+        function cargarSelectPartidos(
+            partidoSeleccionado
+        ) {
+
+            const select =
+                document.getElementById(
+                    "editarPartidoId"
+                );
+
+
+            select.innerHTML = `
+
+                <option value="">
+                    Sin partido
+                </option>
+
+            `;
+
+
+            partidos.forEach(
+                partido => {
+
+                    if (!partido.id) {
+
+                        return;
+
+                    }
+
+
+                    const option =
+                        document.createElement(
+                            "option"
+                        );
+
+
+                    option.value =
+                        partido.id;
+
+
+                    option.textContent =
+                        descripcionPartido(
+                            partido.id
+                        );
+
+
+                    if (
+                        Number(partido.id) ===
+                        Number(partidoSeleccionado)
+                    ) {
+
+                        option.selected =
+                            true;
+
+                    }
+
+
+                    select.appendChild(
+                        option
+                    );
+
+                }
+            );
+
+        }
+
+
+        // =========================================================
+        // ABRIR MODAL EDITAR - PUT
+        // =========================================================
+
+        function abrirModalEditar(id) {
+
+            const incidencia =
+                incidencias.find(
+                    item =>
+                        Number(item.id) ===
+                        Number(id)
+                );
+
+
+            if (!incidencia) {
+
+                alert(
+                    "No se pudo encontrar la incidencia."
+                );
+
+                return;
+
+            }
+
+
+            document.getElementById(
+                "editarId"
+            ).value =
+                incidencia.id;
+
+
+            cargarSelectJugadores(
+                incidencia.jugadorId
+            );
+
+
+            cargarSelectPartidos(
+                incidencia.partidoId
+            );
+
+
+            document.getElementById(
+                "editarFecha"
+            ).value =
+                incidencia.fecha || "";
+
+
+            document.getElementById(
+                "editarMotivo"
+            ).value =
+                incidencia.motivo || "";
+
+
+            document.getElementById(
+                "editarCantidadDias"
+            ).value =
+                incidencia.cantidadDias ?? 0;
+
+
+            document.getElementById(
+                "modalEditar"
+            ).classList.remove(
+                "hidden"
+            );
+
+        }
+
+
+        // =========================================================
+        // CERRAR MODAL EDITAR
+        // =========================================================
+
+        function cerrarModalEditar() {
+
+            document.getElementById(
+                "modalEditar"
+            ).classList.add(
+                "hidden"
+            );
+
+        }
+
+
+        // =========================================================
+        // ABRIR MODAL PATCH
+        // =========================================================
+
+        function abrirModalDias(id) {
+
+            const incidencia =
+                incidencias.find(
+                    item =>
+                        Number(item.id) ===
+                        Number(id)
+                );
+
+
+            if (!incidencia) {
+
+                alert(
+                    "No se pudo encontrar la incidencia."
+                );
+
+                return;
+
+            }
+
+
+            document.getElementById(
+                "diasIncidenciaId"
+            ).value =
+                incidencia.id;
+
+
+            document.getElementById(
+                "diasPatch"
+            ).value =
+                incidencia.cantidadDias ?? 0;
+
+
+            document.getElementById(
+                "modalDias"
+            ).classList.remove(
+                "hidden"
+            );
+
+        }
+
+
+        // =========================================================
+        // CERRAR MODAL PATCH
+        // =========================================================
+
+        function cerrarModalDias() {
+
+            document.getElementById(
+                "modalDias"
+            ).classList.add(
+                "hidden"
+            );
+
+        }
+
+
+        // =========================================================
+        // PUT - ACTUALIZAR INCIDENCIA COMPLETA
+        // =========================================================
+
+        document.getElementById(
+            "editarIncidenciaForm"
+        ).addEventListener(
+            "submit",
+            async function (e) {
+
+                e.preventDefault();
+
+
+                const token =
+                    getJwt();
+
+
+                if (!token) {
+
+                    alert(
+                        "Sesión expirada."
+                    );
+
+
+                    window.location.href =
+                        "/login";
+
+
+                    return;
+
+                }
+
+
+                const id =
+                    document.getElementById(
+                        "editarId"
+                    ).value;
+
+
+                const jugadorId =
+                    document.getElementById(
+                        "editarJugadorId"
+                    ).value;
+
+
+                const partidoId =
+                    document.getElementById(
+                        "editarPartidoId"
+                    ).value;
+
+
+                const fecha =
+                    document.getElementById(
+                        "editarFecha"
+                    ).value;
+
+
+                const motivo =
+                    document.getElementById(
+                        "editarMotivo"
+                    ).value
+                    .trim();
+
+
+                const cantidadDias =
+                    document.getElementById(
+                        "editarCantidadDias"
+                    ).value;
+
+
+                if (!jugadorId) {
+
+                    alert(
+                        "Debés seleccionar un jugador."
+                    );
+
+                    return;
+
+                }
+
+
+                if (!fecha) {
+
+                    alert(
+                        "Debés seleccionar una fecha."
+                    );
+
+                    return;
+
+                }
+
+
+                if (!motivo) {
+
+                    alert(
+                        "Debés ingresar un motivo."
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    cantidadDias === "" ||
+                    Number(cantidadDias) < 0
+                ) {
+
+                    alert(
+                        "La cantidad de días no puede ser negativa."
+                    );
+
+                    return;
+
+                }
+
+
+                const incidenciaData = {
+
+                    jugadorId:
+                        Number(jugadorId),
+
+                    partidoId:
+                        partidoId
+                            ? Number(partidoId)
+                            : null,
+
+                    fecha:
+                        fecha,
+
+                    motivo:
+                        motivo,
+
+                    cantidadDias:
+                        Number(cantidadDias)
+
+                };
+
+
+                console.log(
+                    "Enviando PUT:",
+                    incidenciaData
+                );
+
+
+                const boton =
+                    document.getElementById(
+                        "btnGuardarEdicion"
+                    );
+
+
+                boton.disabled =
+                    true;
+
+
+                boton.innerHTML =
+                    '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Guardando...';
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            `/api/incidencias/${id}`,
+                            {
+
+                                method: "PUT",
+
+                                headers: {
+
+                                    "Content-Type":
+                                        "application/json",
+
+                                    "Authorization":
+                                        "Bearer " + token,
+
+                                    "Accept":
+                                        "application/json"
+
+                                },
+
+                                body:
+                                    JSON.stringify(
+                                        incidenciaData
+                                    )
+
+                            }
+                        );
+
+
+                    if (!response.ok) {
+
+                        let mensaje =
+                            "No se pudo actualizar la incidencia.";
+
+
+                        try {
+
+                            const errorData =
+                                await response.json();
+
+
+                            if (
+                                errorData.mensaje
+                            ) {
+
+                                mensaje =
+                                    errorData.mensaje;
+
+                            } else if (
+                                errorData.message
+                            ) {
+
+                                mensaje =
+                                    errorData.message;
+
+                            }
+
+                        } catch (_) {}
+
+
+                        throw new Error(
+                            mensaje
+                        );
+
+                    }
+
+
+                    await response.json();
+
+
+                    alert(
+                        "Incidencia actualizada correctamente."
+                    );
+
+
+                    cerrarModalEditar();
+
+
+                    await cargarDatos();
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Error actualizando incidencia:",
+                        error
+                    );
+
+
+                    alert(
+                        error.message ||
+                        "No se pudo actualizar la incidencia."
+                    );
+
+                } finally {
+
+                    boton.disabled =
+                        false;
+
+
+                    boton.innerHTML =
+                        '<i class="fa-solid fa-floppy-disk mr-2"></i> Guardar cambios';
+
+                }
+
+            }
+        );
+
+
+        // =========================================================
+        // PATCH - ACTUALIZAR SOLO DÍAS
+        // =========================================================
+
+        document.getElementById(
+            "diasForm"
+        ).addEventListener(
+            "submit",
+            async function (e) {
+
+                e.preventDefault();
+
+
+                const token =
+                    getJwt();
+
+
+                if (!token) {
+
+                    alert(
+                        "Sesión expirada."
+                    );
+
+
+                    window.location.href =
+                        "/login";
+
+
+                    return;
+
+                }
+
+
+                const id =
+                    document.getElementById(
+                        "diasIncidenciaId"
+                    ).value;
+
+
+                const cantidadDias =
+                    document.getElementById(
+                        "diasPatch"
+                    ).value;
+
+
+                if (
+                    cantidadDias === "" ||
+                    Number(cantidadDias) < 0
+                ) {
+
+                    alert(
+                        "Ingresá una cantidad de días válida."
+                    );
+
+                    return;
+
+                }
+
+
+                const patchData = {
+
+                    cantidadDias:
+                        Number(cantidadDias)
+
+                };
+
+
+                console.log(
+                    "Enviando PATCH:",
+                    patchData
+                );
+
+
+                const boton =
+                    document.getElementById(
+                        "btnGuardarDias"
+                    );
+
+
+                boton.disabled =
+                    true;
+
+
+                boton.innerHTML =
+                    '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Actualizando...';
+
+
+                try {
+
+                    const response =
+                        await fetch(
+                            `/api/incidencias/${id}`,
+                            {
+
+                                method: "PATCH",
+
+                                headers: {
+
+                                    "Content-Type":
+                                        "application/json",
+
+                                    "Authorization":
+                                        "Bearer " + token,
+
+                                    "Accept":
+                                        "application/json"
+
+                                },
+
+                                body:
+                                    JSON.stringify(
+                                        patchData
+                                    )
+
+                            }
+                        );
+
+
+                    if (!response.ok) {
+
+                        let mensaje =
+                            "No se pudieron actualizar los días.";
+
+
+                        try {
+
+                            const errorData =
+                                await response.json();
+
+
+                            if (
+                                errorData.mensaje
+                            ) {
+
+                                mensaje =
+                                    errorData.mensaje;
+
+                            } else if (
+                                errorData.message
+                            ) {
+
+                                mensaje =
+                                    errorData.message;
+
+                            }
+
+                        } catch (_) {}
+
+
+                        throw new Error(
+                            mensaje
+                        );
+
+                    }
+
+
+                    await response.json();
+
+
+                    alert(
+                        "Cantidad de días actualizada correctamente."
+                    );
+
+
+                    cerrarModalDias();
+
+
+                    await cargarDatos();
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Error actualizando días:",
+                        error
+                    );
+
+
+                    alert(
+                        error.message ||
+                        "No se pudieron actualizar los días."
+                    );
+
+                } finally {
+
+                    boton.disabled =
+                        false;
+
+
+                    boton.innerHTML =
+                        '<i class="fa-solid fa-rotate mr-2"></i> Actualizar';
+
+                }
+
+            }
+        );
+
+
+        // =========================================================
+        // ELIMINAR INCIDENCIA
+        // =========================================================
+
+        async function eliminarIncidencia(
+            id
+        ) {
+
+            if (!id) {
+
+                alert(
+                    "No se pudo identificar la incidencia."
+                );
+
+                return;
+
+            }
+
+
+            const confirmar =
+                confirm(
+                    "¿Seguro que querés eliminar esta incidencia?"
+                );
+
+
+            if (!confirmar) {
+
+                return;
+
+            }
+
+
+            const token =
+                getJwt();
+
+
+            if (!token) {
+
+                alert(
+                    "Sesión expirada."
+                );
+
+
+                window.location.href =
+                    "/login";
+
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `/api/incidencias/${id}`,
+                        {
+
+                            method: "DELETE",
+
+                            headers: {
+
+                                "Authorization":
+                                    "Bearer " + token,
+
+                                "Accept":
+                                    "application/json"
+
+                            }
+
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    let mensaje =
+                        "No se pudo eliminar la incidencia.";
+
+
+                    try {
+
+                        const errorData =
+                            await response.json();
+
+
+                        if (
+                            errorData.mensaje
+                        ) {
+
+                            mensaje =
+                                errorData.mensaje;
+
+                        } else if (
+                            errorData.message
+                        ) {
+
+                            mensaje =
+                                errorData.message;
+
+                        }
+
+                    } catch (_) {}
+
+
+                    throw new Error(
+                        mensaje
+                    );
+
+                }
+
+
+                await cargarDatos();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error eliminando incidencia:",
+                    error
+                );
+
+
+                alert(
+                    error.message ||
+                    "No se pudo eliminar la incidencia."
+                );
+
+            }
+
+        }
+
+
+        // =========================================================
+        // EVENTOS
+        // =========================================================
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            function () {
+
+
+                // =================================================
+                // BUSCAR JUGADOR
+                // =================================================
+
+                document
+                    .getElementById(
+                        "inputJugador"
+                    )
+                    .addEventListener(
+                        "input",
+                        function () {
+
+                            mostrarIncidencias();
+
+                        }
+                    );
+
+
+                // =================================================
+                // BUSCAR PARTIDO
+                // =================================================
+
+                document
+                    .getElementById(
+                        "inputPartido"
+                    )
+                    .addEventListener(
+                        "input",
+                        function () {
+
+                            mostrarIncidencias();
+
+                        }
+                    );
+
+
+                // =================================================
+                // TODOS
+                // =================================================
+
+                document
+                    .getElementById(
+                        "btnTodos"
+                    )
+                    .addEventListener(
+                        "click",
+                        function () {
+
+                            document
+                                .getElementById(
+                                    "inputJugador"
+                                )
+                                .value =
+                                "";
+
+
+                            document
+                                .getElementById(
+                                    "inputPartido"
+                                )
+                                .value =
+                                "";
+
+
+                            mostrarIncidencias();
+
+                        }
+                    );
+
+
+                // =================================================
+                // CARGAR DATOS
+                // =================================================
+
+                cargarDatos();
+
+            }
+        );
+
+
+        // =========================================================
+        // CERRAR MODALES HACIENDO CLICK AFUERA
+        // =========================================================
+
+        document.getElementById(
+            "modalEditar"
+        ).addEventListener(
+            "click",
+            function (e) {
+
+                if (
+                    e.target === this
+                ) {
+
+                    cerrarModalEditar();
+
+                }
+
+            }
+        );
+
+
+        document.getElementById(
+            "modalDias"
+        ).addEventListener(
+            "click",
+            function (e) {
+
+                if (
+                    e.target === this
+                ) {
+
+                    cerrarModalDias();
+
+                }
+
+            }
+        );
+
+    </script>
+
+</div>
+
+</body>
+
+</html>

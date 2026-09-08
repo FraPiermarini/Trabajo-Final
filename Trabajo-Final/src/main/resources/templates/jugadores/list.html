@@ -1,0 +1,1470 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: mainLayout(~{::#content})}"
+      lang="es">
+
+<head>
+
+```
+<meta charset="UTF-8">
+
+<title>Jugadores</title>
+
+<link rel="icon" href="data:,">
+```
+
+</head>
+
+<body>
+
+<div id="content" class="max-w-[1200px] mx-auto">
+
+```
+<!-- HEADER -->
+
+<div class="flex flex-col md:flex-row
+            md:items-center justify-between
+            gap-6 mb-10">
+
+    <div>
+
+        <h1 class="text-4xl font-black text-white
+                   tracking-tight italic uppercase">
+
+            Jugadores
+
+        </h1>
+
+        <p class="text-emerald-500 font-bold mt-1">
+
+            Plantel completo del club: fichas,
+            categorías y rendimiento individual.
+
+        </p>
+
+    </div>
+
+
+    <!-- AGREGAR -->
+
+    <a th:href="@{/jugadores/nuevo}"
+       class="bg-[#10b981]
+              hover:bg-[#059669]
+              text-slate-900
+              px-6 py-3
+              rounded-xl
+              font-bold
+              flex items-center gap-2
+              shadow-lg
+              shadow-emerald-500/20
+              transition-all
+              transform active:scale-95">
+
+        <i class="fa-solid fa-plus"></i>
+
+        <span>
+            Agregar jugador
+        </span>
+
+    </a>
+
+</div>
+
+
+<!-- BUSQUEDA Y FILTROS -->
+
+<div class="flex flex-col md:flex-row gap-4 mb-8">
+
+    <!-- BUSCAR -->
+
+    <div class="relative flex-1">
+
+        <i class="fa-solid fa-magnifying-glass
+                  absolute left-4 top-1/2
+                  -translate-y-1/2
+                  text-slate-500">
+        </i>
+
+        <input
+            type="text"
+            id="searchInput"
+            placeholder="Buscar por nombre, apellido o DNI..."
+            class="w-full pl-12 pr-6 py-3
+                   bg-[#0f172a]
+                   border border-slate-800
+                   rounded-xl
+                   focus:ring-2
+                   focus:ring-emerald-500
+                   outline-none
+                   transition-all
+                   text-slate-300
+                   font-medium">
+
+    </div>
+
+
+    <!-- FILTRO CATEGORIA -->
+
+    <select
+        id="categoriaFilter"
+        class="bg-[#0f172a]
+               border border-slate-800
+               text-slate-300
+               px-4 py-3
+               rounded-xl
+               outline-none
+               focus:ring-2
+               focus:ring-emerald-500
+               font-medium
+               min-w-[180px]">
+
+        <option value="">
+            Todas las categorías
+        </option>
+
+    </select>
+
+
+    <!-- FILTRO POSICION -->
+
+    <select
+        id="posicionFilter"
+        class="bg-[#0f172a]
+               border border-slate-800
+               text-slate-300
+               px-4 py-3
+               rounded-xl
+               outline-none
+               focus:ring-2
+               focus:ring-emerald-500
+               font-medium
+               min-w-[180px]">
+
+        <option value="">
+            Todas las posiciones
+        </option>
+
+    </select>
+
+</div>
+
+
+<!-- LISTADO -->
+
+<div id="jugadoresList"
+     class="space-y-4">
+
+    <!-- LOADING -->
+
+    <div id="loading"
+         class="py-20 text-center">
+
+        <div class="inline-block
+                    animate-spin
+                    w-10 h-10
+                    border-4
+                    border-emerald-500
+                    border-t-transparent
+                    rounded-full">
+        </div>
+
+        <p class="text-slate-500 mt-4
+                  font-bold uppercase
+                  tracking-widest text-xs">
+
+            Cargando jugadores...
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- JAVASCRIPT -->
+<!-- ========================================================= -->
+
+<script>
+
+    // =========================================================
+    // JWT
+    // =========================================================
+
+    function getJwt() {
+
+        const cookie =
+            document.cookie
+                .split('; ')
+                .find(row =>
+                    row.startsWith('token=')
+                );
+
+        return cookie
+            ? cookie.substring(6)
+            : null;
+    }
+
+
+    // =========================================================
+    // ESCAPAR HTML
+    // =========================================================
+
+    function escapeHtml(str) {
+
+        const div =
+            document.createElement('div');
+
+        div.textContent =
+            str ?? '';
+
+        return div.innerHTML;
+    }
+
+
+    // =========================================================
+    // VARIABLES
+    // =========================================================
+
+    let jugadores = [];
+
+
+    // =========================================================
+    // CARGAR JUGADORES
+    // =========================================================
+
+    async function cargarJugadores() {
+
+        const container =
+            document.getElementById(
+                'jugadoresList'
+            );
+
+        const token = getJwt();
+
+
+        if (!token) {
+
+            container.innerHTML = `
+
+                <div class="p-10
+                            bg-red-500/10
+                            border border-red-500/20
+                            rounded-[2rem]
+                            text-center">
+
+                    <p class="text-red-500
+                              font-black uppercase">
+
+                        Sesión expirada.
+
+                    </p>
+
+                    <p class="text-slate-500
+                              text-sm mt-2">
+
+                        Iniciá sesión nuevamente.
+
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        try {
+
+            const res =
+                await fetch(
+                    '/api/jugadores',
+                    {
+
+                        method: 'GET',
+
+                        headers: {
+
+                            'Authorization':
+                                'Bearer ' + token,
+
+                            'Accept':
+                                'application/json'
+
+                        }
+
+                    }
+                );
+
+
+            // =================================================
+            // ERROR HTTP
+            // =================================================
+
+            if (!res.ok) {
+
+                if (
+                    res.status === 401 ||
+                    res.status === 403
+                ) {
+
+                    throw new Error(
+                        "No tenés permisos para consultar los jugadores."
+                    );
+
+                }
+
+                throw new Error(
+                    "Error al obtener los jugadores."
+                );
+
+            }
+
+
+            const data =
+                await res.json();
+
+
+            console.log(
+                "Respuesta /api/jugadores:",
+                data
+            );
+
+
+            // =================================================
+            // SOPORTAR ARRAY O PAGINACIÓN
+            // =================================================
+
+            if (Array.isArray(data)) {
+
+                jugadores = data;
+
+            } else if (
+                data &&
+                Array.isArray(data.content)
+            ) {
+
+                jugadores =
+                    data.content;
+
+            } else if (
+                data &&
+                typeof data === 'object'
+            ) {
+
+                jugadores = [data];
+
+            } else {
+
+                jugadores = [];
+
+            }
+
+
+            console.log(
+                "Jugadores procesados:",
+                jugadores
+            );
+
+
+            // =================================================
+            // CARGAR FILTROS
+            // =================================================
+
+            cargarFiltros();
+
+
+            // =================================================
+            // MOSTRAR
+            // =================================================
+
+            renderizarJugadores(
+                jugadores
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Error al cargar jugadores:",
+                error
+            );
+
+
+            container.innerHTML = `
+
+                <div class="p-10
+                            bg-red-500/10
+                            border border-red-500/20
+                            rounded-[2rem]
+                            text-red-500
+                            text-center">
+
+                    <i class="fa-solid
+                              fa-circle-exclamation
+                              text-2xl mb-4">
+                    </i>
+
+                    <p class="font-black uppercase">
+
+                        ERROR AL CARGAR LOS JUGADORES
+
+                    </p>
+
+                    <p class="text-xs mt-2
+                              text-red-400">
+
+                        ${escapeHtml(
+                            error.message
+                        )}
+
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
+
+    // =========================================================
+    // RENDERIZAR JUGADORES
+    // =========================================================
+
+    function renderizarJugadores(lista) {
+
+        const container =
+            document.getElementById(
+                'jugadoresList'
+            );
+
+
+        container.innerHTML = '';
+
+
+        // =====================================================
+        // SIN JUGADORES
+        // =====================================================
+
+        if (
+            !lista ||
+            lista.length === 0
+        ) {
+
+            container.innerHTML = `
+
+                <div class="py-20
+                            text-center
+                            border-2
+                            border-dashed
+                            border-slate-800
+                            rounded-[2rem]">
+
+                    <div class="w-16 h-16
+                                mx-auto mb-5
+                                rounded-2xl
+                                bg-slate-800
+                                flex items-center
+                                justify-center">
+
+                        <i class="fa-solid
+                                  fa-users-slash
+                                  text-2xl
+                                  text-slate-600">
+                        </i>
+
+                    </div>
+
+                    <p class="text-slate-500
+                              font-bold">
+
+                        No hay jugadores registrados.
+
+                    </p>
+
+                    <p class="text-slate-700
+                              text-xs mt-2">
+
+                        Agregá el primer jugador
+                        para comenzar.
+
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        // =====================================================
+        // CREAR CARDS
+        // =====================================================
+
+        lista.forEach(jugador => {
+
+
+            // =================================================
+            // DATOS
+            // =================================================
+
+            const nombre =
+                jugador.nombre || '';
+
+            const apellido =
+                jugador.apellido || '';
+
+            const dni =
+                jugador.dni || '';
+
+            const posicion =
+                jugador.posicion || '';
+
+            const numero =
+                jugador.numeroCamiseta ?? '';
+
+
+            // =================================================
+            // CATEGORIA
+            // =================================================
+
+            let nombreCategoria =
+                'Sin categoría';
+
+
+            if (
+                jugador.categoria &&
+                jugador.categoria.nombre
+            ) {
+
+                nombreCategoria =
+                    jugador.categoria.nombre;
+
+            } else if (
+                jugador.nombreCategoria
+            ) {
+
+                nombreCategoria =
+                    jugador.nombreCategoria;
+
+            }
+
+
+            // =================================================
+            // IMAGEN
+            // =================================================
+
+            let avatar;
+
+
+            if (jugador.imagenUrl) {
+
+                avatar = `
+
+                    <img
+                        src="${escapeHtml(
+                            jugador.imagenUrl
+                        )}"
+                        class="w-16 h-16
+                               rounded-2xl
+                               object-cover
+                               shadow-lg
+                               border border-slate-700"
+                        alt="Foto de ${escapeHtml(
+                            nombre + ' ' + apellido
+                        )}">
+
+                `;
+
+            } else {
+
+                avatar = `
+
+                    <div class="w-16 h-16
+                                rounded-2xl
+                                bg-slate-800
+                                border border-slate-700
+                                text-emerald-500
+                                flex items-center
+                                justify-center
+                                font-black
+                                text-xl
+                                shadow-inner">
+
+                        ${escapeHtml(
+                            obtenerIniciales(
+                                nombre,
+                                apellido
+                            )
+                        )}
+
+                    </div>
+
+                `;
+
+            }
+
+
+            // =================================================
+            // EDAD
+            // =================================================
+
+            const edad =
+                calcularEdad(
+                    jugador.fechaNacimiento
+                );
+
+
+            // =================================================
+            // CARD
+            // =================================================
+
+            const card =
+                document.createElement('div');
+
+
+            card.className = `
+                bg-[#0f172a]
+                border border-slate-800
+                p-5
+                rounded-[1.5rem]
+                flex
+                flex-col
+                md:flex-row
+                md:items-center
+                md:justify-between
+                gap-5
+                hover:border-emerald-500/50
+                transition-all
+                duration-300
+            `;
+
+
+            // Guardar datos para filtros
+
+            card.dataset.nombre =
+                `${nombre} ${apellido}`
+                    .toLowerCase();
+
+            card.dataset.dni =
+                String(dni)
+                    .toLowerCase();
+
+            card.dataset.categoria =
+                String(nombreCategoria)
+                    .toLowerCase();
+
+            card.dataset.posicion =
+                String(posicion)
+                    .toLowerCase();
+
+
+            // =================================================
+            // HTML
+            // =================================================
+
+            card.innerHTML = `
+
+                <!-- INFORMACION -->
+
+                <div class="flex items-center gap-6">
+
+                    ${avatar}
+
+
+                    <div>
+
+                        <h3 class="text-xl
+                                   font-bold
+                                   text-slate-100
+                                   leading-none
+                                   mb-2">
+
+                            ${escapeHtml(
+                                nombre
+                            )}
+                            ${escapeHtml(
+                                apellido
+                            )}
+
+                        </h3>
+
+
+                        <div class="flex
+                                    flex-wrap
+                                    items-center
+                                    gap-2
+                                    text-sm">
+
+                            <span class="text-slate-400
+                                         font-medium">
+
+                                ${escapeHtml(
+                                    posicion ||
+                                    'Sin posición'
+                                )}
+
+                            </span>
+
+
+                            <span class="text-slate-700">
+                                •
+                            </span>
+
+
+                            <span class="text-emerald-500
+                                         font-bold">
+
+                                ${escapeHtml(
+                                    nombreCategoria
+                                )}
+
+                            </span>
+
+
+                            <span class="text-slate-700">
+                                •
+                            </span>
+
+
+                            <span class="text-slate-500">
+
+                                ${edad === '--'
+                                    ? '--'
+                                    : edad + ' años'}
+
+                            </span>
+
+                        </div>
+
+
+                        <div class="mt-3
+                                    flex
+                                    flex-wrap
+                                    items-center
+                                    gap-2">
+
+
+                            <!-- DNI -->
+
+                            <span class="bg-slate-800
+                                         text-slate-400
+                                         px-3 py-1
+                                         rounded-full
+                                         text-[10px]
+                                         font-black
+                                         uppercase
+                                         tracking-widest">
+
+                                DNI:
+                                ${escapeHtml(
+                                    String(dni)
+                                )}
+
+                            </span>
+
+
+                            <!-- CAMISETA -->
+
+                            ${
+                                numero !== ''
+                                ? `
+                                <span class="bg-emerald-500/10
+                                             text-emerald-500
+                                             px-3 py-1
+                                             rounded-full
+                                             text-[10px]
+                                             font-black
+                                             uppercase
+                                             tracking-widest
+                                             border
+                                             border-emerald-500/20">
+
+                                    <i class="fa-solid
+                                              fa-shirt mr-1">
+                                    </i>
+
+                                    N° ${escapeHtml(
+                                        String(numero)
+                                    )}
+
+                                </span>
+                                `
+                                : ''
+                            }
+
+
+                            <!-- ESTADO -->
+
+                            <span class="bg-emerald-500/10
+                                         text-emerald-500
+                                         px-3 py-1
+                                         rounded-full
+                                         text-[10px]
+                                         font-black
+                                         uppercase
+                                         tracking-widest
+                                         border
+                                         border-emerald-500/20">
+
+                                Activo
+
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ACCIONES -->
+
+                <div class="flex
+                            items-center
+                            gap-2
+                            md:shrink-0">
+
+
+                    <!-- EDITAR -->
+
+                    <a
+                        href="/jugadores/nuevo?id=${jugador.id}"
+                        title="Editar jugador"
+                        class="flex-1
+                               md:flex-none
+                               px-5 py-3
+                               flex items-center
+                               justify-center
+                               gap-2
+                               text-emerald-500
+                               bg-emerald-500/10
+                               hover:bg-emerald-500
+                               hover:text-slate-900
+                               rounded-xl
+                               transition-all
+                               font-bold
+                               text-xs
+                               uppercase
+                               tracking-widest">
+
+                        <i class="fa-solid
+                                  fa-pen-to-square">
+                        </i>
+
+                        <span>
+                            Editar
+                        </span>
+
+                    </a>
+
+
+                    <!-- ELIMINAR -->
+
+                    <button
+                        type="button"
+                        class="btn-eliminar
+                               w-12 h-12
+                               flex items-center
+                               justify-center
+                               bg-slate-800
+                               text-slate-400
+                               hover:bg-red-500/20
+                               hover:text-red-500
+                               rounded-xl
+                               transition-all"
+                        data-id="${jugador.id}"
+                        data-nombre="${escapeHtml(
+                            nombre + ' ' + apellido
+                        )}"
+                        title="Eliminar jugador">
+
+                        <i class="fa-solid
+                                  fa-trash-can">
+                        </i>
+
+                    </button>
+
+                </div>
+
+            `;
+
+
+            container.appendChild(card);
+
+        });
+
+
+        // =====================================================
+        // EVENTOS ELIMINAR
+        // =====================================================
+
+        container
+            .querySelectorAll(
+                '.btn-eliminar'
+            )
+            .forEach(btn => {
+
+                btn.addEventListener(
+                    'click',
+                    function () {
+
+                        eliminarJugador(
+                            this.dataset.id,
+                            this.dataset.nombre
+                        );
+
+                    }
+                );
+
+            });
+
+    }
+
+
+    // =========================================================
+    // CARGAR FILTROS
+    // =========================================================
+
+    function cargarFiltros() {
+
+        const categoriaSelect =
+            document.getElementById(
+                'categoriaFilter'
+            );
+
+        const posicionSelect =
+            document.getElementById(
+                'posicionFilter'
+            );
+
+
+        categoriaSelect.innerHTML = `
+            <option value="">
+                Todas las categorías
+            </option>
+        `;
+
+
+        posicionSelect.innerHTML = `
+            <option value="">
+                Todas las posiciones
+            </option>
+        `;
+
+
+        // =====================================================
+        // CATEGORIAS
+        // =====================================================
+
+        const categorias = [
+
+            ...new Set(
+
+                jugadores
+                    .map(j => {
+
+                        if (
+                            j.categoria &&
+                            j.categoria.nombre
+                        ) {
+
+                            return j.categoria.nombre;
+
+                        }
+
+                        return j.nombreCategoria;
+
+                    })
+                    .filter(Boolean)
+
+            )
+
+        ];
+
+
+        categorias.sort();
+
+
+        categorias.forEach(categoria => {
+
+            const option =
+                document.createElement(
+                    'option'
+                );
+
+            option.value =
+                categoria;
+
+            option.textContent =
+                categoria;
+
+            categoriaSelect
+                .appendChild(option);
+
+        });
+
+
+        // =====================================================
+        // POSICIONES
+        // =====================================================
+
+        const posiciones = [
+
+            ...new Set(
+
+                jugadores
+                    .map(j =>
+                        j.posicion
+                    )
+                    .filter(Boolean)
+
+            )
+
+        ];
+
+
+        posiciones.sort();
+
+
+        posiciones.forEach(posicion => {
+
+            const option =
+                document.createElement(
+                    'option'
+                );
+
+            option.value =
+                posicion;
+
+            option.textContent =
+                posicion;
+
+            posicionSelect
+                .appendChild(option);
+
+        });
+
+    }
+
+
+    // =========================================================
+    // FILTRAR
+    // =========================================================
+
+    function filtrarJugadores() {
+
+        const texto =
+            document.getElementById(
+                'searchInput'
+            )
+            .value
+            .toLowerCase()
+            .trim();
+
+
+        const categoria =
+            document.getElementById(
+                'categoriaFilter'
+            )
+            .value
+            .toLowerCase();
+
+
+        const posicion =
+            document.getElementById(
+                'posicionFilter'
+            )
+            .value
+            .toLowerCase();
+
+
+        const filtrados =
+            jugadores.filter(jugador => {
+
+
+                // =============================
+                // NOMBRE
+                // =============================
+
+                const nombre =
+                    `${jugador.nombre || ''}
+                     ${jugador.apellido || ''}`
+                    .toLowerCase();
+
+
+                // =============================
+                // DNI
+                // =============================
+
+                const dni =
+                    String(
+                        jugador.dni || ''
+                    )
+                    .toLowerCase();
+
+
+                const coincideTexto =
+                    !texto ||
+                    nombre.includes(texto) ||
+                    dni.includes(texto);
+
+
+                // =============================
+                // CATEGORIA
+                // =============================
+
+                let nombreCategoria =
+                    '';
+
+
+                if (
+                    jugador.categoria &&
+                    jugador.categoria.nombre
+                ) {
+
+                    nombreCategoria =
+                        jugador.categoria.nombre;
+
+                } else if (
+                    jugador.nombreCategoria
+                ) {
+
+                    nombreCategoria =
+                        jugador.nombreCategoria;
+
+                }
+
+
+                const coincideCategoria =
+                    !categoria ||
+                    nombreCategoria
+                        .toLowerCase() ===
+                    categoria;
+
+
+                // =============================
+                // POSICION
+                // =============================
+
+                const posicionJugador =
+                    String(
+                        jugador.posicion || ''
+                    )
+                    .toLowerCase();
+
+
+                const coincidePosicion =
+                    !posicion ||
+                    posicionJugador ===
+                    posicion;
+
+
+                return (
+                    coincideTexto &&
+                    coincideCategoria &&
+                    coincidePosicion
+                );
+
+            });
+
+
+        renderizarJugadores(
+            filtrados
+        );
+
+    }
+
+
+    // =========================================================
+    // ELIMINAR JUGADOR
+    // =========================================================
+
+    async function eliminarJugador(
+        id,
+        nombre
+    ) {
+
+
+        if (
+            !confirm(
+                `¿Seguro que querés eliminar al jugador "${nombre}"?\n\nEsta acción no se puede deshacer.`
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        const token =
+            getJwt();
+
+
+        if (!token) {
+
+            alert(
+                "Sesión expirada."
+            );
+
+            window.location.href =
+                "/login";
+
+            return;
+
+        }
+
+
+        try {
+
+            const res =
+                await fetch(
+                    `/api/jugadores/${id}`,
+                    {
+
+                        method: 'DELETE',
+
+                        headers: {
+
+                            'Authorization':
+                                'Bearer ' + token,
+
+                            'Accept':
+                                'application/json'
+
+                        }
+
+                    }
+                );
+
+
+            // =================================================
+            // AUTORIZACION
+            // =================================================
+
+            if (
+                res.status === 401 ||
+                res.status === 403
+            ) {
+
+                throw new Error(
+                    "No tenés permisos para eliminar jugadores."
+                );
+
+            }
+
+
+            // =================================================
+            // ERROR
+            // =================================================
+
+            if (!res.ok) {
+
+                let mensaje =
+                    "No se pudo eliminar el jugador.";
+
+
+                try {
+
+                    const errorData =
+                        await res.json();
+
+
+                    if (
+                        errorData.mensaje
+                    ) {
+
+                        mensaje =
+                            errorData.mensaje;
+
+                    } else if (
+                        errorData.message
+                    ) {
+
+                        mensaje =
+                            errorData.message;
+
+                    }
+
+                } catch (_) {}
+
+
+                throw new Error(
+                    mensaje
+                );
+
+            }
+
+
+            // =================================================
+            // EXITO
+            // =================================================
+
+            alert(
+                `Jugador "${nombre}" eliminado correctamente.`
+            );
+
+
+            // Recargar
+
+            await cargarJugadores();
+
+
+        } catch (error) {
+
+            console.error(
+                "Error eliminando jugador:",
+                error
+            );
+
+
+            alert(
+                error.message ||
+                "Error al eliminar el jugador."
+            );
+
+        }
+
+    }
+
+
+    // =========================================================
+    // CALCULAR EDAD
+    // =========================================================
+
+    function calcularEdad(fecha) {
+
+        if (!fecha) {
+
+            return '--';
+
+        }
+
+
+        const hoy =
+            new Date();
+
+
+        const nacimiento =
+            new Date(fecha);
+
+
+        let edad =
+            hoy.getFullYear() -
+            nacimiento.getFullYear();
+
+
+        const mes =
+            hoy.getMonth() -
+            nacimiento.getMonth();
+
+
+        if (
+            mes < 0 ||
+            (
+                mes === 0 &&
+                hoy.getDate() <
+                nacimiento.getDate()
+            )
+        ) {
+
+            edad--;
+
+        }
+
+
+        return edad;
+
+    }
+
+
+    // =========================================================
+    // INICIALES
+    // =========================================================
+
+    function obtenerIniciales(
+        nombre,
+        apellido
+    ) {
+
+        const inicialNombre =
+            nombre
+                ? nombre.charAt(0)
+                : '';
+
+
+        const inicialApellido =
+            apellido
+                ? apellido.charAt(0)
+                : '';
+
+
+        return (
+            inicialNombre +
+            inicialApellido
+        ).toUpperCase();
+
+    }
+
+
+    // =========================================================
+    // EVENTOS FILTROS
+    // =========================================================
+
+    document
+        .getElementById(
+            'searchInput'
+        )
+        .addEventListener(
+            'input',
+            filtrarJugadores
+        );
+
+
+    document
+        .getElementById(
+            'categoriaFilter'
+        )
+        .addEventListener(
+            'change',
+            filtrarJugadores
+        );
+
+
+    document
+        .getElementById(
+            'posicionFilter'
+        )
+        .addEventListener(
+            'change',
+            filtrarJugadores
+        );
+
+
+    // =========================================================
+    // INICIAR
+    // =========================================================
+
+    document.addEventListener(
+        'DOMContentLoaded',
+        function () {
+
+            cargarJugadores();
+
+        }
+    );
+
+</script>
+```
+
+</div>
+
+</body>
+
+</html>

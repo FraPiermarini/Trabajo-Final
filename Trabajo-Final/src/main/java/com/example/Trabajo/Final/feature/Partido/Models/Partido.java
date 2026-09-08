@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.example.Trabajo.Final.feature.Campeonato.Models.Campeonato;
 import com.example.Trabajo.Final.feature.Categoria.Models.Categoria;
+import com.example.Trabajo.Final.feature.Entrenador.Models.Entrenador;
 import com.example.Trabajo.Final.feature.Incidencias.Models.Incidencia;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -60,5 +61,9 @@ public class Partido {
 
     @OneToMany(mappedBy = "partido")
     private List<Incidencia> incidencias = new ArrayList<>();
+
+    @ManyToOne
+    @JoinColumn(name = "entrenadorId")
+    private Entrenador entrenador;
 
 }

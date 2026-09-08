@@ -18,6 +18,9 @@ public class DataInitializer implements CommandLineRunner {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    
+
+
     @Override
     public void run(String... args){
         if(usuarioRepository.findByEmail("admin@admin.com").isEmpty()){

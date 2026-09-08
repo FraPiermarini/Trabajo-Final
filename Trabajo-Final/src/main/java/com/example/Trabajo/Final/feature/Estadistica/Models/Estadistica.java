@@ -13,13 +13,15 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Table(name = "estadisticas")
+@Table(name = "estadisticas", uniqueConstraints = {@UniqueConstraint(name = "uk_estadistica_jugador_partido", columnNames = {"jugadorId" , "partidoId" })})
+
 @AllArgsConstructor
 @NoArgsConstructor
 public class Estadistica {

@@ -1,0 +1,1857 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: mainLayout(~{::#content})}"
+      lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Partidos</title>
+    <link rel="icon" href="data:,">
+</head>
+
+<body>
+
+<div id="content" class="max-w-[1200px] mx-auto">
+
+    <!-- ========================================================= -->
+    <!-- HEADER -->
+    <!-- ========================================================= -->
+
+    <div class="flex flex-col md:flex-row
+                md:items-center justify-between
+                gap-6 mb-8">
+
+        <div>
+
+            <h1 class="text-4xl font-black text-white
+                       tracking-tight italic uppercase">
+
+                Partidos
+
+            </h1>
+
+            <p class="text-emerald-500 font-bold mt-1">
+
+                Calendario y resultados de la temporada.
+
+            </p>
+
+        </div>
+
+
+        <!-- AGREGAR -->
+
+        <a th:href="@{/partidos/nuevo}"
+           class="bg-[#10b981]
+                  hover:bg-[#059669]
+                  text-slate-900
+                  px-6 py-3
+                  rounded-xl
+                  font-bold
+                  flex items-center justify-center
+                  gap-2
+                  shadow-lg
+                  shadow-emerald-500/20
+                  transition-all
+                  transform active:scale-95">
+
+            <i class="fa-solid fa-plus"></i>
+
+            <span>
+                Agregar partido
+            </span>
+
+        </a>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- FILTROS -->
+    <!-- ========================================================= -->
+
+    <div class="bg-[#0f172a]
+                border border-slate-800
+                rounded-2xl
+                p-4
+                mb-8">
+
+        <div class="flex flex-col lg:flex-row gap-3">
+
+
+            <!-- BUSCAR -->
+
+            <div class="relative flex-1">
+
+                <i class="fa-solid fa-magnifying-glass
+                          absolute left-4 top-1/2
+                          -translate-y-1/2
+                          text-slate-500">
+                </i>
+
+                <input
+                    id="inputBusqueda"
+                    type="text"
+                    placeholder="Buscar por rival o jornada..."
+                    class="w-full
+                           bg-slate-900
+                           border border-slate-800
+                           text-white
+                           placeholder-slate-600
+                           rounded-xl
+                           pl-11 pr-4
+                           py-3
+                           text-sm
+                           font-medium
+                           outline-none
+                           focus:border-emerald-500
+                           transition-all">
+
+            </div>
+
+
+            <!-- CAMPEONATO -->
+
+            <div class="relative lg:w-72">
+
+                <i class="fa-solid fa-trophy
+                          absolute left-4 top-1/2
+                          -translate-y-1/2
+                          text-emerald-500
+                          text-xs
+                          pointer-events-none">
+                </i>
+
+                <select
+                    id="filtroCampeonato"
+                    class="w-full
+                           bg-slate-900
+                           border border-slate-800
+                           text-slate-300
+                           rounded-xl
+                           pl-10 pr-4
+                           py-3
+                           text-sm
+                           font-bold
+                           outline-none
+                           focus:border-emerald-500
+                           transition-all
+                           appearance-none">
+
+                    <option value="">
+                        Todos los campeonatos
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- TODOS -->
+
+            <button
+                id="btnTodos"
+                type="button"
+                class="bg-emerald-500
+                       hover:bg-emerald-400
+                       text-slate-900
+                       px-6 py-3
+                       rounded-xl
+                       font-black
+                       text-xs
+                       uppercase
+                       tracking-widest
+                       transition-all
+                       whitespace-nowrap">
+
+                Todos
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- TITULO LISTADO -->
+    <!-- ========================================================= -->
+
+    <div class="flex items-center justify-between mb-5">
+
+        <div>
+
+            <h2 id="tituloListado"
+                class="text-lg font-black
+                       text-white
+                       uppercase
+                       tracking-tight">
+
+                Últimos partidos
+
+            </h2>
+
+            <p id="subtituloListado"
+               class="text-slate-600 text-xs font-bold mt-1">
+
+                Mostrando los últimos 3 partidos registrados.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- LISTADO -->
+    <!-- ========================================================= -->
+
+    <div id="partidosList"
+         class="flex flex-col gap-6">
+
+
+        <!-- LOADING -->
+
+        <div id="loading"
+             class="py-20 text-center">
+
+            <div class="inline-block
+                        animate-spin
+                        w-10 h-10
+                        border-4
+                        border-emerald-500
+                        border-t-transparent
+                        rounded-full">
+            </div>
+
+            <p class="text-slate-500 mt-4
+                      font-bold uppercase
+                      tracking-widest text-xs">
+
+                Cargando partidos...
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================================================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ========================================================= -->
+
+    <script>
+
+        // =========================================================
+        // VARIABLES
+        // =========================================================
+
+        let partidos = [];
+
+        let campeonatos = [];
+
+        let modoBusqueda = false;
+
+
+        // =========================================================
+        // JWT
+        // =========================================================
+
+        function getJwt() {
+
+            const cookie =
+                document.cookie
+                    .split('; ')
+                    .find(row =>
+                        row.startsWith('token=')
+                    );
+
+            return cookie
+                ? cookie.substring(6)
+                : null;
+        }
+
+
+        // =========================================================
+        // ESCAPAR HTML
+        // =========================================================
+
+        function escapeHtml(str) {
+
+            const div =
+                document.createElement('div');
+
+            div.textContent =
+                str ?? '';
+
+            return div.innerHTML;
+        }
+
+
+        // =========================================================
+        // FORMATEAR FECHA
+        // =========================================================
+
+        function formatearFecha(fecha) {
+
+            if (!fecha) {
+                return '';
+            }
+
+            const partes =
+                fecha.split('-');
+
+            if (partes.length !== 3) {
+                return fecha;
+            }
+
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+
+        }
+
+
+        // =========================================================
+        // OBTENER NOMBRE CAMPEONATO
+        // =========================================================
+
+        function obtenerNombreCampeonato(id) {
+
+            if (id === null || id === undefined) {
+                return '-';
+            }
+
+            const campeonato =
+                campeonatos.find(
+                    c => String(c.id) === String(id)
+                );
+
+            if (campeonato) {
+
+                return campeonato.nombre ||
+                       `Campeonato ${id}`;
+
+            }
+
+            return `Campeonato ${id}`;
+
+        }
+
+
+        // =========================================================
+        // CARGAR CAMPEONATOS
+        // =========================================================
+
+        async function cargarCampeonatos() {
+
+            const token = getJwt();
+
+            if (!token) {
+                return;
+            }
+
+            try {
+
+                const res =
+                    await fetch(
+                        '/api/campeonatos',
+                        {
+
+                            method: 'GET',
+
+                            headers: {
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            }
+
+                        }
+                    );
+
+
+                if (!res.ok) {
+                    return;
+                }
+
+
+                const data =
+                    await res.json();
+
+
+                if (Array.isArray(data)) {
+
+                    campeonatos = data;
+
+                } else if (
+                    data &&
+                    Array.isArray(data.content)
+                ) {
+
+                    campeonatos =
+                        data.content;
+
+                } else {
+
+                    campeonatos = [];
+
+                }
+
+
+                cargarSelectCampeonatos();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error al cargar campeonatos:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        // =========================================================
+        // CARGAR SELECT DE CAMPEONATOS
+        // =========================================================
+
+        function cargarSelectCampeonatos() {
+
+            const select =
+                document.getElementById(
+                    'filtroCampeonato'
+                );
+
+
+            select.innerHTML = `
+
+                <option value="">
+                    Todos los campeonatos
+                </option>
+
+            `;
+
+
+            campeonatos.forEach(
+                campeonato => {
+
+                    const option =
+                        document.createElement(
+                            'option'
+                        );
+
+                    option.value =
+                        campeonato.id;
+
+                    option.textContent =
+                        `${campeonato.nombre || 'Campeonato'}${campeonato.año ? ' - ' + campeonato.año : ''}`;
+
+                    select.appendChild(
+                        option
+                    );
+
+                }
+            );
+
+        }
+
+
+        // =========================================================
+        // CARGAR PARTIDOS
+        // =========================================================
+
+        async function cargarPartidos() {
+
+            const lista =
+                document.getElementById(
+                    'partidosList'
+                );
+
+
+            const token =
+                getJwt();
+
+
+            if (!token) {
+
+                lista.innerHTML = `
+
+                    <div class="py-20
+                                text-center
+                                border-2
+                                border-dashed
+                                border-slate-800
+                                rounded-[2rem]">
+
+                        <p class="text-red-500 font-bold">
+
+                            Sesión expirada.
+
+                        </p>
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            try {
+
+                const res =
+                    await fetch(
+                        '/api/partidos',
+                        {
+
+                            method: 'GET',
+
+                            headers: {
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            }
+
+                        }
+                    );
+
+
+                if (!res.ok) {
+
+                    if (
+                        res.status === 401 ||
+                        res.status === 403
+                    ) {
+
+                        throw new Error(
+                            "No tenés permisos para consultar los partidos."
+                        );
+
+                    }
+
+                    throw new Error(
+                        "Error al obtener los partidos."
+                    );
+
+                }
+
+
+                const data =
+                    await res.json();
+
+
+                console.log(
+                    "Respuesta /api/partidos:",
+                    data
+                );
+
+
+                // =================================================
+                // ARRAY O PAGINACIÓN
+                // =================================================
+
+                if (Array.isArray(data)) {
+
+                    partidos = data;
+
+                } else if (
+                    data &&
+                    Array.isArray(data.content)
+                ) {
+
+                    partidos =
+                        data.content;
+
+                } else if (
+                    data &&
+                    typeof data === 'object'
+                ) {
+
+                    partidos = [data];
+
+                } else {
+
+                    partidos = [];
+
+                }
+
+
+                mostrarPartidos();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error al cargar partidos:",
+                    error
+                );
+
+
+                lista.innerHTML = `
+
+                    <div class="p-10
+                                bg-red-500/10
+                                border
+                                border-red-500/20
+                                rounded-[2rem]
+                                text-red-500
+                                text-center">
+
+                        <i class="fa-solid
+                                  fa-circle-exclamation
+                                  text-xl mb-3">
+                        </i>
+
+                        <p class="font-black">
+
+                            ERROR AL CARGAR LOS PARTIDOS
+
+                        </p>
+
+                        <p class="text-xs
+                                  mt-2
+                                  text-red-400">
+
+                            ${escapeHtml(
+                                error.message
+                            )}
+
+                        </p>
+
+                    </div>
+
+                `;
+
+            }
+
+        }
+
+
+        // =========================================================
+        // MOSTRAR PARTIDOS
+        // =========================================================
+
+        function mostrarPartidos() {
+
+            const lista =
+                document.getElementById(
+                    'partidosList'
+                );
+
+
+            lista.innerHTML = '';
+
+
+            const texto =
+                document.getElementById(
+                    'inputBusqueda'
+                ).value
+                 .trim()
+                 .toLowerCase();
+
+
+            const campeonatoId =
+                document.getElementById(
+                    'filtroCampeonato'
+                ).value;
+
+
+            // =====================================================
+            // DETERMINAR SI HAY BÚSQUEDA
+            // =====================================================
+
+            modoBusqueda =
+                texto !== '' ||
+                campeonatoId !== '';
+
+
+            // =====================================================
+            // FILTRAR
+            // =====================================================
+
+            let partidosFiltrados =
+                [...partidos];
+
+
+            if (texto !== '') {
+
+                partidosFiltrados =
+                    partidosFiltrados.filter(
+                        partido => {
+
+                            const rival =
+                                String(
+                                    partido.rival || ''
+                                ).toLowerCase();
+
+
+                            const jornada =
+                                String(
+                                    partido.jornada || ''
+                                ).toLowerCase();
+
+
+                            return rival.includes(texto) ||
+                                   jornada.includes(texto);
+
+                        }
+                    );
+
+            }
+
+
+            // =====================================================
+            // FILTRO CAMPEONATO
+            // =====================================================
+
+            if (campeonatoId !== '') {
+
+                partidosFiltrados =
+                    partidosFiltrados.filter(
+                        partido =>
+
+                            String(
+                                partido.campeonatoId
+                            ) === String(
+                                campeonatoId
+                            )
+
+                    );
+
+            }
+
+
+            // =====================================================
+            // ORDENAR POR FECHA
+            // MÁS RECIENTE PRIMERO
+            // =====================================================
+
+            partidosFiltrados.sort(
+                (a, b) => {
+
+                    const fechaA =
+                        a.fecha
+                            ? new Date(
+                                a.fecha + 'T00:00:00'
+                              ).getTime()
+                            : 0;
+
+
+                    const fechaB =
+                        b.fecha
+                            ? new Date(
+                                b.fecha + 'T00:00:00'
+                              ).getTime()
+                            : 0;
+
+
+                    return fechaB - fechaA;
+
+                }
+            );
+
+
+            // =====================================================
+            // SI NO HAY BÚSQUEDA
+            // MOSTRAR SOLO LOS ÚLTIMOS 3
+            // =====================================================
+
+            if (!modoBusqueda) {
+
+                partidosFiltrados =
+                    partidosFiltrados.slice(
+                        0,
+                        3
+                    );
+
+
+                document.getElementById(
+                    'tituloListado'
+                ).textContent =
+                    'Últimos partidos';
+
+
+                document.getElementById(
+                    'subtituloListado'
+                ).textContent =
+                    'Mostrando los últimos 3 partidos registrados.';
+
+            }
+
+
+            // =====================================================
+            // SI HAY BÚSQUEDA
+            // MOSTRAR TODOS
+            // =====================================================
+
+            else {
+
+                let textoTitulo =
+                    'Resultados de búsqueda';
+
+
+                if (campeonatoId !== '') {
+
+                    const campeonato =
+                        campeonatos.find(
+                            c =>
+                                String(c.id) ===
+                                String(campeonatoId)
+                        );
+
+
+                    if (campeonato) {
+
+                        textoTitulo =
+                            campeonato.nombre ||
+                            'Partidos del campeonato';
+
+                    }
+
+                }
+
+
+                document.getElementById(
+                    'tituloListado'
+                ).textContent =
+                    textoTitulo;
+
+
+                document.getElementById(
+                    'subtituloListado'
+                ).textContent =
+                    `${partidosFiltrados.length} partido${partidosFiltrados.length === 1 ? '' : 's'} encontrado${partidosFiltrados.length === 1 ? '' : 's'}.`;
+
+            }
+
+
+            // =====================================================
+            // SIN PARTIDOS
+            // =====================================================
+
+            if (partidosFiltrados.length === 0) {
+
+                let mensaje =
+                    modoBusqueda
+                        ? 'No se encontraron partidos.'
+                        : 'No hay partidos registrados.';
+
+
+                let detalle =
+                    modoBusqueda
+                        ? 'Probá con otro rival, jornada o campeonato.'
+                        : 'Creá un partido para comenzar.';
+
+
+                lista.innerHTML = `
+
+                    <div class="py-20
+                                text-center
+                                border-2
+                                border-dashed
+                                border-slate-800
+                                rounded-[2rem]">
+
+                        <div class="w-16 h-16
+                                    mx-auto mb-5
+                                    rounded-2xl
+                                    bg-slate-800
+                                    flex items-center
+                                    justify-center">
+
+                            <i class="fa-solid
+                                      fa-futbol
+                                      text-2xl
+                                      text-slate-600">
+                            </i>
+
+                        </div>
+
+
+                        <p class="text-slate-500
+                                  font-bold">
+
+                            ${mensaje}
+
+                        </p>
+
+
+                        <p class="text-slate-700
+                                  text-xs mt-2">
+
+                            ${detalle}
+
+                        </p>
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            // =====================================================
+            // CREAR CARDS
+            // =====================================================
+
+            partidosFiltrados.forEach(
+                partido => {
+
+
+                    // =================================================
+                    // FECHA
+                    // =================================================
+
+                    const fecha =
+                        formatearFecha(
+                            partido.fecha
+                        );
+
+
+                    // =================================================
+                    // LOCAL / VISITANTE
+                    // =================================================
+
+                    /*
+                     * true  = LOCAL
+                     * false = VISITANTE
+                     *
+                     * También aceptamos "true"/"false"
+                     * por si el JSON llega como String.
+                     */
+
+                    const esLocal =
+                        partido.local === true ||
+                        partido.local === "true";
+
+
+                    const condicion =
+                        esLocal
+                            ? 'Local'
+                            : 'Visitante';
+
+
+                    const condicionClase =
+                        esLocal
+                            ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+                            : 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+
+
+                    // =================================================
+                    // RESULTADO
+                    // =================================================
+
+                    const resultado =
+                        partido.resultado || '';
+
+
+                    const tieneResultado =
+                        resultado.trim() !== '';
+
+
+                    // =================================================
+                    // NOMBRE CAMPEONATO
+                    // =================================================
+
+                    const nombreCampeonato =
+                        obtenerNombreCampeonato(
+                            partido.campeonatoId
+                        );
+
+
+                    // =================================================
+                    // CARD
+                    // =================================================
+
+                    const card =
+                        document.createElement(
+                            'div'
+                        );
+
+
+                    card.className =
+                        `bg-[#0f172a]
+                         border border-slate-800
+                         rounded-[2.5rem]
+                         p-8
+                         relative
+                         hover:border-emerald-500/40
+                         transition-all
+                         group`;
+
+
+                    card.innerHTML = `
+
+
+                        <!-- ========================================= -->
+                        <!-- CABECERA -->
+                        <!-- ========================================= -->
+
+                        <div class="flex
+                                    justify-between
+                                    items-start
+                                    mb-8">
+
+
+                            <div class="flex
+                                        items-center
+                                        gap-2">
+
+                                <span class="w-2 h-2
+                                             bg-emerald-500
+                                             rounded-full">
+                                </span>
+
+
+                                <span class="text-[10px]
+                                             font-black
+                                             text-slate-400
+                                             uppercase
+                                             tracking-widest">
+
+                                    ${escapeHtml(fecha)}
+
+                                    ·
+
+                                    Jornada
+                                    ${escapeHtml(
+                                        partido.jornada || ''
+                                    )}
+
+                                </span>
+
+                            </div>
+
+
+                            <!-- LOCAL / VISITANTE -->
+
+                            <span class="${condicionClase}
+                                         border
+                                         px-4 py-1
+                                         rounded-full
+                                         text-[10px]
+                                         font-black
+                                         uppercase">
+
+                                ${condicion}
+
+                            </span>
+
+                        </div>
+
+
+                        <!-- ========================================= -->
+                        <!-- PARTIDO -->
+                        <!-- ========================================= -->
+
+                        <div class="flex
+                                    items-center
+                                    justify-around
+                                    mb-8">
+
+
+                            ${
+                                esLocal
+                                    ? `
+                                        <!-- CLUB LOCAL -->
+
+                                        <div class="text-center
+                                                    w-28">
+
+                                            <img
+                                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFoWW9Qj6yO6eX2UjfyWmJNxQw_9EheO0KJF-zaevWvl1fBtSP_zBFzYk&s=10"
+                                                class="w-20 h-20
+                                                       object-contain
+                                                       mx-auto mb-2
+                                                       drop-shadow-xl"
+                                                alt="Complejo Deportivo Justiniano Posse">
+
+                                            <p class="font-black
+                                                      italic
+                                                      text-sm
+                                                      tracking-tighter">
+
+                                                CDJP
+
+                                            </p>
+
+                                        </div>
+                                    `
+                                    : `
+                                        <!-- RIVAL LOCAL -->
+
+                                        <div class="text-center
+                                                    w-28">
+
+                                            <div class="w-20 h-20
+                                                        bg-slate-800
+                                                        rounded-full
+                                                        flex
+                                                        items-center
+                                                        justify-center
+                                                        mx-auto mb-2
+                                                        text-2xl
+                                                        font-black
+                                                        text-slate-600">
+
+                                                ${escapeHtml(
+                                                    (partido.rival || '?')
+                                                        .charAt(0)
+                                                        .toUpperCase()
+                                                )}
+
+                                            </div>
+
+                                            <p class="font-black
+                                                      italic
+                                                      text-sm
+                                                      tracking-tighter
+                                                      text-slate-500
+                                                      uppercase">
+
+                                                ${escapeHtml(
+                                                    partido.rival || ''
+                                                )}
+
+                                            </p>
+
+                                        </div>
+                                    `
+                            }
+
+
+                            <!-- RESULTADO -->
+
+                            <div class="text-center">
+
+                                <div class="text-3xl
+                                            font-black
+                                            italic
+                                            text-emerald-500">
+
+                                    ${tieneResultado
+                                        ? escapeHtml(resultado)
+                                        : 'VS'}
+
+                                </div>
+
+                            </div>
+
+
+                            ${
+                                esLocal
+                                    ? `
+                                        <!-- RIVAL VISITANTE -->
+
+                                        <div class="text-center
+                                                    w-28">
+
+                                            <div class="w-20 h-20
+                                                        bg-slate-800
+                                                        rounded-full
+                                                        flex
+                                                        items-center
+                                                        justify-center
+                                                        mx-auto mb-2
+                                                        text-2xl
+                                                        font-black
+                                                        text-slate-600">
+
+                                                ${escapeHtml(
+                                                    (partido.rival || '?')
+                                                        .charAt(0)
+                                                        .toUpperCase()
+                                                )}
+
+                                            </div>
+
+                                            <p class="font-black
+                                                      italic
+                                                      text-sm
+                                                      tracking-tighter
+                                                      text-slate-500
+                                                      uppercase">
+
+                                                ${escapeHtml(
+                                                    partido.rival || ''
+                                                )}
+
+                                            </p>
+
+                                        </div>
+                                    `
+                                    : `
+                                        <!-- CLUB VISITANTE -->
+
+                                        <div class="text-center
+                                                    w-28">
+
+                                            <img
+                                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFoWW9Qj6yO6eX2UjfyWmJNxQw_9EheO0KJF-zaevWvl1fBtSP_zBFzYk&s=10"
+                                                class="w-20 h-20
+                                                       object-contain
+                                                       mx-auto mb-2
+                                                       drop-shadow-xl"
+                                                alt="Complejo Deportivo Justiniano Posse">
+
+                                            <p class="font-black
+                                                      italic
+                                                      text-sm
+                                                      tracking-tighter">
+
+                                                CDJP
+
+                                            </p>
+
+                                        </div>
+                                    `
+                            }
+
+                        </div>
+
+
+                        <!-- ========================================= -->
+                        <!-- INFORMACIÓN -->
+                        <!-- ========================================= -->
+
+                        <div class="border-t
+                                    border-slate-800
+                                    pt-6
+                                    space-y-3">
+
+
+                            <!-- CATEGORÍA -->
+
+                            <div class="flex
+                                        items-center
+                                        gap-2">
+
+                                <i class="fa-solid
+                                          fa-layer-group
+                                          text-emerald-500
+                                          text-xs">
+                                </i>
+
+
+                                <span class="text-xs
+                                             font-bold
+                                             text-slate-300">
+
+                                    Categoría:
+                                    ${escapeHtml(
+                                        partido.categoriaId ?? '-'
+                                    )}
+
+                                </span>
+
+                            </div>
+
+
+                            <!-- CAMPEONATO -->
+
+                            <div class="flex
+                                        items-center
+                                        gap-2">
+
+                                <i class="fa-solid
+                                          fa-trophy
+                                          text-emerald-500
+                                          text-xs">
+                                </i>
+
+
+                                <span class="text-xs
+                                             font-bold
+                                             text-slate-300">
+
+                                    Campeonato:
+                                    ${escapeHtml(
+                                        nombreCampeonato
+                                    )}
+
+                                </span>
+
+                            </div>
+
+
+                            <!-- ESTADO -->
+
+                            <div class="flex
+                                        items-center
+                                        gap-2">
+
+                                <i class="fa-solid
+                                          ${tieneResultado
+                                              ? 'fa-circle-check'
+                                              : 'fa-clock'}
+                                          text-emerald-500
+                                          text-xs">
+                                </i>
+
+
+                                <span class="text-xs
+                                             font-bold
+                                             ${tieneResultado
+                                                 ? 'text-emerald-500'
+                                                 : 'text-slate-500'}">
+
+                                    ${tieneResultado
+                                        ? 'Partido jugado'
+                                        : 'Pendiente de resultado'}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- ========================================= -->
+                        <!-- ACCIONES -->
+                        <!-- ========================================= -->
+
+                        <div class="mt-6
+                                    flex
+                                    gap-2">
+
+
+                            <!-- RESULTADO -->
+
+                            <button
+                                type="button"
+                                class="btn-resultado
+                                       flex-1
+                                       bg-emerald-500/10
+                                       hover:bg-emerald-500
+                                       text-emerald-500
+                                       hover:text-slate-900
+                                       py-3
+                                       rounded-xl
+                                       font-bold
+                                       transition-all
+                                       text-xs
+                                       uppercase
+                                       tracking-widest"
+                                data-id="${partido.id}">
+
+                                <i class="fa-solid
+                                          fa-square-poll-vertical
+                                          mr-1">
+                                </i>
+
+                                ${tieneResultado
+                                    ? 'Editar resultado'
+                                    : 'Cargar resultado'}
+
+                            </button>
+
+
+                            <!-- EDITAR -->
+
+                            <a
+                                href="/partidos/nuevo?id=${partido.id}"
+                                class="w-12
+                                       bg-slate-800
+                                       hover:bg-emerald-500/20
+                                       text-slate-400
+                                       hover:text-emerald-500
+                                       rounded-xl
+                                       flex
+                                       items-center
+                                       justify-center
+                                       transition-all">
+
+                                <i class="fa-solid
+                                          fa-pen">
+                                </i>
+
+                            </a>
+
+
+                            <!-- ELIMINAR -->
+
+                            <button
+                                type="button"
+                                class="btn-eliminar
+                                       w-12
+                                       bg-slate-800
+                                       hover:bg-red-500/20
+                                       text-slate-400
+                                       hover:text-red-500
+                                       rounded-xl
+                                       transition-all"
+                                data-id="${partido.id}"
+                                data-rival="${escapeHtml(
+                                    partido.rival || ''
+                                )}">
+
+                                <i class="fa-solid
+                                          fa-trash-can">
+                                </i>
+
+                            </button>
+
+                        </div>
+
+                    `;
+
+
+                    lista.appendChild(
+                        card
+                    );
+
+                }
+            );
+
+
+            // =====================================================
+            // EVENTOS ELIMINAR
+            // =====================================================
+
+            lista
+                .querySelectorAll(
+                    '.btn-eliminar'
+                )
+                .forEach(
+                    btn => {
+
+                        btn.addEventListener(
+                            'click',
+                            function () {
+
+                                eliminarPartido(
+                                    this.dataset.id,
+                                    this.dataset.rival
+                                );
+
+                            }
+                        );
+
+                    }
+                );
+
+
+            // =====================================================
+            // EVENTOS RESULTADO
+            // =====================================================
+
+            lista
+                .querySelectorAll(
+                    '.btn-resultado'
+                )
+                .forEach(
+                    btn => {
+
+                        btn.addEventListener(
+                            'click',
+                            function () {
+
+                                cargarResultado(
+                                    this.dataset.id
+                                );
+
+                            }
+                        );
+
+                    }
+                );
+
+        }
+
+
+        // =========================================================
+        // ELIMINAR PARTIDO
+        // =========================================================
+
+        async function eliminarPartido(
+            id,
+            rival
+        ) {
+
+
+            if (
+                !confirm(
+                    `¿Seguro que querés eliminar el partido contra "${rival}"?`
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            const token =
+                getJwt();
+
+
+            if (!token) {
+
+                alert(
+                    "Sesión expirada."
+                );
+
+                window.location.href =
+                    "/login";
+
+                return;
+
+            }
+
+
+            try {
+
+                const res =
+                    await fetch(
+                        `/api/partidos/${id}`,
+                        {
+
+                            method: 'DELETE',
+
+                            headers: {
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            }
+
+                        }
+                    );
+
+
+                if (!res.ok) {
+
+                    let mensaje =
+                        "No se pudo eliminar el partido.";
+
+
+                    try {
+
+                        const errorData =
+                            await res.json();
+
+
+                        if (
+                            errorData.mensaje
+                        ) {
+
+                            mensaje =
+                                errorData.mensaje;
+
+                        } else if (
+                            errorData.message
+                        ) {
+
+                            mensaje =
+                                errorData.message;
+
+                        }
+
+                    } catch (_) {}
+
+
+                    throw new Error(
+                        mensaje
+                    );
+
+                }
+
+
+                await cargarPartidos();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error eliminando partido:",
+                    error
+                );
+
+
+                alert(
+                    error.message ||
+                    "Error al eliminar el partido."
+                );
+
+            }
+
+        }
+
+
+        // =========================================================
+        // CARGAR / EDITAR RESULTADO
+        // =========================================================
+
+        async function cargarResultado(id) {
+
+
+            const partido =
+                partidos.find(
+                    p =>
+                        String(p.id) ===
+                        String(id)
+                );
+
+
+            if (!partido) {
+
+                alert(
+                    "No se encontró el partido."
+                );
+
+                return;
+
+            }
+
+
+            const resultado =
+                prompt(
+                    "Ingresá el resultado del partido:",
+                    partido.resultado || ''
+                );
+
+
+            if (resultado === null) {
+                return;
+            }
+
+
+            if (!resultado.trim()) {
+
+                alert(
+                    "El resultado no puede estar vacío."
+                );
+
+                return;
+
+            }
+
+
+            const token =
+                getJwt();
+
+
+            if (!token) {
+
+                alert(
+                    "Sesión expirada."
+                );
+
+                window.location.href =
+                    "/login";
+
+                return;
+
+            }
+
+
+            try {
+
+                const res =
+                    await fetch(
+                        `/api/partidos/${id}`,
+                        {
+
+                            method: 'PATCH',
+
+                            headers: {
+
+                                'Content-Type':
+                                    'application/json',
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            },
+
+                            body:
+                                JSON.stringify({
+
+                                    resultado:
+                                        resultado.trim()
+
+                                })
+
+                        }
+                    );
+
+
+                if (!res.ok) {
+
+                    let mensaje =
+                        "No se pudo actualizar el resultado.";
+
+
+                    try {
+
+                        const errorData =
+                            await res.json();
+
+
+                        if (
+                            errorData.mensaje
+                        ) {
+
+                            mensaje =
+                                errorData.mensaje;
+
+                        } else if (
+                            errorData.message
+                        ) {
+
+                            mensaje =
+                                errorData.message;
+
+                        }
+
+                    } catch (_) {}
+
+
+                    throw new Error(
+                        mensaje
+                    );
+
+                }
+
+
+                await cargarPartidos();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error actualizando resultado:",
+                    error
+                );
+
+
+                alert(
+                    error.message ||
+                    "Error al actualizar el resultado."
+                );
+
+            }
+
+        }
+
+
+        // =========================================================
+        // EVENTOS DE FILTROS
+        // =========================================================
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            function () {
+
+
+                // ================================================
+                // CARGAR CAMPEONATOS
+                // ================================================
+
+                cargarCampeonatos();
+
+
+                // ================================================
+                // BUSCADOR
+                // ================================================
+
+                document
+                    .getElementById(
+                        'inputBusqueda'
+                    )
+                    .addEventListener(
+                        'input',
+                        function () {
+
+                            mostrarPartidos();
+
+                        }
+                    );
+
+
+                // ================================================
+                // CAMPEONATO
+                // ================================================
+
+                document
+                    .getElementById(
+                        'filtroCampeonato'
+                    )
+                    .addEventListener(
+                        'change',
+                        function () {
+
+                            mostrarPartidos();
+
+                        }
+                    );
+
+
+                // ================================================
+                // BOTÓN TODOS
+                // ================================================
+
+                document
+                    .getElementById(
+                        'btnTodos'
+                    )
+                    .addEventListener(
+                        'click',
+                        function () {
+
+                            document
+                                .getElementById(
+                                    'inputBusqueda'
+                                )
+                                .value = '';
+
+
+                            document
+                                .getElementById(
+                                    'filtroCampeonato'
+                                )
+                                .value = '';
+
+
+                            mostrarPartidos();
+
+                        }
+                    );
+
+
+                // ================================================
+                // CARGAR PARTIDOS
+                // ================================================
+
+                cargarPartidos();
+
+            }
+        );
+
+    </script>
+
+</div>
+
+</body>
+
+</html>
+

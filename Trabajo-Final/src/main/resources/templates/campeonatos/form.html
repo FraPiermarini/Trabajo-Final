@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: mainLayout(~{::#content})}"
+      lang="es">
+
+<head>
+
+```
+<meta charset="UTF-8">
+
+<title>Nuevo Campeonato</title>
+
+<link rel="icon" href="data:,">
+```
+
+</head>
+
+<body>
+
+<div id="content" class="max-w-[1000px] mx-auto">
+
+```
+<!-- ========================================================= -->
+<!-- HEADER -->
+<!-- ========================================================= -->
+
+<div class="flex items-center gap-4 mb-10">
+
+    <a th:href="@{/campeonatos}"
+       class="w-11 h-11 flex items-center justify-center
+              bg-[#0f172a] border border-slate-800 rounded-xl
+              text-slate-400 hover:text-emerald-500
+              hover:border-emerald-500/30 transition-all">
+
+        <i class="fa-solid fa-arrow-left"></i>
+
+    </a>
+
+
+    <div>
+
+        <h1 id="formTitle"
+            class="text-4xl font-black text-white
+                   italic uppercase tracking-tight">
+
+            Nuevo Campeonato
+
+        </h1>
+
+
+        <p class="text-emerald-500 font-bold mt-1">
+
+            Completá los datos del campeonato.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- FORMULARIO -->
+<!-- ========================================================= -->
+
+<form id="campeonatoForm">
+
+    <input type="hidden" id="campeonatoId">
+
+
+    <div class="bg-[#0f172a]
+                border border-slate-800
+                rounded-[2.5rem]
+                p-8">
+
+
+        <!-- ================================================= -->
+        <!-- CABECERA -->
+        <!-- ================================================= -->
+
+        <div class="flex items-center gap-4 mb-8">
+
+            <div class="w-12 h-12 rounded-2xl
+                        bg-emerald-500/10
+                        flex items-center justify-center
+                        text-emerald-500">
+
+                <i class="fa-solid fa-trophy text-xl"></i>
+
+            </div>
+
+
+            <div>
+
+                <h2 class="text-xl font-black
+                           text-white
+                           uppercase italic">
+
+                    Datos del campeonato
+
+                </h2>
+
+
+                <p class="text-xs text-slate-600
+                          font-bold uppercase
+                          tracking-widest mt-1">
+
+                    Información general
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- CAMPOS -->
+        <!-- ================================================= -->
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+
+            <!-- ================================================= -->
+            <!-- NOMBRE -->
+            <!-- ================================================= -->
+
+            <div class="space-y-2">
+
+                <label for="nombre"
+                       class="text-[10px]
+                              font-black
+                              text-slate-500
+                              uppercase
+                              tracking-widest
+                              ml-1">
+
+                    Nombre
+
+                </label>
+
+
+                <input type="text"
+                       id="nombre"
+                       required
+                       maxlength="100"
+                       placeholder="Ej: Liga Regional, Torneo Apertura..."
+                       class="w-full
+                              bg-[#0a0f1d]
+                              border border-slate-800
+                              text-slate-200
+                              px-5 py-4
+                              rounded-xl
+                              outline-none
+                              focus:ring-2
+                              focus:ring-emerald-500
+                              focus:border-transparent
+                              transition-all">
+
+            </div>
+
+
+            <!-- ================================================= -->
+            <!-- AÑO -->
+            <!-- ================================================= -->
+
+            <div class="space-y-2">
+
+                <label for="año"
+                       class="text-[10px]
+                              font-black
+                              text-slate-500
+                              uppercase
+                              tracking-widest
+                              ml-1">
+
+                    Año
+
+                </label>
+
+
+                <input type="text"
+                       id="año"
+                       required
+                       maxlength="4"
+                       placeholder="Ej: 2026"
+                       class="w-full
+                              bg-[#0a0f1d]
+                              border border-slate-800
+                              text-slate-200
+                              px-5 py-4
+                              rounded-xl
+                              outline-none
+                              focus:ring-2
+                              focus:ring-emerald-500
+                              focus:border-transparent
+                              transition-all">
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================================= -->
+        <!-- BOTONES -->
+        <!-- ================================================= -->
+
+        <div class="flex justify-end gap-3
+                    mt-8 pt-8
+                    border-t border-slate-800">
+
+
+            <!-- CANCELAR -->
+
+            <a th:href="@{/campeonatos}"
+               class="px-6 py-3
+                      rounded-xl
+                      border border-slate-800
+                      bg-[#0a0f1d]
+                      text-slate-400
+                      hover:text-white
+                      font-bold
+                      transition-all">
+
+                Cancelar
+
+            </a>
+
+
+            <!-- GUARDAR -->
+
+            <button type="submit"
+                    id="submitButton"
+                    class="px-8 py-3
+                           rounded-xl
+                           bg-emerald-500
+                           hover:bg-emerald-400
+                           text-slate-900
+                           font-black
+                           uppercase
+                           text-xs
+                           tracking-widest
+                           shadow-lg
+                           shadow-emerald-500/20
+                           transition-all">
+
+                <i class="fa-solid fa-floppy-disk mr-2"></i>
+
+                Guardar campeonato
+
+            </button>
+
+        </div>
+
+    </div>
+
+</form>
+
+
+<!-- ========================================================= -->
+<!-- JAVASCRIPT -->
+<!-- ========================================================= -->
+
+<script>
+
+
+    // =========================================================
+    // OBTENER JWT
+    // =========================================================
+
+    function getJwt() {
+
+        const cookie =
+            document.cookie
+                .split('; ')
+                .find(row =>
+                    row.startsWith('token=')
+                );
+
+        return cookie
+            ? cookie.substring(6)
+            : null;
+
+    }
+
+
+    // =========================================================
+    // CARGAR CAMPEONATO PARA EDITAR
+    // =========================================================
+
+    async function cargarCampeonato(id) {
+
+        const token = getJwt();
+
+
+        if (!token) {
+
+            alert("Sesión expirada.");
+
+            window.location.href =
+                "/login";
+
+            return;
+
+        }
+
+
+        try {
+
+            const res =
+                await fetch(
+                    `/api/campeonatos/${id}`,
+                    {
+
+                        method: 'GET',
+
+                        headers: {
+
+                            'Authorization':
+                                'Bearer ' + token,
+
+                            'Accept':
+                                'application/json'
+
+                        }
+
+                    }
+                );
+
+
+            if (!res.ok) {
+
+                if (
+                    res.status === 401 ||
+                    res.status === 403
+                ) {
+
+                    throw new Error(
+                        "No tenés permisos para consultar el campeonato."
+                    );
+
+                }
+
+                throw new Error(
+                    "No se pudo obtener el campeonato."
+                );
+
+            }
+
+
+            const campeonato =
+                await res.json();
+
+
+            console.log(
+                "Campeonato obtenido:",
+                campeonato
+            );
+
+
+            // =================================================
+            // CARGAR DATOS
+            // =================================================
+
+            document.getElementById(
+                'campeonatoId'
+            ).value =
+                campeonato.id;
+
+
+            document.getElementById(
+                'nombre'
+            ).value =
+                campeonato.nombre || '';
+
+
+            document.getElementById(
+                'año'
+            ).value =
+                campeonato.año || '';
+
+
+            // =================================================
+            // CAMBIAR MODO EDICIÓN
+            // =================================================
+
+            document.getElementById(
+                'formTitle'
+            ).innerText =
+                "Editar Campeonato";
+
+
+            document.getElementById(
+                'submitButton'
+            ).innerHTML =
+                '<i class="fa-solid fa-pen mr-2"></i> Actualizar campeonato';
+
+
+        } catch (error) {
+
+            console.error(
+                "Error cargando campeonato:",
+                error
+            );
+
+
+            alert(
+                error.message ||
+                "No se pudo cargar el campeonato."
+            );
+
+        }
+
+    }
+
+
+    // =========================================================
+    // INICIALIZAR
+    // =========================================================
+
+    document.addEventListener(
+        'DOMContentLoaded',
+        function () {
+
+
+            const params =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+
+            const id =
+                params.get('id');
+
+
+            // Si existe ID, estamos editando
+
+            if (id) {
+
+                cargarCampeonato(id);
+
+            }
+
+        }
+    );
+
+
+    // =========================================================
+    // GUARDAR / ACTUALIZAR
+    // =========================================================
+
+    document.getElementById(
+        'campeonatoForm'
+    ).addEventListener(
+        'submit',
+        async function (e) {
+
+            e.preventDefault();
+
+
+            const token = getJwt();
+
+
+            if (!token) {
+
+                alert("Sesión expirada.");
+
+                window.location.href =
+                    "/login";
+
+                return;
+
+            }
+
+
+            // =================================================
+            // DATOS
+            // =================================================
+
+            const id =
+                document.getElementById(
+                    'campeonatoId'
+                ).value;
+
+
+            const nombre =
+                document.getElementById(
+                    'nombre'
+                ).value.trim();
+
+
+            const año =
+                document.getElementById(
+                    'año'
+                ).value.trim();
+
+
+            // =================================================
+            // VALIDACIONES
+            // =================================================
+
+            if (!nombre) {
+
+                alert(
+                    "El nombre es obligatorio."
+                );
+
+                return;
+
+            }
+
+
+            if (!año) {
+
+                alert(
+                    "El año es obligatorio."
+                );
+
+                return;
+
+            }
+
+
+            if (!/^\d{4}$/.test(año)) {
+
+                alert(
+                    "El año debe tener 4 números."
+                );
+
+                return;
+
+            }
+
+
+            // =================================================
+            // OBJETO
+            // =================================================
+
+            const campeonatoData = {
+
+                nombre: nombre,
+
+                año: año
+
+            };
+
+
+            console.log(
+                "Enviando campeonato:",
+                campeonatoData
+            );
+
+
+            // =================================================
+            // BOTÓN
+            // =================================================
+
+            const boton =
+                document.getElementById(
+                    'submitButton'
+                );
+
+
+            boton.disabled = true;
+
+
+            boton.innerHTML =
+                '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Guardando...';
+
+
+            try {
+
+
+                // =================================================
+                // URL Y MÉTODO
+                // =================================================
+
+                const url =
+                    id
+                        ? `/api/campeonatos/${id}`
+                        : '/api/campeonatos';
+
+
+                const method =
+                    id
+                        ? 'PUT'
+                        : 'POST';
+
+
+                const res =
+                    await fetch(
+                        url,
+                        {
+
+                            method: method,
+
+                            headers: {
+
+                                'Content-Type':
+                                    'application/json',
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            },
+
+                            body:
+                                JSON.stringify(
+                                    campeonatoData
+                                )
+
+                        }
+                    );
+
+
+                // =================================================
+                // ERROR
+                // =================================================
+
+                if (!res.ok) {
+
+                    let mensaje =
+                        id
+                            ? "No se pudo actualizar el campeonato."
+                            : "No se pudo crear el campeonato.";
+
+
+                    try {
+
+                        const errorData =
+                            await res.json();
+
+
+                        if (
+                            errorData.mensaje
+                        ) {
+
+                            mensaje =
+                                errorData.mensaje;
+
+                        } else if (
+                            errorData.message
+                        ) {
+
+                            mensaje =
+                                errorData.message;
+
+                        } else if (
+                            errorData.error
+                        ) {
+
+                            mensaje =
+                                errorData.error;
+
+                        }
+
+                    } catch (_) {
+
+                        const texto =
+                            await res.text();
+
+
+                        if (texto) {
+
+                            console.error(
+                                "Respuesta del servidor:",
+                                texto
+                            );
+
+                        }
+
+                    }
+
+
+                    throw new Error(
+                        mensaje
+                    );
+
+                }
+
+
+                // =================================================
+                // ÉXITO
+                // =================================================
+
+                alert(
+                    id
+                        ? "Campeonato actualizado correctamente."
+                        : "Campeonato creado correctamente."
+                );
+
+
+                window.location.href =
+                    "/campeonatos";
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error guardando campeonato:",
+                    error
+                );
+
+
+                alert(
+                    error.message ||
+                    "Error al guardar el campeonato."
+                );
+
+
+                boton.disabled = false;
+
+
+                boton.innerHTML =
+                    '<i class="fa-solid fa-floppy-disk mr-2"></i> ' +
+                    (
+                        id
+                            ? "Actualizar campeonato"
+                            : "Guardar campeonato"
+                    );
+
+            }
+
+        }
+    );
+
+</script>
+```
+
+</div>
+
+</body>
+
+</html>

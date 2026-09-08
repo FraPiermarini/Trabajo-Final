@@ -1,0 +1,7805 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: mainLayout(~{::#content})}"
+      lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Reportes de Estadísticas</title>
+
+    <link rel="icon"
+          href="data:,">
+
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+
+</head>
+
+
+<body>
+
+<div id="content"
+     class="max-w-[1200px] mx-auto">
+
+
+    <!-- =========================================================
+         HEADER
+    ========================================================== -->
+
+    <div class="mb-8">
+
+        <a href="/estadisticas"
+           class="inline-flex items-center gap-2
+                  text-slate-400 hover:text-emerald-400
+                  text-sm font-bold mb-5 transition">
+
+            <i class="fa-solid fa-arrow-left"></i>
+
+            Volver a estadísticas
+
+        </a>
+
+
+        <div>
+
+            <h1 class="text-3xl md:text-4xl
+                       font-black text-white tracking-tight">
+
+                Reportes
+
+            </h1>
+
+            <p class="text-slate-500 mt-2">
+
+                Analizá el rendimiento deportivo.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         TIPO DE REPORTE
+    ========================================================== -->
+
+    <div class="grid grid-cols-1
+                md:grid-cols-3
+                gap-4 mb-8">
+
+
+        <button
+            type="button"
+            data-tipo="jugador"
+            class="tipoReporte
+                   text-left
+                   bg-slate-900
+                   border border-emerald-500
+                   rounded-2xl
+                   p-5
+                   transition
+                   hover:border-emerald-400">
+
+            <div class="flex items-center gap-4">
+
+                <div class="w-12 h-12
+                            rounded-xl
+                            bg-emerald-500/10
+                            flex items-center
+                            justify-center">
+
+                    <i class="fa-solid fa-user
+                              text-emerald-500
+                              text-xl">
+                    </i>
+
+                </div>
+
+
+                <div>
+
+                    <p class="text-white
+                              font-black">
+
+                        Jugador
+
+                    </p>
+
+                    <p class="text-slate-500
+                              text-xs mt-1">
+
+                        Estadísticas individuales.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </button>
+
+
+
+        <button
+            type="button"
+            data-tipo="entrenador"
+            class="tipoReporte
+                   text-left
+                   bg-slate-900
+                   border border-slate-800
+                   rounded-2xl
+                   p-5
+                   transition
+                   hover:border-emerald-500">
+
+            <div class="flex items-center gap-4">
+
+                <div class="w-12 h-12
+                            rounded-xl
+                            bg-emerald-500/10
+                            flex items-center
+                            justify-center">
+
+                    <i class="fa-solid fa-user-tie
+                              text-emerald-500
+                              text-xl">
+                    </i>
+
+                </div>
+
+
+                <div>
+
+                    <p class="text-white
+                              font-black">
+
+                        Entrenador
+
+                    </p>
+
+                    <p class="text-slate-500
+                              text-xs mt-1">
+
+                        Rendimiento del entrenador.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </button>
+
+
+
+        <button
+            type="button"
+            data-tipo="categoria"
+            class="tipoReporte
+                   text-left
+                   bg-slate-900
+                   border border-slate-800
+                   rounded-2xl
+                   p-5
+                   transition
+                   hover:border-emerald-500">
+
+            <div class="flex items-center gap-4">
+
+                <div class="w-12 h-12
+                            rounded-xl
+                            bg-emerald-500/10
+                            flex items-center
+                            justify-center">
+
+                    <i class="fa-solid fa-layer-group
+                              text-emerald-500
+                              text-xl">
+                    </i>
+
+                </div>
+
+
+                <div>
+
+                    <p class="text-white
+                              font-black">
+
+                        Categoría
+
+                    </p>
+
+                    <p class="text-slate-500
+                              text-xs mt-1">
+
+                        Rendimiento general de una categoría.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        </button>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         CONFIGURACION
+    ========================================================== -->
+
+    <div class="bg-slate-900
+                border border-slate-800
+                rounded-3xl
+                p-6 md:p-7
+                mb-8">
+
+
+        <div class="flex items-center gap-3 mb-6">
+
+            <div class="w-10 h-10
+                        rounded-xl
+                        bg-emerald-500/10
+                        flex items-center
+                        justify-center">
+
+                <i class="fa-solid fa-sliders
+                          text-emerald-500">
+                </i>
+
+            </div>
+
+
+            <div>
+
+                <h2 class="text-white
+                           font-black">
+
+                    Configuración del reporte
+
+                </h2>
+
+                <p class="text-slate-500
+                          text-xs mt-1">
+
+                    Seleccioná los filtros que querés analizar.
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+
+        <div class="grid grid-cols-1
+                    md:grid-cols-2
+                    lg:grid-cols-3
+                    gap-5">
+
+
+            <!-- ALCANCE JUGADOR -->
+
+            <div id="contenedorAlcanceJugador">
+
+                <label class="block
+                              text-slate-400
+                              text-xs
+                              font-bold
+                              uppercase
+                              tracking-wider
+                              mb-2">
+
+                    Alcance
+
+                </label>
+
+                <select
+                    id="alcanceJugador"
+                    class="w-full
+                           bg-slate-950
+                           border border-slate-700
+                           rounded-xl
+                           px-4 py-3
+                           text-white
+                           outline-none
+                           focus:border-emerald-500">
+
+                    <option value="uno">
+                        Un jugador
+                    </option>
+
+                    <option value="todos" id="opcionTodosJugadores">
+                        Todos los jugadores de la categoría
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- ENTRENADOR -->
+
+            <div id="contenedorEntrenador"
+                 class="hidden">
+
+                <label class="block
+                              text-slate-400
+                              text-xs
+                              font-bold
+                              uppercase
+                              tracking-wider
+                              mb-2">
+
+                    Entrenador
+
+                </label>
+
+                <select
+                    id="entrenadorId"
+                    class="w-full
+                           bg-slate-950
+                           border border-slate-700
+                           rounded-xl
+                           px-4 py-3
+                           text-white
+                           outline-none
+                           focus:border-emerald-500">
+
+                    <option value="">
+                        Seleccioná un entrenador
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- CATEGORIA -->
+
+            <div id="contenedorCategoria">
+
+                <label class="block
+                              text-slate-400
+                              text-xs
+                              font-bold
+                              uppercase
+                              tracking-wider
+                              mb-2">
+
+                    Categoría
+
+                </label>
+
+                <select
+                    id="categoriaId"
+                    class="w-full
+                           bg-slate-950
+                           border border-slate-700
+                           rounded-xl
+                           px-4 py-3
+                           text-white
+                           outline-none
+                           focus:border-emerald-500">
+
+                    <option value="">
+                        Seleccioná una categoría
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- JUGADOR -->
+
+            <div id="contenedorJugador"
+                 class="hidden">
+
+                <label class="block
+                              text-slate-400
+                              text-xs
+                              font-bold
+                              uppercase
+                              tracking-wider
+                              mb-2">
+
+                    Jugador
+
+                </label>
+
+                <select
+                    id="jugadorId"
+                    class="w-full
+                           bg-slate-950
+                           border border-slate-700
+                           rounded-xl
+                           px-4 py-3
+                           text-white
+                           outline-none
+                           focus:border-emerald-500">
+
+                    <option value="">
+                        Seleccioná un jugador
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- ALCANCE -->
+
+            <div>
+
+                <label class="block
+                              text-slate-400
+                              text-xs
+                              font-bold
+                              uppercase
+                              tracking-wider
+                              mb-2">
+
+                    Período
+
+                </label>
+
+                <select
+                    id="alcance"
+                    class="w-full
+                           bg-slate-950
+                           border border-slate-700
+                           rounded-xl
+                           px-4 py-3
+                           text-white
+                           outline-none
+                           focus:border-emerald-500">
+
+                    <option value="acumulado">
+                        Acumulado
+                    </option>
+
+                    <option value="mes">
+                        Por mes
+                    </option>
+
+                    <option value="campeonato">
+                        Por campeonato
+                    </option>
+
+                    <option value="partido">
+                        Por partido
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- AÑO -->
+
+            <div id="contenedorAnio"
+                 class="hidden">
+
+                <label class="block
+                              text-slate-400
+                              text-xs
+                              font-bold
+                              uppercase
+                              tracking-wider
+                              mb-2">
+
+                    Año
+
+                </label>
+
+                <input
+                    type="number"
+                    id="anio"
+                    class="w-full
+                           bg-slate-950
+                           border border-slate-700
+                           rounded-xl
+                           px-4 py-3
+                           text-white
+                           outline-none
+                           focus:border-emerald-500">
+
+            </div>
+
+
+
+            <!-- MES -->
+
+            <div id="contenedorMes"
+                 class="hidden">
+
+                <label class="block
+                              text-slate-400
+                              text-xs
+                              font-bold
+                              uppercase
+                              tracking-wider
+                              mb-2">
+
+                    Mes
+
+                </label>
+
+                <select
+                    id="mes"
+                    class="w-full
+                           bg-slate-950
+                           border border-slate-700
+                           rounded-xl
+                           px-4 py-3
+                           text-white
+                           outline-none
+                           focus:border-emerald-500">
+
+                    <option value="1">Enero</option>
+                    <option value="2">Febrero</option>
+                    <option value="3">Marzo</option>
+                    <option value="4">Abril</option>
+                    <option value="5">Mayo</option>
+                    <option value="6">Junio</option>
+                    <option value="7">Julio</option>
+                    <option value="8">Agosto</option>
+                    <option value="9">Septiembre</option>
+                    <option value="10">Octubre</option>
+                    <option value="11">Noviembre</option>
+                    <option value="12">Diciembre</option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- CAMPEONATO -->
+
+            <div id="contenedorCampeonato"
+                 class="hidden">
+
+                <label class="block
+                              text-slate-400
+                              text-xs
+                              font-bold
+                              uppercase
+                              tracking-wider
+                              mb-2">
+
+                    Campeonato
+
+                </label>
+
+                <select
+                    id="campeonatoId"
+                    class="w-full
+                           bg-slate-950
+                           border border-slate-700
+                           rounded-xl
+                           px-4 py-3
+                           text-white
+                           outline-none
+                           focus:border-emerald-500">
+
+                    <option value="">
+                        Seleccioná un campeonato
+                    </option>
+
+                </select>
+
+            </div>
+
+
+
+            <!-- PARTIDO -->
+
+            <div id="contenedorPartido"
+                 class="hidden">
+
+                <label class="block
+                              text-slate-400
+                              text-xs
+                              font-bold
+                              uppercase
+                              tracking-wider
+                              mb-2">
+
+                    Partido
+
+                </label>
+
+                <select
+                    id="partidoId"
+                    class="w-full
+                           bg-slate-950
+                           border border-slate-700
+                           rounded-xl
+                           px-4 py-3
+                           text-white
+                           outline-none
+                           focus:border-emerald-500">
+
+                    <option value="">
+                        Seleccioná un partido
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- BOTON -->
+
+        <div class="mt-6 flex justify-end">
+
+            <button
+                id="btnGenerar"
+                type="button"
+                class="w-full md:w-auto
+                       inline-flex
+                       items-center
+                       justify-center
+                       gap-2
+                       bg-emerald-500
+                       hover:bg-emerald-600
+                       text-white
+                       font-black
+                       rounded-xl
+                       px-6 py-3
+                       transition">
+
+                <i class="fa-solid fa-chart-column"></i>
+
+                Generar reporte
+
+            </button>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         LOADING
+    ========================================================== -->
+
+    <div id="loading"
+         class="hidden
+                bg-slate-900
+                border border-slate-800
+                rounded-2xl
+                p-8
+                text-center
+                mb-8">
+
+        <i class="fa-solid fa-spinner
+                  fa-spin
+                  text-emerald-500
+                  text-2xl
+                  mb-3">
+        </i>
+
+        <p class="text-white
+                  font-bold">
+
+            Generando reporte...
+
+        </p>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         ERROR
+    ========================================================== -->
+
+    <div id="estadoError"
+         class="hidden
+                bg-red-500/10
+                border border-red-500/30
+                rounded-2xl
+                p-5
+                mb-8">
+
+        <div class="flex items-start gap-4">
+
+            <div class="w-10 h-10
+                        rounded-xl
+                        bg-red-500/10
+                        flex items-center
+                        justify-center
+                        shrink-0">
+
+                <i class="fa-solid fa-circle-exclamation
+                          text-red-400">
+                </i>
+
+            </div>
+
+
+            <div>
+
+                <p class="text-red-400
+                          font-black">
+
+                    No se pudo generar el reporte
+
+                </p>
+
+                <p id="textoError"
+                   class="text-red-300/80
+                          text-sm
+                          mt-1">
+
+                    Ocurrió un error.
+
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- =========================================================
+         RESULTADO
+    ========================================================== -->
+
+    <div id="resultado"
+         class="hidden">
+
+
+        <div class="mb-6">
+
+            <h2 id="tituloResultado"
+                class="text-2xl
+                       font-black
+                       text-white">
+
+                Reporte
+
+            </h2>
+
+            <p id="subtituloResultado"
+               class="text-slate-500
+                      text-sm
+                      mt-1">
+
+            </p>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             TARJETAS JUGADOR
+        ====================================================== -->
+
+        <div id="contenedorTarjetas"
+             class="hidden
+                    grid
+                    grid-cols-2
+                    md:grid-cols-4
+                    gap-4
+                    mb-8">
+        </div>
+
+
+
+        <!-- =====================================================
+             TARJETAS EQUIPO
+        ====================================================== -->
+
+        <div id="contenedorTarjetasEquipo"
+             class="hidden
+                    grid
+                    grid-cols-2
+                    md:grid-cols-4
+                    gap-4
+                    mb-8">
+        </div>
+
+
+
+        <!-- =====================================================
+             TABLA JUGADORES
+        ====================================================== -->
+
+        <div id="contenedorTabla"
+             class="hidden
+                    bg-slate-900
+                    border border-slate-800
+                    rounded-3xl
+                    overflow-hidden
+                    mb-8">
+
+            <div class="overflow-x-auto">
+
+                <table class="w-full">
+
+                    <thead>
+
+                    <tr class="border-b
+                               border-slate-800
+                               text-slate-500
+                               text-xs
+                               uppercase
+                               tracking-wider">
+
+                        <th class="text-left
+                                   px-5 py-4">
+
+                            Jugador
+
+                        </th>
+
+                        <th class="px-4 py-4">
+                            Partidos
+                        </th>
+
+                        <th class="px-4 py-4">
+                            Titular
+                        </th>
+
+                        <th class="px-4 py-4">
+                            Min.
+                        </th>
+
+                        <th class="px-4 py-4">
+                            ⚽
+                        </th>
+
+                        <th class="px-4 py-4">
+                            Asist.
+                        </th>
+
+                        <th class="px-4 py-4">
+                            🟨
+                        </th>
+
+                        <th class="px-4 py-4">
+                            🟥
+                        </th>
+
+                        <th class="px-4 py-4">
+                            Incidencias
+                        </th>
+
+                    </tr>
+
+                    </thead>
+
+                    <tbody id="tablaJugadores"
+                           class="text-sm">
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             INCIDENCIAS
+        ====================================================== -->
+
+        <div id="contenedorIncidencias"
+             class="hidden
+                    bg-slate-900
+                    border border-slate-800
+                    rounded-3xl
+                    overflow-hidden
+                    mb-8">
+
+            <div class="px-5 py-4
+                        border-b
+                        border-slate-800">
+
+                <h3 class="text-white
+                           font-black">
+
+                    Incidencias
+
+                </h3>
+
+            </div>
+
+            <div id="listaIncidencias"
+                 class="divide-y
+                        divide-slate-800">
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             GRAFICOS EQUIPO
+        ====================================================== -->
+
+        <div id="contenedorGraficosEquipo"
+             class="hidden
+                    grid
+                    grid-cols-1
+                    lg:grid-cols-2
+                    gap-5
+                    mb-8">
+
+
+            <!-- RESULTADOS -->
+
+            <div class="bg-slate-900
+                        border border-slate-800
+                        rounded-3xl
+                        p-5">
+
+                <h3 class="text-white
+                           font-black">
+
+                    Resultados
+
+                </h3>
+
+                <p class="text-slate-500 text-xs mt-1">Balance de victorias, empates y derrotas.</p><p class="text-slate-600 text-[11px] mt-1">Datos: partidos jugados y resultado de cada partido.</p><div id="graficoResultadosEquipo"
+                     class="w-full
+                            h-[320px]">
+                </div>
+
+            </div>
+
+
+
+            <!-- GOLES -->
+
+            <div class="bg-slate-900
+                        border border-slate-800
+                        rounded-3xl
+                        p-5">
+
+                <h3 class="text-white
+                           font-black">
+
+                    Producción ofensiva
+
+                </h3>
+
+                <p class="text-slate-500 text-xs mt-1">Goles a favor, recibidos y diferencia.</p><p class="text-slate-600 text-[11px] mt-1">Datos: goles convertidos y goles recibidos.</p><div id="graficoGolesEquipo"
+                     class="w-full
+                            h-[320px]">
+                </div>
+
+            </div>
+
+
+
+            <!-- EFICIENCIA -->
+
+            <div class="bg-slate-900
+                        border border-slate-800
+                        rounded-3xl
+                        p-5">
+
+                <h3 class="text-white
+                           font-black">
+
+                    Eficiencia competitiva
+
+                </h3>
+
+                <p class="text-slate-500 text-xs mt-1">Rendimiento porcentual del equipo.</p><p class="text-slate-600 text-[11px] mt-1">Datos: victorias, empates, derrotas y efectividad.</p><div id="graficoEficienciaEquipo"
+                     class="w-full
+                            h-[320px]">
+                </div>
+
+            </div>
+
+
+
+            <!-- PROMEDIO -->
+
+            <div class="bg-slate-900
+                        border border-slate-800
+                        rounded-3xl
+                        p-5">
+
+                <h3 class="text-white
+                           font-black">
+
+                    Promedio goleador
+
+                </h3>
+
+                <p class="text-slate-500 text-xs mt-1">Promedio de goles por partido.</p><p class="text-slate-600 text-[11px] mt-1">Datos: goles a favor y goles recibidos divididos por partidos.</p><div id="graficoPromedioEquipo"
+                     class="w-full
+                            h-[320px]">
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             GRAFICOS JUGADORES
+        ====================================================== -->
+
+        <div id="contenedorGraficos"
+             class="hidden
+                    grid
+                    grid-cols-1
+                    lg:grid-cols-2
+                    gap-5
+                    mb-8">
+
+
+            <!-- INDIVIDUAL -->
+
+            <div id="contenedorGraficoIndividual"
+                 class="hidden
+                        bg-slate-900
+                        border border-slate-800
+                        rounded-3xl
+                        p-5">
+
+                <h3 class="text-white
+                           font-black">
+
+                    Rendimiento individual
+
+                </h3>
+
+                <p class="text-slate-500 text-xs mt-1">Participación como titular del jugador.</p><p class="text-slate-600 text-[11px] mt-1">Datos: partidos jugados y titularidades.</p><div id="graficoIndividual"
+                     class="w-full
+                            h-[330px]">
+                </div>
+
+            </div>
+
+
+
+            <!-- ATAQUE -->
+
+            <div id="contenedorGraficoAtaque"
+                 class="hidden
+                        bg-slate-900
+                        border border-slate-800
+                        rounded-3xl
+                        p-5">
+
+                <h3 class="text-white
+                           font-black">
+
+                    Eficiencia ofensiva individual
+
+                </h3>
+
+                <p class="text-slate-500 text-xs mt-1">Producción de goles y asistencias.</p><p class="text-slate-600 text-[11px] mt-1">Datos: goles y asistencias acumulados por jugador.</p><div id="graficoAtaque"
+                     class="w-full
+                            h-[330px]">
+                </div>
+
+            </div>
+
+
+
+            <!-- PARTICIPACION -->
+
+            <div id="contenedorGraficoParticipacion"
+                 class="hidden
+                        bg-slate-900
+                        border border-slate-800
+                        rounded-3xl
+                        p-5">
+
+                <h3 class="text-white
+                           font-black">
+
+                    Participación
+
+                </h3>
+
+                <p class="text-slate-500 text-xs mt-1">Minutos disputados por cada jugador.</p><p class="text-slate-600 text-[11px] mt-1">Datos: minutos registrados en las estadísticas.</p><div id="graficoParticipacion"
+                     class="w-full
+                            h-[360px]">
+                </div>
+
+            </div>
+
+
+
+            <!-- DISCIPLINA -->
+
+            <div id="contenedorGraficoDisciplina"
+                 class="hidden
+                        bg-slate-900
+                        border border-slate-800
+                        rounded-3xl
+                        p-5">
+
+                <h3 class="text-white
+                           font-black">
+
+                    Disciplina
+
+                </h3>
+
+                <p class="text-slate-500 text-xs mt-1">Tarjetas normalizadas por 90 minutos.</p><p class="text-slate-600 text-[11px] mt-1">Datos: amarillas, rojas y minutos disputados.</p><div id="graficoDisciplina"
+                     class="w-full
+                            h-[330px]">
+                </div>
+
+            </div>
+
+
+
+            <!-- EFICIENCIA -->
+
+            <div id="contenedorGraficoEficiencia"
+                 class="hidden
+                        bg-slate-900
+                        border border-slate-800
+                        rounded-3xl
+                        p-5">
+
+                <h3 class="text-white
+                           font-black">
+
+                    Producción ofensiva
+
+                </h3>
+
+                <p class="text-slate-500 text-xs mt-1">Promedio de goles y asistencias por partido.</p><p class="text-slate-600 text-[11px] mt-1">Datos: goles, asistencias y partidos jugados.</p><div id="graficoEficiencia"
+                     class="w-full
+                            h-[330px]">
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+        <!-- =====================================================
+             VACIO
+        ====================================================== -->
+
+        <div id="estadoVacio"
+             class="hidden
+                    bg-slate-900
+                    border border-slate-800
+                    rounded-3xl
+                    p-10
+                    text-center">
+
+            <div class="w-14 h-14
+                        rounded-2xl
+                        bg-slate-800
+                        mx-auto
+                        flex items-center
+                        justify-center
+                        mb-4">
+
+                <i class="fa-solid fa-chart-simple
+                          text-slate-500
+                          text-xl">
+                </i>
+
+            </div>
+
+            <h3 class="text-white
+                       font-black">
+
+                Sin datos
+
+            </h3>
+
+            <p class="text-slate-500
+                      text-sm
+                      mt-2">
+
+                No hay información disponible para los filtros seleccionados.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+<script>
+
+
+    /* =========================================================
+       VARIABLES
+    ========================================================== */
+
+    let tipoReporte = "jugador";
+
+
+    let jugadores = [];
+    let partidos = [];
+    let campeonatos = [];
+    let categorias = [];
+    let entrenadores = [];
+
+
+    let graficoIndividual = null;
+    let graficoAtaque = null;
+    let graficoParticipacion = null;
+    let graficoDisciplina = null;
+    let graficoEficiencia = null;
+
+
+    let graficoResultadosEquipo = null;
+    let graficoGolesEquipo = null;
+    let graficoEficienciaEquipo = null;
+    let graficoPromedioEquipo = null;
+
+
+
+    /* =========================================================
+       JWT
+    ========================================================== */
+
+    function getJwt() {
+
+        const cookies =
+            document.cookie.split(";");
+
+
+        for (const cookie of cookies) {
+
+            const [
+                nombre,
+                valor
+            ] =
+                cookie.trim().split("=");
+
+
+            if (nombre === "token") {
+
+                return decodeURIComponent(valor);
+
+            }
+
+        }
+
+
+        return null;
+
+    }
+
+
+
+    /* =========================================================
+       NORMALIZAR LISTAS
+    ========================================================== */
+
+    function normalizarLista(data) {
+
+        if (Array.isArray(data)) {
+
+            return data;
+
+        }
+
+
+        if (
+            data &&
+            Array.isArray(data.content)
+        ) {
+
+            return data.content;
+
+        }
+
+
+        if (
+            data &&
+            Array.isArray(data.data)
+        ) {
+
+            return data.data;
+
+        }
+
+
+        if (data && typeof data === "object") {
+
+            for (
+                const key of Object.keys(data)
+            ) {
+
+                if (
+                    Array.isArray(
+                        data[key]
+                    )
+                ) {
+
+                    return data[key];
+
+                }
+
+            }
+
+        }
+
+
+        return [];
+
+    }
+
+
+
+    /* =========================================================
+       OBTENER OBJETO DE REPORTE
+    ========================================================== */
+
+    function obtenerObjetoReporte(
+        data,
+        id,
+        campoId
+    ) {
+
+        if (!data) {
+
+            return null;
+
+        }
+
+
+        if (Array.isArray(data)) {
+
+            if (!data.length) {
+
+                return null;
+
+            }
+
+
+            if (
+                id == null ||
+                !campoId
+            ) {
+
+                return data[0];
+
+            }
+
+
+            return data.find(
+                elemento =>
+                    Number(
+                        elemento?.[campoId]
+                    ) ===
+                    Number(id)
+            ) || data[0];
+
+        }
+
+
+        if (
+            data.data &&
+            !Array.isArray(data.data)
+        ) {
+
+            return data.data;
+
+        }
+
+
+        if (
+            data.content &&
+            !Array.isArray(data.content)
+        ) {
+
+            return data.content;
+
+        }
+
+
+        return data;
+
+    }
+
+
+
+    /* =========================================================
+       ESCAPE HTML
+    ========================================================== */
+
+    function escapeHtml(value) {
+
+        return String(value ?? "")
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
+
+    }
+
+
+
+    /* =========================================================
+       NOMBRES
+    ========================================================== */
+
+    function nombreJugador(id) {
+
+        const jugador =
+            jugadores.find(
+                j =>
+                    Number(j.id) ===
+                    Number(id)
+            );
+
+
+        if (!jugador) {
+
+            return "Jugador";
+
+        }
+
+
+        const nombre =
+            jugador.nombre ??
+            jugador.nombres ??
+            "";
+
+
+        const apellido =
+            jugador.apellido ??
+            jugador.apellidos ??
+            "";
+
+
+        const completo =
+            `${nombre} ${apellido}`.trim();
+
+
+        return completo ||
+               jugador.nombreCompleto ||
+               "Jugador";
+
+    }
+
+
+
+    function nombreCategoria(id) {
+
+        const categoria =
+            categorias.find(
+                c =>
+                    Number(c.id) ===
+                    Number(id)
+            );
+
+
+        if (!categoria) {
+
+            return "Categoría";
+
+        }
+
+
+        return (
+            categoria.nombre ??
+            categoria.nombreCategoria ??
+            categoria.descripcion ??
+            "Categoría"
+        );
+
+    }
+
+
+
+    function nombreCampeonato(id) {
+
+        const campeonato =
+            campeonatos.find(
+                c =>
+                    Number(c.id) ===
+                    Number(id)
+            );
+
+
+        if (!campeonato) {
+
+            return "Campeonato";
+
+        }
+
+
+        return (
+            campeonato.nombre ??
+            campeonato.nombreCampeonato ??
+            campeonato.descripcion ??
+            "Campeonato"
+        );
+
+    }
+
+
+
+    function nombreEntrenador(id) {
+
+        const entrenador =
+            entrenadores.find(
+                e =>
+                    Number(e.id) ===
+                    Number(id)
+            );
+
+
+        if (!entrenador) {
+
+            return "Entrenador";
+
+        }
+
+
+        const nombre =
+            entrenador.nombre ??
+            entrenador.nombres ??
+            "";
+
+
+        const apellido =
+            entrenador.apellido ??
+            entrenador.apellidos ??
+            "";
+
+
+        return (
+            `${nombre} ${apellido}`.trim()
+        ) || "Entrenador";
+
+    }
+
+
+
+    /* =========================================================
+       FECHAS
+    ========================================================== */
+
+    function formatearFecha(fecha) {
+
+        if (!fecha) {
+
+            return "";
+
+        }
+
+
+        const texto =
+            String(fecha);
+
+
+        if (
+            texto.length >= 10
+        ) {
+
+            const partes =
+                texto
+                    .substring(0, 10)
+                    .split("-");
+
+
+            if (
+                partes.length === 3
+            ) {
+
+                return `${partes[2]}/${partes[1]}/${partes[0]}`;
+
+            }
+
+        }
+
+
+        return texto;
+
+    }
+
+
+
+    function descripcionPartido(id) {
+
+        const partido =
+            partidos.find(
+                p =>
+                    Number(p.id) ===
+                    Number(id)
+            );
+
+
+        if (!partido) {
+
+            return "Partido";
+
+        }
+
+
+        const fecha =
+            formatearFecha(
+                partido.fecha
+            );
+
+
+        const local =
+            partido.local === true ||
+            partido.local === "true";
+
+
+        const ubicacion =
+            local
+                ? "Local"
+                : "Visitante";
+
+
+        return `${fecha} · ${ubicacion} vs ${partido.rival || "Rival"}`;
+
+    }
+
+
+
+    /* =========================================================
+       CARGAR DATOS
+    ========================================================== */
+
+    async function cargarDatos(
+        url,
+        mensaje
+    ) {
+
+        const token =
+            getJwt();
+
+
+        const response =
+            await fetch(
+                url,
+                {
+
+                    headers: {
+
+                        "Authorization":
+                            "Bearer " + token,
+
+                        "Accept":
+                            "application/json"
+
+                    }
+
+                }
+            );
+
+
+        if (!response.ok) {
+
+            throw new Error(
+                mensaje ||
+                "No se pudieron cargar los datos."
+            );
+
+        }
+
+
+        const data =
+            await response.json();
+
+
+        return normalizarLista(
+            data
+        );
+
+    }
+
+
+
+    async function cargarCategorias() {
+
+        categorias =
+            await cargarDatos(
+                "/api/categorias",
+                "No se pudieron cargar las categorías."
+            );
+
+    }
+
+
+
+    async function cargarJugadores() {
+
+        jugadores =
+            await cargarDatos(
+                "/api/jugadores",
+                "No se pudieron cargar los jugadores."
+            );
+
+    }
+
+
+
+    async function cargarPartidos() {
+
+        partidos =
+            await cargarDatos(
+                "/api/partidos",
+                "No se pudieron cargar los partidos."
+            );
+
+    }
+
+
+
+    async function cargarCampeonatos() {
+
+        campeonatos =
+            await cargarDatos(
+                "/api/campeonatos",
+                "No se pudieron cargar los campeonatos."
+            );
+
+    }
+
+
+
+    async function cargarEntrenadores() {
+
+        entrenadores =
+            await cargarDatos(
+                "/api/entrenadores",
+                "No se pudieron cargar los entrenadores."
+            );
+
+    }
+
+
+
+    /* =========================================================
+       OBTENER CATEGORIA
+    ========================================================== */
+
+    function obtenerCategoriaId(
+        elemento
+    ) {
+
+        if (!elemento) {
+
+            return null;
+
+        }
+
+
+        if (
+            elemento.categoriaId != null
+        ) {
+
+            return elemento.categoriaId;
+
+        }
+
+
+        if (
+            elemento.categoria_id != null
+        ) {
+
+            return elemento.categoria_id;
+
+        }
+
+
+        if (
+            elemento.categoria &&
+            elemento.categoria.id != null
+        ) {
+
+            return elemento.categoria.id;
+
+        }
+
+
+        return null;
+
+    }
+
+
+
+    /* =========================================================
+       SELECT CATEGORIA
+    ========================================================== */
+
+    function actualizarSelectorCategoria() {
+
+        const select =
+            document.getElementById(
+                "categoriaId"
+            );
+
+
+        if (!select) {
+
+            return;
+
+        }
+
+
+        const categoriaAnterior =
+            select.value;
+
+
+        select.innerHTML = `
+
+            <option value="">
+                Seleccioná una categoría
+            </option>
+
+        `;
+
+
+        categorias
+            .slice()
+            .sort(
+                (a, b) =>
+                    nombreCategoria(a.id)
+                        .localeCompare(
+                            nombreCategoria(b.id)
+                        )
+            )
+            .forEach(
+                categoria => {
+
+                    select.innerHTML += `
+
+                        <option value="${categoria.id}">
+
+                            ${escapeHtml(
+                                nombreCategoria(
+                                    categoria.id
+                                )
+                            )}
+
+                        </option>
+
+                    `;
+
+                }
+            );
+
+
+        if (
+            categorias.some(
+                c =>
+                    String(c.id) ===
+                    String(categoriaAnterior)
+            )
+        ) {
+
+            select.value =
+                categoriaAnterior;
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       SELECT ENTRENADOR
+    ========================================================== */
+
+    function actualizarSelectorEntrenador() {
+
+        const select =
+            document.getElementById(
+                "entrenadorId"
+            );
+
+
+        if (!select) {
+
+            return;
+
+        }
+
+
+        const anterior =
+            select.value;
+
+
+        select.innerHTML = `
+
+            <option value="">
+                Seleccioná un entrenador
+            </option>
+
+        `;
+
+
+        entrenadores
+            .slice()
+            .sort(
+                (a, b) =>
+                    nombreEntrenador(a.id)
+                        .localeCompare(
+                            nombreEntrenador(b.id)
+                        )
+            )
+            .forEach(
+                entrenador => {
+
+                    select.innerHTML += `
+
+                        <option value="${entrenador.id}">
+
+                            ${escapeHtml(
+                                nombreEntrenador(
+                                    entrenador.id
+                                )
+                            )}
+
+                        </option>
+
+                    `;
+
+                }
+            );
+
+
+        if (
+            entrenadores.some(
+                e =>
+                    String(e.id) ===
+                    String(anterior)
+            )
+        ) {
+
+            select.value =
+                anterior;
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       JUGADORES DE CATEGORIA
+    ========================================================== */
+
+    function jugadoresDeCategoria() {
+
+        const categoriaId =
+            document.getElementById(
+                "categoriaId"
+            )?.value;
+
+
+        if (!categoriaId) {
+
+            return jugadores;
+
+        }
+
+
+        return jugadores.filter(
+            jugador =>
+                Number(
+                    obtenerCategoriaId(
+                        jugador
+                    )
+                ) ===
+                Number(categoriaId)
+        );
+
+    }
+
+
+
+    /* =========================================================
+       PARTIDOS DE CATEGORIA
+    ========================================================== */
+
+    function partidosDeCategoria() {
+
+        const categoriaId =
+            document.getElementById(
+                "categoriaId"
+            )?.value;
+
+
+        const alcance =
+            document.getElementById(
+                "alcance"
+            )?.value;
+
+
+        const necesitaCategoria =
+
+            tipoReporte === "jugador" ||
+
+            tipoReporte === "categoria" ||
+
+            (
+                tipoReporte === "entrenador" &&
+                alcance === "partido"
+            );
+
+
+        if (
+            !necesitaCategoria ||
+            !categoriaId
+        ) {
+
+            return partidos;
+
+        }
+
+
+        return partidos.filter(
+            partido => {
+
+                const categoriaPartido =
+                    obtenerCategoriaId(
+                        partido
+                    );
+
+
+                return Number(
+                    categoriaPartido
+                ) ===
+                Number(categoriaId);
+
+            }
+        );
+
+    }
+
+
+
+    /* =========================================================
+       SELECT JUGADOR
+    ========================================================== */
+
+    function actualizarSelectorJugador() {
+
+        const select =
+            document.getElementById(
+                "jugadorId"
+            );
+
+
+        if (!select) {
+
+            return;
+
+        }
+
+
+        const anterior =
+            select.value;
+
+
+        select.innerHTML = `
+
+            <option value="">
+                Seleccioná un jugador
+            </option>
+
+        `;
+
+
+        jugadoresDeCategoria()
+            .slice()
+            .sort(
+                (a, b) =>
+                    nombreJugador(a.id)
+                        .localeCompare(
+                            nombreJugador(b.id)
+                        )
+            )
+            .forEach(
+                jugador => {
+
+                    select.innerHTML += `
+
+                        <option value="${jugador.id}">
+
+                            ${escapeHtml(
+                                nombreJugador(
+                                    jugador.id
+                                )
+                            )}
+
+                        </option>
+
+                    `;
+
+                }
+            );
+
+
+        if (
+            jugadoresDeCategoria().some(
+                j =>
+                    String(j.id) ===
+                    String(anterior)
+            )
+        ) {
+
+            select.value =
+                anterior;
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       SELECT PARTIDO
+    ========================================================== */
+
+    function actualizarSelectorPartido() {
+
+        const select =
+            document.getElementById(
+                "partidoId"
+            );
+
+
+        if (!select) {
+
+            return;
+
+        }
+
+
+        const anterior =
+            select.value;
+
+
+        select.innerHTML = `
+
+            <option value="">
+                Seleccioná un partido
+            </option>
+
+        `;
+
+
+        partidosDeCategoria()
+            .slice()
+            .sort(
+                (a, b) =>
+                    String(
+                        b.fecha || ""
+                    )
+                    .localeCompare(
+                        String(
+                            a.fecha || ""
+                        )
+                    )
+            )
+            .forEach(
+                partido => {
+
+                    const local =
+                        partido.local === true ||
+                        partido.local === "true";
+
+
+                    const ubicacion =
+                        local
+                            ? "Local"
+                            : "Visitante";
+
+
+                    select.innerHTML += `
+
+                        <option value="${partido.id}">
+
+                            ${escapeHtml(
+                                formatearFecha(
+                                    partido.fecha
+                                )
+                            )}
+                            ·
+                            ${escapeHtml(
+                                ubicacion
+                            )}
+                            vs
+                            ${escapeHtml(
+                                partido.rival ||
+                                "Rival"
+                            )}
+
+                        </option>
+
+                    `;
+
+                }
+            );
+
+
+        if (
+            partidosDeCategoria().some(
+                p =>
+                    String(p.id) ===
+                    String(anterior)
+            )
+        ) {
+
+            select.value =
+                anterior;
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       SELECT CAMPEONATO
+    ========================================================== */
+
+    function actualizarSelectorCampeonato() {
+
+        const select =
+            document.getElementById(
+                "campeonatoId"
+            );
+
+
+        if (!select) {
+
+            return;
+
+        }
+
+
+        const anterior =
+            select.value;
+
+
+        select.innerHTML = `
+
+            <option value="">
+                Seleccioná un campeonato
+            </option>
+
+        `;
+
+
+        campeonatos
+            .slice()
+            .sort(
+                (a, b) =>
+                    nombreCampeonato(a.id)
+                        .localeCompare(
+                            nombreCampeonato(b.id)
+                        )
+            )
+            .forEach(
+                campeonato => {
+
+                    select.innerHTML += `
+
+                        <option value="${campeonato.id}">
+
+                            ${escapeHtml(
+                                nombreCampeonato(
+                                    campeonato.id
+                                )
+                            )}
+
+                        </option>
+
+                    `;
+
+                }
+            );
+
+
+        if (
+            campeonatos.some(
+                c =>
+                    String(c.id) ===
+                    String(anterior)
+            )
+        ) {
+
+            select.value =
+                anterior;
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       FILTROS
+    ========================================================== */
+
+    function actualizarFiltros() {
+
+        const contenedorJugador =
+            document.getElementById(
+                "contenedorJugador"
+            );
+
+        const contenedorEntrenador =
+            document.getElementById(
+                "contenedorEntrenador"
+            );
+
+        const contenedorCategoria =
+            document.getElementById(
+                "contenedorCategoria"
+            );
+
+        const contenedorAlcanceJugador =
+            document.getElementById(
+                "contenedorAlcanceJugador"
+            );
+
+        const contenedorAnio =
+            document.getElementById(
+                "contenedorAnio"
+            );
+
+        const contenedorMes =
+            document.getElementById(
+                "contenedorMes"
+            );
+
+        const contenedorCampeonato =
+            document.getElementById(
+                "contenedorCampeonato"
+            );
+
+        const contenedorPartido =
+            document.getElementById(
+                "contenedorPartido"
+            );
+
+
+        [
+            contenedorJugador,
+            contenedorEntrenador,
+            contenedorAnio,
+            contenedorMes,
+            contenedorCampeonato,
+            contenedorPartido
+        ]
+        .forEach(
+            elemento => {
+
+                elemento?.classList.add(
+                    "hidden"
+                );
+
+            }
+        );
+
+
+        contenedorCategoria
+            ?.classList.add(
+                "hidden"
+            );
+
+
+        contenedorAlcanceJugador
+            ?.classList.add(
+                "hidden"
+            );
+
+
+
+        const alcance =
+            document.getElementById(
+                "alcance"
+            )?.value;
+
+
+        /* JUGADOR */
+
+        if (
+            tipoReporte ===
+            "jugador"
+        ) {
+
+            contenedorAlcanceJugador
+                ?.classList.remove(
+                    "hidden"
+                );
+
+
+            contenedorCategoria
+                ?.classList.remove(
+                    "hidden"
+                );
+
+
+            const alcanceJugador =
+                document.getElementById(
+                    "alcanceJugador"
+                )?.value;
+
+
+            if (
+                alcanceJugador ===
+                "uno"
+            ) {
+
+                contenedorJugador
+                    ?.classList.remove(
+                        "hidden"
+                    );
+
+            }
+
+        }
+
+
+
+        /* ENTRENADOR */
+
+        if (
+            tipoReporte ===
+            "entrenador"
+        ) {
+
+            contenedorEntrenador
+                ?.classList.remove(
+                    "hidden"
+                );
+
+
+            /*
+             * Para partido:
+             *
+             * Entrenador
+             *       ↓
+             * Categoría
+             *       ↓
+             * Partido
+             */
+
+            if (
+                alcance ===
+                "partido"
+            ) {
+
+                contenedorCategoria
+                    ?.classList.remove(
+                        "hidden"
+                    );
+
+            }
+
+        }
+
+
+
+        /* CATEGORIA */
+
+        if (
+            tipoReporte ===
+            "categoria"
+        ) {
+
+            contenedorCategoria
+                ?.classList.remove(
+                    "hidden"
+                );
+
+        }
+
+
+
+        /* PERIODOS */
+
+        if (
+            alcance ===
+            "mes"
+        ) {
+
+            contenedorAnio
+                ?.classList.remove(
+                    "hidden"
+                );
+
+            contenedorMes
+                ?.classList.remove(
+                    "hidden"
+                );
+
+        }
+
+
+        if (
+            alcance ===
+            "campeonato"
+        ) {
+
+            contenedorCampeonato
+                ?.classList.remove(
+                    "hidden"
+                );
+
+        }
+
+
+        if (
+            alcance ===
+            "partido"
+        ) {
+
+            contenedorPartido
+                ?.classList.remove(
+                    "hidden"
+                );
+
+        }
+
+
+
+        /* ACTUALIZAR SELECTORES */
+
+        if (
+            tipoReporte ===
+            "jugador"
+        ) {
+
+            actualizarSelectorJugador();
+
+        }
+
+
+        if (
+            tipoReporte ===
+            "entrenador"
+        ) {
+
+            actualizarSelectorEntrenador();
+
+        }
+
+
+        if (
+            tipoReporte ===
+            "categoria"
+        ) {
+
+            actualizarSelectorPartido();
+
+        }
+
+
+        if (
+            tipoReporte ===
+            "jugador" &&
+            alcance ===
+            "partido"
+        ) {
+
+            actualizarSelectorPartido();
+
+        }
+
+
+        if (
+            tipoReporte ===
+            "entrenador" &&
+            alcance ===
+            "partido"
+        ) {
+
+            actualizarSelectorPartido();
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       FILTRAR REPORTES DE JUGADORES POR CATEGORIA
+    ========================================================== */
+
+    function obtenerCategoriaReporteJugador(
+        reporte
+    ) {
+
+        if (
+            reporte?.categoriaId != null
+        ) {
+
+            return reporte.categoriaId;
+
+        }
+
+
+        if (
+            reporte?.categoria_id != null
+        ) {
+
+            return reporte.categoria_id;
+
+        }
+
+
+        if (
+            reporte?.categoria?.id != null
+        ) {
+
+            return reporte.categoria.id;
+
+        }
+
+
+        const jugador =
+            jugadores.find(
+                j =>
+                    Number(j.id) ===
+                    Number(reporte?.jugadorId)
+            );
+
+
+        return obtenerCategoriaId(
+            jugador
+        );
+
+    }
+
+
+
+    function filtrarReportesJugadoresPorCategoria(
+        reportes,
+        categoriaId
+    ) {
+
+        if (!categoriaId) {
+
+            return reportes;
+
+        }
+
+
+        return reportes.filter(
+            reporte => {
+
+                return Number(
+                    obtenerCategoriaReporteJugador(
+                        reporte
+                    )
+                ) ===
+                Number(categoriaId);
+
+            }
+        );
+
+    }
+
+
+
+    /* =========================================================
+       URL
+    ========================================================== */
+
+    function generarUrl() {
+
+        const alcance =
+            document.getElementById("alcance").value;
+
+        const anio =
+            document.getElementById("anio")?.value;
+
+        const mes =
+            document.getElementById("mes")?.value;
+
+        const campeonatoId =
+            document.getElementById("campeonatoId")?.value;
+
+        const partidoId =
+            document.getElementById("partidoId")?.value;
+
+        if (tipoReporte === "jugador") {
+
+            const categoriaId =
+                document.getElementById("categoriaId")?.value;
+
+            const alcanceJugador =
+                document.getElementById("alcanceJugador")?.value || "uno";
+
+            if (!categoriaId) {
+                throw new Error(
+                    "Seleccioná una categoría antes de generar el reporte."
+                );
+            }
+
+            if (alcanceJugador === "uno") {
+
+                const jugadorId =
+                    document.getElementById("jugadorId")?.value;
+
+                if (!jugadorId) {
+                    throw new Error(
+                        "Seleccioná un jugador para generar el reporte."
+                    );
+                }
+
+                if (alcance === "acumulado") {
+                    return `/api/estadisticas/jugador/${jugadorId}/acumulado`;
+                }
+
+                if (alcance === "mes") {
+                    if (!anio || !mes) {
+                        throw new Error("Seleccioná el año y el mes.");
+                    }
+                    return `/api/estadisticas/mes/${anio}/${mes}/jugador/${jugadorId}`;
+                }
+
+                if (alcance === "campeonato") {
+                    if (!campeonatoId) {
+                        throw new Error("Seleccioná un campeonato.");
+                    }
+                    validarCampeonatoCategoria();
+                    return `/api/estadisticas/campeonato/${campeonatoId}/jugador/${jugadorId}`;
+                }
+
+                if (alcance === "partido") {
+                    if (!partidoId) {
+                        throw new Error("Seleccioná un partido.");
+                    }
+                    return `/api/estadisticas/partido/${partidoId}/jugador/${jugadorId}`;
+                }
+            }
+
+            throw new Error(
+                "Para este período se deben consultar los jugadores de la categoría."
+            );
+        }
+
+        if (tipoReporte === "entrenador") {
+
+            const entrenadorId =
+                document.getElementById("entrenadorId")?.value;
+
+            if (!entrenadorId) {
+                throw new Error("Seleccioná un entrenador.");
+            }
+
+            if (alcance === "acumulado") {
+                return `/api/estadisticas/entrenador/${entrenadorId}/acumulado`;
+            }
+
+            if (alcance === "mes") {
+                if (!anio || !mes) {
+                    throw new Error("Seleccioná el año y el mes.");
+                }
+                return `/api/estadisticas/entrenador/${entrenadorId}/mes/${anio}/${mes}`;
+            }
+
+            if (alcance === "campeonato") {
+                if (!campeonatoId) {
+                    throw new Error("Seleccioná un campeonato.");
+                }
+                validarCampeonatoCategoria();
+                return `/api/estadisticas/entrenador/${entrenadorId}/campeonato/${campeonatoId}`;
+            }
+
+            if (alcance === "partido") {
+                if (!document.getElementById("categoriaId")?.value) {
+                    throw new Error(
+                        "Seleccioná una categoría antes de seleccionar el partido."
+                    );
+                }
+                if (!partidoId) {
+                    throw new Error("Seleccioná un partido.");
+                }
+                return `/api/estadisticas/entrenador/${entrenadorId}/partido/${partidoId}`;
+            }
+        }
+
+        if (tipoReporte === "categoria") {
+
+            const categoriaId =
+                document.getElementById("categoriaId")?.value;
+
+            if (!categoriaId) {
+                throw new Error("Seleccioná una categoría.");
+            }
+
+            if (alcance === "acumulado") {
+                return `/api/estadisticas/categoria/${categoriaId}/acumulado`;
+            }
+
+            if (alcance === "mes") {
+                if (!anio || !mes) {
+                    throw new Error("Seleccioná el año y el mes.");
+                }
+                return `/api/estadisticas/categoria/${categoriaId}/mes/${anio}/${mes}`;
+            }
+
+            if (alcance === "campeonato") {
+                if (!campeonatoId) {
+                    throw new Error("Seleccioná un campeonato.");
+                }
+                validarCampeonatoCategoria();
+                return `/api/estadisticas/categoria/${categoriaId}/campeonato/${campeonatoId}`;
+            }
+
+            if (alcance === "partido") {
+                if (!partidoId) {
+                    throw new Error("Seleccioná un partido.");
+                }
+                return `/api/estadisticas/categoria/${categoriaId}/partido/${partidoId}`;
+            }
+        }
+
+        throw new Error("No se pudo determinar el tipo de reporte.");
+    }
+
+
+    /* =========================================================
+       VALIDAR CAMPEONATO + CATEGORIA
+    ========================================================== */
+
+    function validarCampeonatoCategoria() {
+
+        const categoriaId =
+            document.getElementById("categoriaId")?.value;
+
+        const campeonatoId =
+            document.getElementById("campeonatoId")?.value;
+
+        if (!categoriaId || !campeonatoId) {
+            return true;
+        }
+
+        const pertenece =
+            partidos.some(partido => {
+
+                const categoriaPartido =
+                    obtenerCategoriaId(partido);
+
+                const campeonatoPartido =
+                    partido.campeonatoId ??
+                    partido.campeonato_id ??
+                    partido.campeonato?.id;
+
+                return Number(categoriaPartido) === Number(categoriaId)
+                    && Number(campeonatoPartido) === Number(campeonatoId);
+            });
+
+        if (!pertenece) {
+            throw new Error(
+                `El campeonato "${nombreCampeonato(campeonatoId)}" no pertenece a la categoría "${nombreCategoria(categoriaId)}". Seleccioná un campeonato correspondiente a esa categoría.`
+            );
+        }
+
+        return true;
+    }
+
+
+    /* =========================================================
+       TARJETA
+    ========================================================== */
+
+    function crearTarjeta(
+        icono,
+        titulo,
+        valor,
+        clase = "text-emerald-500"
+    ) {
+
+        return `
+
+            <div class="bg-slate-900
+                        border border-slate-800
+                        rounded-2xl
+                        p-5">
+
+                <div class="flex
+                            items-center
+                            justify-between
+                            gap-3">
+
+                    <div>
+
+                        <p class="text-slate-500
+                                  text-[11px]
+                                  font-bold
+                                  uppercase
+                                  tracking-wider">
+
+                            ${escapeHtml(
+                                titulo
+                            )}
+
+                        </p>
+
+                        <p class="text-white
+                                  text-2xl
+                                  font-black
+                                  mt-2">
+
+                            ${escapeHtml(
+                                String(valor)
+                            )}
+
+                        </p>
+
+                    </div>
+
+
+                    <div class="w-11 h-11
+                                rounded-xl
+                                bg-emerald-500/10
+                                flex items-center
+                                justify-center
+                                shrink-0">
+
+                        <i class="fa-solid
+                                  ${icono}
+                                  ${clase}">
+                        </i>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+
+    /* =========================================================
+       TARJETAS JUGADOR
+    ========================================================== */
+
+    function mostrarTarjetasJugador(
+        reporte
+    ) {
+
+        const contenedor =
+            document.getElementById(
+                "contenedorTarjetas"
+            );
+
+
+        contenedor.innerHTML = "";
+
+
+        contenedor.innerHTML +=
+            crearTarjeta(
+                "fa-calendar-days",
+                "Partidos",
+                Number(
+                    reporte.partidos ?? 0
+                )
+            );
+
+
+        contenedor.innerHTML +=
+            crearTarjeta(
+                "fa-shirt",
+                "Titularidades",
+                Number(
+                    reporte.titulares ?? 0
+                )
+            );
+
+
+        contenedor.innerHTML +=
+            crearTarjeta(
+                "fa-clock",
+                "Minutos",
+                Number(
+                    reporte.minutos ?? 0
+                )
+            );
+
+
+        contenedor.innerHTML +=
+            crearTarjeta(
+                "fa-futbol",
+                "Goles",
+                Number(
+                    reporte.goles ?? 0
+                )
+            );
+
+
+        contenedor.innerHTML +=
+            crearTarjeta(
+                "fa-handshake",
+                "Asistencias",
+                Number(
+                    reporte.asistencias ?? 0
+                )
+            );
+
+
+        contenedor.innerHTML +=
+            crearTarjeta(
+                "fa-square",
+                "Amarillas",
+                Number(
+                    reporte.amarillas ?? 0
+                ),
+                "text-yellow-400"
+            );
+
+
+        contenedor.innerHTML +=
+            crearTarjeta(
+                "fa-square",
+                "Rojas",
+                Number(
+                    reporte.rojas ?? 0
+                ),
+                "text-red-400"
+            );
+
+
+        contenedor.innerHTML +=
+            crearTarjeta(
+                "fa-calendar-xmark",
+                "Días incidencia",
+                Number(
+                    reporte.diasIncidencias ?? 0
+                ),
+                "text-red-400"
+            );
+
+    }
+
+
+
+    /* =========================================================
+       TARJETAS EQUIPO
+    ========================================================== */
+
+    function mostrarTarjetasEquipo(
+        reporte,
+        esPartido = false
+    ) {
+
+        const contenedor =
+            document.getElementById(
+                "contenedorTarjetasEquipo"
+            );
+
+
+        contenedor.innerHTML = "";
+
+
+        contenedor.innerHTML +=
+            crearTarjeta(
+                "fa-calendar-days",
+                "Partidos",
+                Number(
+                    reporte.partidos ?? 0
+                )
+            );
+
+
+        contenedor.innerHTML +=
+            crearTarjeta(
+                "fa-trophy",
+                "Victorias",
+                Number(
+                    reporte.victorias ?? 0
+                )
+            );
+
+
+        contenedor.innerHTML +=
+            crearTarjeta(
+                "fa-equals",
+                "Empates",
+                Number(
+                    reporte.empates ?? 0
+                )
+            );
+
+
+        contenedor.innerHTML +=
+            crearTarjeta(
+                "fa-xmark",
+                "Derrotas",
+                Number(
+                    reporte.derrotas ?? 0
+                ),
+                "text-red-400"
+            );
+
+
+        contenedor.innerHTML +=
+            crearTarjeta(
+                "fa-futbol",
+                "Goles",
+                Number(
+                    reporte.goles ?? 0
+                )
+            );
+
+
+        contenedor.innerHTML +=
+            crearTarjeta(
+                "fa-shield-halved",
+                "Goles recibidos",
+                Number(
+                    reporte.golesEnContra ?? 0
+                ),
+                "text-red-400"
+            );
+
+
+        contenedor.innerHTML +=
+            crearTarjeta(
+                "fa-star",
+                "Puntos",
+                Number(
+                    reporte.puntos ?? 0
+                )
+            );
+
+
+        if (esPartido) {
+
+            const diferencia =
+                Number(
+                    reporte.diferenciaGol ??
+                    (
+                        Number(
+                            reporte.goles ?? 0
+                        ) -
+                        Number(
+                            reporte.golesEnContra ?? 0
+                        )
+                    )
+                );
+
+
+            contenedor.innerHTML +=
+                crearTarjeta(
+                    "fa-arrow-trend-up",
+                    "Diferencia de gol",
+                    diferencia,
+                    diferencia >= 0
+                        ? "text-emerald-500"
+                        : "text-red-400"
+                );
+
+        } else {
+
+            contenedor.innerHTML +=
+                crearTarjeta(
+                    "fa-chart-line",
+                    "Efectividad",
+                    Number(
+                        reporte.efectividad ?? 0
+                    ).toFixed(1) + "%",
+                    "text-emerald-500"
+                );
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       TABLA
+    ========================================================== */
+
+    function mostrarTabla(
+        reportes
+    ) {
+
+        const contenedor =
+            document.getElementById(
+                "contenedorTabla"
+            );
+
+
+        const tabla =
+            document.getElementById(
+                "tablaJugadores"
+            );
+
+
+        tabla.innerHTML = "";
+
+
+        reportes.forEach(
+            reporte => {
+
+                const incidencias =
+                    Array.isArray(
+                        reporte.incidencias
+                    )
+                        ? reporte.incidencias.length
+                        : Number(
+                            reporte.incidencias ?? 0
+                        );
+
+
+                const fila =
+                    document.createElement(
+                        "tr"
+                    );
+
+
+                fila.className =
+                    "border-b border-slate-800/70 hover:bg-slate-800/30 transition";
+
+
+                fila.innerHTML = `
+
+                    <td class="px-5 py-4">
+
+                        <p class="text-white
+                                  font-bold">
+
+                            ${escapeHtml(
+                                nombreJugador(
+                                    reporte.jugadorId
+                                )
+                            )}
+
+                        </p>
+
+                    </td>
+
+
+                    <td class="px-4 py-4
+                               text-center
+                               text-slate-300">
+
+                        ${Number(
+                            reporte.partidos ?? 0
+                        )}
+
+                    </td>
+
+
+                    <td class="px-4 py-4
+                               text-center
+                               text-slate-300">
+
+                        ${Number(
+                            reporte.titulares ?? 0
+                        )}
+
+                    </td>
+
+
+                    <td class="px-4 py-4
+                               text-center
+                               text-slate-300">
+
+                        ${Number(
+                            reporte.minutos ?? 0
+                        )}
+
+                    </td>
+
+
+                    <td class="px-4 py-4
+                               text-center
+                               text-emerald-400
+                               font-bold">
+
+                        ${Number(
+                            reporte.goles ?? 0
+                        )}
+
+                    </td>
+
+
+                    <td class="px-4 py-4
+                               text-center
+                               text-slate-300">
+
+                        ${Number(
+                            reporte.asistencias ?? 0
+                        )}
+
+                    </td>
+
+
+                    <td class="px-4 py-4
+                               text-center
+                               text-yellow-400">
+
+                        ${Number(
+                            reporte.amarillas ?? 0
+                        )}
+
+                    </td>
+
+
+                    <td class="px-4 py-4
+                               text-center
+                               text-red-400">
+
+                        ${Number(
+                            reporte.rojas ?? 0
+                        )}
+
+                    </td>
+
+
+                    <td class="px-4 py-4
+                               text-center
+                               text-red-400">
+
+                        ${incidencias}
+
+                    </td>
+
+                `;
+
+
+                tabla.appendChild(
+                    fila
+                );
+
+            }
+        );
+
+
+        contenedor.classList.remove(
+            "hidden"
+        );
+
+    }
+
+
+
+    /* =========================================================
+       INCIDENCIAS
+    ========================================================== */
+
+    function mostrarIncidencias(
+        reportes
+    ) {
+
+        const contenedor =
+            document.getElementById(
+                "contenedorIncidencias"
+            );
+
+
+        const lista =
+            document.getElementById(
+                "listaIncidencias"
+            );
+
+
+        lista.innerHTML = "";
+
+
+        const incidencias = [];
+
+
+        reportes.forEach(
+            reporte => {
+
+                if (
+                    !Array.isArray(
+                        reporte.incidencias
+                    )
+                ) {
+
+                    return;
+
+                }
+
+
+                reporte.incidencias.forEach(
+                    incidencia => {
+
+                        incidencias.push({
+
+                            ...incidencia,
+
+                            jugadorId:
+                                incidencia.jugadorId ??
+                                reporte.jugadorId
+
+                        });
+
+                    }
+                );
+
+            }
+        );
+
+
+        if (!incidencias.length) {
+
+            return;
+
+        }
+
+
+        incidencias.forEach(
+            incidencia => {
+
+                const elemento =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                elemento.className =
+                    "p-5 flex items-center justify-between gap-4";
+
+
+                elemento.innerHTML = `
+
+                    <div>
+
+                        <p class="text-white
+                                  font-black
+                                  text-sm">
+
+                            ${escapeHtml(
+                                nombreJugador(
+                                    incidencia.jugadorId
+                                )
+                            )}
+
+                        </p>
+
+                        <p class="text-slate-500
+                                  text-xs
+                                  mt-1">
+
+                            ${escapeHtml(
+                                incidencia.motivo ||
+                                "Sin motivo"
+                            )}
+
+                        </p>
+
+                    </div>
+
+
+                    <div class="text-right">
+
+                        <p class="text-slate-400
+                                  text-xs">
+
+                            ${formatearFecha(
+                                incidencia.fecha
+                            )}
+
+                        </p>
+
+                        <p class="text-red-400
+                                  font-black
+                                  text-xs
+                                  mt-1">
+
+                            ${incidencia.cantidadDias ?? 0} días
+
+                        </p>
+
+                    </div>
+
+                `;
+
+
+                lista.appendChild(
+                    elemento
+                );
+
+            }
+        );
+
+
+        contenedor.classList.remove(
+            "hidden"
+        );
+
+    }
+
+
+
+    /* =========================================================
+       TEMA ECHARTS
+    ========================================================== */
+
+    function temaBase() {
+
+        return {
+
+            backgroundColor:
+                "transparent",
+
+            textStyle: {
+
+                fontFamily:
+                    "Plus Jakarta Sans, sans-serif"
+
+            },
+
+            tooltip: {
+
+                backgroundColor:
+                    "#0f172a",
+
+                borderColor:
+                    "#1e293b",
+
+                textStyle: {
+
+                    color:
+                        "#f8fafc"
+
+                }
+
+            }
+
+        };
+
+    }
+
+
+
+    /* =========================================================
+       PROMEDIOS
+    ========================================================== */
+
+    function obtenerPromedioGoles(
+        reporte
+    ) {
+
+        const partidos =
+            Number(
+                reporte?.partidos ?? 0
+            );
+
+
+        const goles =
+            Number(
+                reporte?.goles ?? 0
+            );
+
+
+        if (
+            partidos <= 0
+        ) {
+
+            return 0;
+
+        }
+
+
+        return Number(
+            (
+                goles /
+                partidos
+            ).toFixed(2)
+        );
+
+    }
+
+
+
+    function obtenerPromedioGolesEnContra(reporte) {
+
+        const partidos = numero(
+            reporte?.partidos
+        );
+
+        let golesEnContra =
+            reporte?.golesEnContra ??
+            reporte?.golesRecibidos ??
+            reporte?.golesEnContraTotal ??
+            reporte?.golesRecibidosTotal;
+
+        /*
+         * Algunos reportes pueden no traer el campo calculado.
+         * En ese caso intentamos obtenerlo desde resultados
+         * individuales si el backend los entrega.
+         */
+        if (
+            golesEnContra == null &&
+            Array.isArray(reporte?.partidosDetalle)
+        ) {
+            golesEnContra =
+                reporte.partidosDetalle.reduce(
+                    (total, partido) =>
+                        total + numero(
+                            partido.golesEnContra ??
+                            partido.golesRecibidos
+                        ),
+                    0
+                );
+        }
+
+        golesEnContra = numero(golesEnContra);
+
+        if (partidos <= 0) {
+            return 0;
+        }
+
+        return Number(
+            (golesEnContra / partidos).toFixed(2)
+        );
+    }
+
+
+    function obtenerGolesEnContra(reporte) {
+
+        const directo =
+            reporte?.golesEnContra ??
+            reporte?.golesRecibidos ??
+            reporte?.golesEnContraTotal ??
+            reporte?.golesRecibidosTotal;
+
+        if (directo != null) {
+            return numero(directo);
+        }
+
+        if (Array.isArray(reporte?.partidosDetalle)) {
+            return reporte.partidosDetalle.reduce(
+                (total, partido) =>
+                    total + numero(
+                        partido.golesEnContra ??
+                        partido.golesRecibidos
+                    ),
+                0
+            );
+        }
+
+        return 0;
+    }
+
+
+    /* =========================================================
+       GRAFICOS EQUIPO
+    ========================================================== */
+
+    function destruirGraficosEquipo() {
+
+        [
+
+            graficoResultadosEquipo,
+            graficoGolesEquipo,
+            graficoEficienciaEquipo,
+            graficoPromedioEquipo
+
+        ].forEach(
+            grafico => {
+
+                if (
+                    grafico &&
+                    typeof grafico.dispose ===
+                    "function"
+                ) {
+
+                    try {
+
+                        grafico.dispose();
+
+                    } catch (_) {}
+
+                }
+
+            }
+        );
+
+
+        graficoResultadosEquipo = null;
+        graficoGolesEquipo = null;
+        graficoEficienciaEquipo = null;
+        graficoPromedioEquipo = null;
+
+
+        document
+            .getElementById(
+                "contenedorGraficosEquipo"
+            )
+            ?.classList.add(
+                "hidden"
+            );
+
+    }
+
+
+
+    function mostrarGraficosEquipo(
+        reporte
+    ) {
+
+        const contenedor =
+            document.getElementById(
+                "contenedorGraficosEquipo"
+            );
+
+
+        contenedor.classList.remove(
+            "hidden"
+        );
+
+
+
+        /* =====================================================
+           RESULTADOS
+        ===================================================== */
+
+        graficoResultadosEquipo =
+            echarts.init(
+                document.getElementById(
+                    "graficoResultadosEquipo"
+                )
+            );
+
+
+        const victorias =
+            Number(
+                reporte.victorias ?? 0
+            );
+
+
+        const empates =
+            Number(
+                reporte.empates ?? 0
+            );
+
+
+        const derrotas =
+            Number(
+                reporte.derrotas ?? 0
+            );
+
+
+        graficoResultadosEquipo.setOption({
+
+            ...temaBase(),
+
+            tooltip: {
+
+                ...temaBase().tooltip,
+
+                trigger:
+                    "item",
+
+                formatter:
+                    function(params) {
+
+                        return `
+                            ${params.name}<br>
+                            Partidos: <b>${params.value}</b><br>
+                            Porcentaje: <b>${params.percent}%</b>
+                        `;
+
+                    }
+
+            },
+
+            legend: {
+
+                bottom: 0,
+
+                textStyle: {
+
+                    color:
+                        "#94a3b8",
+
+                    fontWeight:
+                        700
+
+                }
+
+            },
+
+            series: [
+
+                {
+
+                    type:
+                        "pie",
+
+                    radius:
+                        ["45%", "70%"],
+
+                    center:
+                        ["50%", "46%"],
+
+                    label: {
+
+                        color:
+                            "#cbd5e1",
+
+                        fontWeight:
+                            800,
+
+                        formatter:
+                            "{b}\n{d}%"
+
+                    },
+
+                    itemStyle: {
+
+                        borderColor:
+                            "#0f172a",
+
+                        borderWidth:
+                            5
+
+                    },
+
+                    data: [
+
+                        {
+
+                            value:
+                                victorias,
+
+                            name:
+                                "Victorias",
+
+                            itemStyle: {
+
+                                color:
+                                    "#10b981"
+
+                            }
+
+                        },
+
+                        {
+
+                            value:
+                                empates,
+
+                            name:
+                                "Empates",
+
+                            itemStyle: {
+
+                                color:
+                                    "#64748b"
+
+                            }
+
+                        },
+
+                        {
+
+                            value:
+                                derrotas,
+
+                            name:
+                                "Derrotas",
+
+                            itemStyle: {
+
+                                color:
+                                    "#ef4444"
+
+                            }
+
+                        }
+
+                    ]
+
+                }
+
+            ]
+
+        });
+
+
+
+        /* =====================================================
+           GOLES
+        ===================================================== */
+
+        graficoGolesEquipo =
+            echarts.init(
+                document.getElementById(
+                    "graficoGolesEquipo"
+                )
+            );
+
+
+        const goles =
+            Number(
+                reporte.goles ?? 0
+            );
+
+
+        const golesEnContra =
+            obtenerGolesEnContra(reporte);
+
+
+        const diferencia =
+            Number(
+                reporte.diferenciaGol ??
+                (
+                    goles -
+                    golesEnContra
+                )
+            );
+
+
+        graficoGolesEquipo.setOption({
+
+            ...temaBase(),
+
+            tooltip: {
+
+                ...temaBase().tooltip,
+
+                trigger:
+                    "axis",
+
+                axisPointer: {
+
+                    type:
+                        "shadow"
+
+                },
+
+                formatter:
+                    function(params) {
+
+                        let texto = "";
+
+                        params.forEach(
+                            param => {
+
+                                let descripcion =
+                                    param.name;
+
+                                if (
+                                    param.name ===
+                                    "Goles"
+                                ) {
+
+                                    descripcion =
+                                        "Goles a favor";
+
+                                }
+
+                                if (
+                                    param.name ===
+                                    "Recibidos"
+                                ) {
+
+                                    descripcion =
+                                        "Goles recibidos";
+
+                                }
+
+                                if (
+                                    param.name ===
+                                    "Diferencia"
+                                ) {
+
+                                    descripcion =
+                                        "Diferencia de gol";
+
+                                }
+
+                                texto +=
+                                    `${descripcion}: <b>${param.value}</b><br>`;
+
+                            }
+                        );
+
+
+                        return texto;
+
+                    }
+
+            },
+
+            grid: {
+
+                left:
+                    "7%",
+
+                right:
+                    "7%",
+
+                top:
+                    "10%",
+
+                bottom:
+                    "13%",
+
+                containLabel:
+                    true
+
+            },
+
+            xAxis: {
+
+                type:
+                    "category",
+
+                data: [
+
+                    "Goles",
+                    "Recibidos",
+                    "Diferencia"
+
+                ],
+
+                axisLabel: {
+
+                    color:
+                        "#cbd5e1",
+
+                    fontWeight:
+                        800
+
+                }
+
+            },
+
+            yAxis: {
+
+                type:
+                    "value",
+
+                name:
+                    "Cantidad de goles",
+
+                nameTextStyle: {
+
+                    color:
+                        "#64748b",
+
+                    fontWeight:
+                        700
+
+                },
+
+                axisLabel: {
+
+                    color:
+                        "#64748b"
+
+                },
+
+                splitLine: {
+
+                    lineStyle: {
+
+                        color:
+                            "#1e293b"
+
+                    }
+
+                }
+
+            },
+
+            series: [
+
+                {
+
+                    type:
+                        "bar",
+
+                    data: [
+
+                        {
+
+                            value:
+                                goles,
+
+                            itemStyle: {
+
+                                color:
+                                    "#10b981",
+
+                                borderRadius:
+                                    [8, 8, 0, 0]
+
+                            }
+
+                        },
+
+                        {
+
+                            value:
+                                golesEnContra,
+
+                            itemStyle: {
+
+                                color:
+                                    "#ef4444",
+
+                                borderRadius:
+                                    [8, 8, 0, 0]
+
+                            }
+
+                        },
+
+                        {
+
+                            value:
+                                diferencia,
+
+                            itemStyle: {
+
+                                color:
+                                    diferencia >= 0
+                                        ? "#64748b"
+                                        : "#f97316",
+
+                                borderRadius:
+                                    diferencia >= 0
+                                        ? [8, 8, 0, 0]
+                                        : [0, 0, 8, 8]
+
+                            }
+
+                        }
+
+                    ],
+
+                    barWidth:
+                        60,
+
+                    label: {
+
+                        show:
+                            true,
+
+                        position:
+                            "top",
+
+                        color:
+                            "#cbd5e1",
+
+                        fontWeight:
+                            900,
+
+                        formatter:
+                            "{c}"
+
+                    }
+
+                }
+
+            ]
+
+        });
+
+
+
+        /* =====================================================
+           EFICIENCIA
+        ===================================================== */
+
+        graficoEficienciaEquipo =
+            echarts.init(
+                document.getElementById(
+                    "graficoEficienciaEquipo"
+                )
+            );
+
+
+        const porcentajeVictorias =
+            Number(
+                reporte.porcentajeVictorias ??
+                (
+                    Number(
+                        reporte.partidos ?? 0
+                    ) > 0
+                        ? victorias /
+                          Number(
+                              reporte.partidos
+                          ) *
+                          100
+                        : 0
+                )
+            );
+
+
+        const porcentajeEmpates =
+            Number(
+                reporte.porcentajeEmpates ??
+                (
+                    Number(
+                        reporte.partidos ?? 0
+                    ) > 0
+                        ? empates /
+                          Number(
+                              reporte.partidos
+                          ) *
+                          100
+                        : 0
+                )
+            );
+
+
+        const porcentajeDerrotas =
+            Number(
+                reporte.porcentajeDerrotas ??
+                (
+                    Number(
+                        reporte.partidos ?? 0
+                    ) > 0
+                        ? derrotas /
+                          Number(
+                              reporte.partidos
+                          ) *
+                          100
+                        : 0
+                )
+            );
+
+
+        const efectividad =
+            Number(
+                reporte.efectividad ?? 0
+            );
+
+
+        graficoEficienciaEquipo.setOption({
+
+            ...temaBase(),
+
+            tooltip: {
+
+                ...temaBase().tooltip,
+
+                trigger:
+                    "axis",
+
+                axisPointer: {
+
+                    type:
+                        "shadow"
+
+                },
+
+                formatter:
+                    function(params) {
+
+                        let texto = "";
+
+                        params.forEach(
+                            param => {
+
+                                texto +=
+                                    `${param.name}: <b>${Number(param.value).toFixed(1)}%</b><br>`;
+
+                            }
+                        );
+
+
+                        return texto;
+
+                    }
+
+            },
+
+            grid: {
+
+                left:
+                    "7%",
+
+                right:
+                    "7%",
+
+                top:
+                    "10%",
+
+                bottom:
+                    "13%",
+
+                containLabel:
+                    true
+
+            },
+
+            xAxis: {
+
+                type:
+                    "category",
+
+                data: [
+
+                    "Victorias",
+                    "Empates",
+                    "Derrotas",
+                    "Efectividad"
+
+                ],
+
+                axisLabel: {
+
+                    color:
+                        "#cbd5e1",
+
+                    fontWeight:
+                        800,
+
+                    interval:
+                        0
+
+                }
+
+            },
+
+            yAxis: {
+
+                type:
+                    "value",
+
+                min:
+                    0,
+
+                max:
+                    100,
+
+                name:
+                    "Porcentaje",
+
+                nameTextStyle: {
+
+                    color:
+                        "#64748b",
+
+                    fontWeight:
+                        700
+
+                },
+
+                axisLabel: {
+
+                    color:
+                        "#64748b",
+
+                    formatter:
+                        "{value}%"
+
+                },
+
+                splitLine: {
+
+                    lineStyle: {
+
+                        color:
+                            "#1e293b"
+
+                    }
+
+                }
+
+            },
+
+            series: [
+
+                {
+
+                    type:
+                        "bar",
+
+                    data: [
+
+                        porcentajeVictorias,
+                        porcentajeEmpates,
+                        porcentajeDerrotas,
+                        efectividad
+
+                    ],
+
+                    barWidth:
+                        55,
+
+                    itemStyle: {
+
+                        color:
+                            "#10b981",
+
+                        borderRadius:
+                            [8, 8, 0, 0]
+
+                    },
+
+                    label: {
+
+                        show:
+                            true,
+
+                        position:
+                            "top",
+
+                        formatter:
+                            function(params) {
+
+                                return Number(
+                                    params.value
+                                ).toFixed(1) + "%";
+
+                            },
+
+                        color:
+                            "#10b981",
+
+                        fontWeight:
+                            900
+
+                    }
+
+                }
+
+            ]
+
+        });
+
+
+
+        /* =====================================================
+           PROMEDIOS
+        ===================================================== */
+
+        graficoPromedioEquipo =
+            echarts.init(
+                document.getElementById(
+                    "graficoPromedioEquipo"
+                )
+            );
+
+
+        const promedioGoles =
+            obtenerPromedioGoles(
+                reporte
+            );
+
+
+        const promedioGolesEnContra =
+            obtenerPromedioGolesEnContra(
+                reporte
+            );
+
+
+        graficoPromedioEquipo.setOption({
+
+            ...temaBase(),
+
+            tooltip: {
+
+                ...temaBase().tooltip,
+
+                trigger:
+                    "axis",
+
+                axisPointer: {
+
+                    type:
+                        "shadow"
+
+                },
+
+                formatter:
+                    function(params) {
+
+                        let texto = "";
+
+                        params.forEach(
+                            param => {
+
+                                texto +=
+                                    `${param.name}: <b>${Number(param.value).toFixed(2)}</b> goles por partido<br>`;
+
+                            }
+                        );
+
+
+                        return texto;
+
+                    }
+
+            },
+
+            grid: {
+
+                left:
+                    "8%",
+
+                right:
+                    "7%",
+
+                top:
+                    "10%",
+
+                bottom:
+                    "16%",
+
+                containLabel:
+                    true
+
+            },
+
+            xAxis: {
+
+                type:
+                    "category",
+
+                data: [
+
+                    "Goles por partido",
+                    "Goles recibidos por partido"
+
+                ],
+
+                axisLabel: {
+
+                    color:
+                        "#cbd5e1",
+
+                    fontWeight:
+                        800,
+
+                    interval:
+                        0
+
+                }
+
+            },
+
+            yAxis: {
+
+                type:
+                    "value",
+
+                min:
+                    0,
+
+                name:
+                    "Goles por partido",
+
+                nameTextStyle: {
+
+                    color:
+                        "#64748b",
+
+                    fontWeight:
+                        700
+
+                },
+
+                axisLabel: {
+
+                    color:
+                        "#64748b"
+
+                },
+
+                splitLine: {
+
+                    lineStyle: {
+
+                        color:
+                            "#1e293b"
+
+                    }
+
+                }
+
+            },
+
+            series: [
+
+                {
+
+                    type:
+                        "bar",
+
+                    data: [
+
+                        {
+
+                            value:
+                                promedioGoles,
+
+                            itemStyle: {
+
+                                color:
+                                    "#10b981",
+
+                                borderRadius:
+                                    [8, 8, 0, 0]
+
+                            }
+
+                        },
+
+                        {
+
+                            value:
+                                promedioGolesEnContra,
+
+                            itemStyle: {
+
+                                color:
+                                    "#ef4444",
+
+                                borderRadius:
+                                    [8, 8, 0, 0]
+
+                            }
+
+                        }
+
+                    ],
+
+                    barWidth:
+                        65,
+
+                    label: {
+
+                        show:
+                            true,
+
+                        position:
+                            "top",
+
+                        formatter:
+                            function(params) {
+
+                                return Number(
+                                    params.value
+                                ).toFixed(2);
+
+                            },
+
+                        color:
+                            "#cbd5e1",
+
+                        fontWeight:
+                            900
+
+                    }
+
+                }
+
+            ]
+
+        });
+
+    }
+
+
+
+    /* =========================================================
+       GRAFICOS JUGADOR
+    ========================================================== */
+
+    function destruirGraficosJugador() {
+
+        [
+
+            graficoIndividual,
+            graficoAtaque,
+            graficoParticipacion,
+            graficoDisciplina,
+            graficoEficiencia
+
+        ].forEach(
+            grafico => {
+
+                if (
+                    grafico &&
+                    typeof grafico.dispose ===
+                    "function"
+                ) {
+
+                    try {
+
+                        grafico.dispose();
+
+                    } catch (_) {}
+
+                }
+
+            }
+        );
+
+
+        graficoIndividual = null;
+        graficoAtaque = null;
+        graficoParticipacion = null;
+        graficoDisciplina = null;
+        graficoEficiencia = null;
+
+
+        document
+            .getElementById(
+                "contenedorGraficos"
+            )
+            ?.classList.add(
+                "hidden"
+            );
+
+
+        [
+
+            "contenedorGraficoIndividual",
+            "contenedorGraficoAtaque",
+            "contenedorGraficoParticipacion",
+            "contenedorGraficoDisciplina",
+            "contenedorGraficoEficiencia"
+
+        ].forEach(
+            id => {
+
+                document
+                    .getElementById(id)
+                    ?.classList.add(
+                        "hidden"
+                    );
+
+            }
+        );
+
+    }
+
+
+
+    function mostrarGraficosJugador(
+        reportes
+    ) {
+
+        if (
+            !reportes ||
+            !reportes.length
+        ) {
+
+            return;
+
+        }
+
+
+        const alcance =
+            document.getElementById(
+                "alcance"
+            )?.value;
+
+
+        /*
+         * POR PARTIDO:
+         * no mostramos ningún gráfico.
+         */
+
+        if (
+            alcance ===
+            "partido"
+        ) {
+
+            return;
+
+        }
+
+
+        document
+            .getElementById(
+                "contenedorGraficos"
+            )
+            .classList.remove(
+                "hidden"
+            );
+
+
+        if (
+            reportes.length ===
+            1
+        ) {
+
+            crearGraficoJugadorIndividual(
+                reportes[0]
+            );
+
+
+            crearGraficoJugadorEficiencia(
+                reportes[0]
+            );
+
+
+            crearGraficoJugadorDisciplina(
+                reportes[0]
+            );
+
+
+            return;
+
+        }
+
+
+        crearGraficoJugadorAtaque(
+            reportes
+        );
+
+
+        crearGraficoJugadorParticipacion(
+            reportes
+        );
+
+
+        crearGraficoJugadorDisciplinaMultiple(
+            reportes
+        );
+
+    }
+
+
+
+    /* =========================================================
+       GRAFICO INDIVIDUAL
+    ========================================================== */
+
+    function crearGraficoJugadorIndividual(
+        reporte
+    ) {
+
+        const contenedor =
+            document.getElementById(
+                "contenedorGraficoIndividual"
+            );
+
+
+        const elemento =
+            document.getElementById(
+                "graficoIndividual"
+            );
+
+
+        contenedor.classList.remove(
+            "hidden"
+        );
+
+
+        graficoIndividual =
+            echarts.init(
+                elemento
+            );
+
+
+        const partidosJugador =
+            Number(
+                reporte.partidos ?? 0
+            );
+
+
+        const titulares =
+            Number(
+                reporte.titulares ?? 0
+            );
+
+
+        const titularidad =
+            partidosJugador > 0
+                ? Math.round(
+                    titulares /
+                    partidosJugador *
+                    100
+                )
+                : 0;
+
+
+        graficoIndividual.setOption({
+
+            ...temaBase(),
+
+            tooltip: {
+
+                ...temaBase().tooltip,
+
+                trigger:
+                    "item",
+
+                formatter:
+                    function(params) {
+
+                        return `
+                            ${params.name}<br>
+                            ${params.value}%
+                        `;
+
+                    }
+
+            },
+
+            legend: {
+
+                bottom:
+                    0,
+
+                textStyle: {
+
+                    color:
+                        "#94a3b8",
+
+                    fontWeight:
+                        700
+
+                }
+
+            },
+
+            graphic: [
+
+                {
+
+                    type:
+                        "text",
+
+                    left:
+                        "center",
+
+                    top:
+                        "6%",
+
+                    style: {
+
+                        text:
+                            nombreJugador(
+                                reporte.jugadorId
+                            ),
+
+                        fill:
+                            "#f8fafc",
+
+                        fontSize:
+                            18,
+
+                        fontWeight:
+                            900,
+
+                        textAlign:
+                            "center"
+
+                    }
+
+                }
+
+            ],
+
+            series: [
+
+                {
+
+                    type:
+                        "pie",
+
+                    radius:
+                        ["52%", "70%"],
+
+                    center:
+                        ["50%", "53%"],
+
+                    label: {
+
+                        show:
+                            true,
+
+                        position:
+                            "center",
+
+                        formatter:
+                            `{title|${titularidad}%}\n{desc|TITULARIDAD}`,
+
+                        rich: {
+
+                            title: {
+
+                                fontSize:
+                                    38,
+
+                                fontWeight:
+                                    900,
+
+                                color:
+                                    "#10b981"
+
+                            },
+
+                            desc: {
+
+                                fontSize:
+                                    11,
+
+                                fontWeight:
+                                    800,
+
+                                color:
+                                    "#64748b"
+
+                            }
+
+                        }
+
+                    },
+
+                    labelLine: {
+
+                        show:
+                            false
+
+                    },
+
+                    itemStyle: {
+
+                        borderColor:
+                            "#0f172a",
+
+                        borderWidth:
+                            5,
+
+                        borderRadius:
+                            8
+
+                    },
+
+                    data: [
+
+                        {
+
+                            value:
+                                titularidad,
+
+                            name:
+                                "Titular",
+
+                            itemStyle: {
+
+                                color:
+                                    "#10b981"
+
+                            }
+
+                        },
+
+                        {
+
+                            value:
+                                100 -
+                                titularidad,
+
+                            name:
+                                "No titular",
+
+                            itemStyle: {
+
+                                color:
+                                    "#1e293b"
+
+                            }
+
+                        }
+
+                    ]
+
+                }
+
+            ]
+
+        });
+
+    }
+
+
+
+    /* =========================================================
+       GRAFICO ATAQUE
+    ========================================================== */
+
+    function crearGraficoJugadorAtaque(
+        reportes
+    ) {
+
+        const contenedor =
+            document.getElementById(
+                "contenedorGraficoAtaque"
+            );
+
+
+        contenedor.classList.remove(
+            "hidden"
+        );
+
+
+        graficoAtaque =
+            echarts.init(
+                document.getElementById(
+                    "graficoAtaque"
+                )
+            );
+
+
+        const datos =
+            reportes.map(
+                reporte => {
+
+                    return {
+
+                        nombre:
+                            nombreJugador(
+                                reporte.jugadorId
+                            ),
+
+                        goles:
+                            Number(
+                                reporte.goles ?? 0
+                            ),
+
+                        asistencias:
+                            Number(
+                                reporte.asistencias ?? 0
+                            )
+
+                    };
+
+                }
+            );
+
+
+        graficoAtaque.setOption({
+
+            ...temaBase(),
+
+            tooltip: {
+
+                ...temaBase().tooltip,
+
+                trigger:
+                    "axis",
+
+                axisPointer: {
+
+                    type:
+                        "shadow"
+
+                }
+
+            },
+
+            legend: {
+
+                top:
+                    0,
+
+                textStyle: {
+
+                    color:
+                        "#94a3b8",
+
+                    fontWeight:
+                        700
+
+                }
+
+            },
+
+            grid: {
+
+                left:
+                    "5%",
+
+                right:
+                    "5%",
+
+                top:
+                    "15%",
+
+                bottom:
+                    "10%",
+
+                containLabel:
+                    true
+
+            },
+
+            xAxis: {
+
+                type:
+                    "category",
+
+                data:
+                    datos.map(
+                        d =>
+                            d.nombre
+                    ),
+
+                axisLabel: {
+
+                    color:
+                        "#cbd5e1",
+
+                    fontWeight:
+                        700,
+
+                    rotate:
+                        datos.length > 6
+                            ? 25
+                            : 0
+
+                }
+
+            },
+
+            yAxis: {
+
+                type:
+                    "value",
+
+                min:
+                    0,
+
+                name:
+                    "Acciones",
+
+                nameTextStyle: {
+
+                    color:
+                        "#64748b",
+
+                    fontWeight:
+                        700
+
+                },
+
+                axisLabel: {
+
+                    color:
+                        "#64748b"
+
+                },
+
+                splitLine: {
+
+                    lineStyle: {
+
+                        color:
+                            "#1e293b"
+
+                    }
+
+                }
+
+            },
+
+            series: [
+
+                {
+
+                    name:
+                        "Goles",
+
+                    type:
+                        "bar",
+
+                    data:
+                        datos.map(
+                            d =>
+                                d.goles
+                        ),
+
+                    itemStyle: {
+
+                        color:
+                            "#10b981",
+
+                        borderRadius:
+                            [7, 7, 0, 0]
+
+                    },
+
+                    label: {
+
+                        show:
+                            true,
+
+                        position:
+                            "top",
+
+                        color:
+                            "#cbd5e1",
+
+                        fontWeight:
+                            800
+
+                    }
+
+                },
+
+                {
+
+                    name:
+                        "Asistencias",
+
+                    type:
+                        "bar",
+
+                    data:
+                        datos.map(
+                            d =>
+                                d.asistencias
+                        ),
+
+                    itemStyle: {
+
+                        color:
+                            "#64748b",
+
+                        borderRadius:
+                            [7, 7, 0, 0]
+
+                    },
+
+                    label: {
+
+                        show:
+                            true,
+
+                        position:
+                            "top",
+
+                        color:
+                            "#cbd5e1",
+
+                        fontWeight:
+                            800
+
+                    }
+
+                }
+
+            ]
+
+        });
+
+    }
+
+
+
+    /* =========================================================
+       GRAFICO PARTICIPACION
+    ========================================================== */
+
+    function crearGraficoJugadorParticipacion(
+        reportes
+    ) {
+
+        const contenedor =
+            document.getElementById(
+                "contenedorGraficoParticipacion"
+            );
+
+
+        contenedor.classList.remove(
+            "hidden"
+        );
+
+
+        graficoParticipacion =
+            echarts.init(
+                document.getElementById(
+                    "graficoParticipacion"
+                )
+            );
+
+
+        const datos =
+            reportes
+                .map(
+                    reporte => ({
+
+                        nombre:
+                            nombreJugador(
+                                reporte.jugadorId
+                            ),
+
+                        minutos:
+                            Number(
+                                reporte.minutos ?? 0
+                            )
+
+                    })
+                )
+                .sort(
+                    (a, b) =>
+                        b.minutos -
+                        a.minutos
+                );
+
+
+        graficoParticipacion.setOption({
+
+            ...temaBase(),
+
+            tooltip: {
+
+                ...temaBase().tooltip,
+
+                trigger:
+                    "axis",
+
+                axisPointer: {
+
+                    type:
+                        "shadow"
+
+                },
+
+                formatter:
+                    function(params) {
+
+                        const param =
+                            params[0];
+
+                        return `
+                            ${param.name}<br>
+                            Minutos disputados: <b>${param.value}</b>
+                        `;
+
+                    }
+
+            },
+
+            grid: {
+
+                left:
+                    "5%",
+
+                right:
+                    "8%",
+
+                top:
+                    "8%",
+
+                bottom:
+                    "8%",
+
+                containLabel:
+                    true
+
+            },
+
+            xAxis: {
+
+                type:
+                    "value",
+
+                min:
+                    0,
+
+                name:
+                    "Minutos",
+
+                nameTextStyle: {
+
+                    color:
+                        "#64748b",
+
+                    fontWeight:
+                        700
+
+                },
+
+                axisLabel: {
+
+                    color:
+                        "#64748b",
+
+                    formatter:
+                        "{value}"
+
+                },
+
+                splitLine: {
+
+                    lineStyle: {
+
+                        color:
+                            "#1e293b"
+
+                    }
+
+                }
+
+            },
+
+            yAxis: {
+
+                type:
+                    "category",
+
+                data:
+                    datos.map(
+                        d =>
+                            d.nombre
+                    ),
+
+                axisLabel: {
+
+                    color:
+                        "#cbd5e1",
+
+                    fontWeight:
+                        700
+
+                }
+
+            },
+
+            series: [
+
+                {
+
+                    type:
+                        "bar",
+
+                    data:
+                        datos.map(
+                            d =>
+                                d.minutos
+                        ),
+
+                    barMaxWidth:
+                        30,
+
+                    itemStyle: {
+
+                        color:
+                            "#10b981",
+
+                        borderRadius:
+                            [0, 8, 8, 0]
+
+                    },
+
+                    label: {
+
+                        show:
+                            true,
+
+                        position:
+                            "right",
+
+                        color:
+                            "#10b981",
+
+                        fontWeight:
+                            900,
+
+                        formatter:
+                            "{c} min"
+
+                    }
+
+                }
+
+            ]
+
+        });
+
+    }
+
+
+
+    /* =========================================================
+       DISCIPLINA INDIVIDUAL
+    ========================================================== */
+
+    function crearGraficoJugadorDisciplina(
+        reporte
+    ) {
+
+        const contenedor =
+            document.getElementById(
+                "contenedorGraficoDisciplina"
+            );
+
+
+        contenedor.classList.remove(
+            "hidden"
+        );
+
+
+        graficoDisciplina =
+            echarts.init(
+                document.getElementById(
+                    "graficoDisciplina"
+                )
+            );
+
+
+        const minutos =
+            Number(
+                reporte.minutos ?? 0
+            );
+
+
+        const amarillas =
+            Number(
+                reporte.amarillas ?? 0
+            );
+
+
+        const rojas =
+            Number(
+                reporte.rojas ?? 0
+            );
+
+
+        const amarillas90 =
+            minutos > 0
+                ? Number(
+                    (
+                        amarillas /
+                        minutos *
+                        90
+                    ).toFixed(2)
+                )
+                : 0;
+
+
+        const rojas90 =
+            minutos > 0
+                ? Number(
+                    (
+                        rojas /
+                        minutos *
+                        90
+                    ).toFixed(2)
+                )
+                : 0;
+
+
+        graficoDisciplina.setOption({
+
+            ...temaBase(),
+
+            tooltip: {
+
+                ...temaBase().tooltip,
+
+                trigger:
+                    "axis",
+
+                axisPointer: {
+
+                    type:
+                        "shadow"
+
+                },
+
+                formatter:
+                    function(params) {
+
+                        let texto = "";
+
+                        params.forEach(
+                            param => {
+
+                                texto +=
+                                    `${param.name}: <b>${Number(param.value).toFixed(2)}</b> por 90 min<br>`;
+
+                            }
+                        );
+
+
+                        return texto;
+
+                    }
+
+            },
+
+            grid: {
+
+                left:
+                    "7%",
+
+                right:
+                    "7%",
+
+                top:
+                    "10%",
+
+                bottom:
+                    "13%",
+
+                containLabel:
+                    true
+
+            },
+
+            xAxis: {
+
+                type:
+                    "category",
+
+                data: [
+
+                    "Amarillas / 90",
+                    "Rojas / 90"
+
+                ],
+
+                axisLabel: {
+
+                    color:
+                        "#cbd5e1",
+
+                    fontWeight:
+                        700
+
+                }
+
+            },
+
+            yAxis: {
+
+                type:
+                    "value",
+
+                min:
+                    0,
+
+                name:
+                    "Tarjetas por 90 min",
+
+                nameTextStyle: {
+
+                    color:
+                        "#64748b",
+
+                    fontWeight:
+                        700
+
+                },
+
+                axisLabel: {
+
+                    color:
+                        "#64748b"
+
+                },
+
+                splitLine: {
+
+                    lineStyle: {
+
+                        color:
+                            "#1e293b"
+
+                    }
+
+                }
+
+            },
+
+            series: [
+
+                {
+
+                    type:
+                        "bar",
+
+                    data: [
+
+                        {
+
+                            value:
+                                amarillas90,
+
+                            itemStyle: {
+
+                                color:
+                                    "#eab308"
+
+                            }
+
+                        },
+
+                        {
+
+                            value:
+                                rojas90,
+
+                            itemStyle: {
+
+                                color:
+                                    "#ef4444"
+
+                            }
+
+                        }
+
+                    ],
+
+                    barWidth:
+                        55,
+
+                    itemStyle: {
+
+                        borderRadius:
+                            [8, 8, 0, 0]
+
+                    },
+
+                    label: {
+
+                        show:
+                            true,
+
+                        position:
+                            "top",
+
+                        formatter:
+                            function(params) {
+
+                                return Number(
+                                    params.value
+                                ).toFixed(2);
+
+                            },
+
+                        color:
+                            "#cbd5e1",
+
+                        fontWeight:
+                            900
+
+                    }
+
+                }
+
+            ]
+
+        });
+
+    }
+
+
+
+    /* =========================================================
+       DISCIPLINA MULTIPLE
+    ========================================================== */
+
+    function crearGraficoJugadorDisciplinaMultiple(
+        reportes
+    ) {
+
+        const contenedor =
+            document.getElementById(
+                "contenedorGraficoDisciplina"
+            );
+
+
+        contenedor.classList.remove(
+            "hidden"
+        );
+
+
+        graficoDisciplina =
+            echarts.init(
+                document.getElementById(
+                    "graficoDisciplina"
+                )
+            );
+
+
+        const datos =
+            reportes.map(
+                reporte => {
+
+                    const minutos =
+                        Number(
+                            reporte.minutos ?? 0
+                        );
+
+
+                    const amarillas =
+                        Number(
+                            reporte.amarillas ?? 0
+                        );
+
+
+                    const rojas =
+                        Number(
+                            reporte.rojas ?? 0
+                        );
+
+
+                    return {
+
+                        nombre:
+                            nombreJugador(
+                                reporte.jugadorId
+                            ),
+
+                        amarillas:
+                            minutos > 0
+                                ? Number(
+                                    (
+                                        amarillas /
+                                        minutos *
+                                        90
+                                    ).toFixed(2)
+                                )
+                                : 0,
+
+                        rojas:
+                            minutos > 0
+                                ? Number(
+                                    (
+                                        rojas /
+                                        minutos *
+                                        90
+                                    ).toFixed(2)
+                                )
+                                : 0
+
+                    };
+
+                }
+            );
+
+
+        graficoDisciplina.setOption({
+
+            ...temaBase(),
+
+            tooltip: {
+
+                ...temaBase().tooltip,
+
+                trigger:
+                    "axis",
+
+                axisPointer: {
+
+                    type:
+                        "shadow"
+
+                },
+
+                formatter:
+                    function(params) {
+
+                        let texto =
+                            `${params[0].axisValue}<br>`;
+
+                        params.forEach(
+                            param => {
+
+                                texto +=
+                                    `${param.seriesName}: <b>${Number(param.value).toFixed(2)}</b><br>`;
+
+                            }
+                        );
+
+
+                        return texto;
+
+                    }
+
+            },
+
+            legend: {
+
+                top:
+                    0,
+
+                textStyle: {
+
+                    color:
+                        "#94a3b8",
+
+                    fontWeight:
+                        700
+
+                }
+
+            },
+
+            grid: {
+
+                left:
+                    "5%",
+
+                right:
+                    "5%",
+
+                top:
+                    "13%",
+
+                bottom:
+                    "13%",
+
+                containLabel:
+                    true
+
+            },
+
+            xAxis: {
+
+                type:
+                    "category",
+
+                data:
+                    datos.map(
+                        d =>
+                            d.nombre
+                    ),
+
+                axisLabel: {
+
+                    color:
+                        "#cbd5e1",
+
+                    fontWeight:
+                        700,
+
+                    rotate:
+                        datos.length > 6
+                            ? 25
+                            : 0
+
+                }
+
+            },
+
+            yAxis: {
+
+                type:
+                    "value",
+
+                min:
+                    0,
+
+                name:
+                    "Tarjetas por 90 min",
+
+                nameTextStyle: {
+
+                    color:
+                        "#64748b",
+
+                    fontWeight:
+                        700
+
+                },
+
+                axisLabel: {
+
+                    color:
+                        "#64748b"
+
+                },
+
+                splitLine: {
+
+                    lineStyle: {
+
+                        color:
+                            "#1e293b"
+
+                    }
+
+                }
+
+            },
+
+            series: [
+
+                {
+
+                    name:
+                        "Amarillas / 90",
+
+                    type:
+                        "bar",
+
+                    data:
+                        datos.map(
+                            d =>
+                                d.amarillas
+                        ),
+
+                    itemStyle: {
+
+                        color:
+                            "#eab308",
+
+                        borderRadius:
+                            [7, 7, 0, 0]
+
+                    },
+
+                    label: {
+
+                        show:
+                            true,
+
+                        position:
+                            "top",
+
+                        formatter:
+                            function(params) {
+
+                                return Number(
+                                    params.value
+                                ).toFixed(2);
+
+                            },
+
+                        color:
+                            "#cbd5e1",
+
+                        fontWeight:
+                            800
+
+                    }
+
+                },
+
+                {
+
+                    name:
+                        "Rojas / 90",
+
+                    type:
+                        "bar",
+
+                    data:
+                        datos.map(
+                            d =>
+                                d.rojas
+                        ),
+
+                    itemStyle: {
+
+                        color:
+                            "#ef4444",
+
+                        borderRadius:
+                            [7, 7, 0, 0]
+
+                    },
+
+                    label: {
+
+                        show:
+                            true,
+
+                        position:
+                            "top",
+
+                        formatter:
+                            function(params) {
+
+                                return Number(
+                                    params.value
+                                ).toFixed(2);
+
+                            },
+
+                        color:
+                            "#cbd5e1",
+
+                        fontWeight:
+                            800
+
+                    }
+
+                }
+
+            ]
+
+        });
+
+    }
+
+
+
+    /* =========================================================
+       EFICIENCIA INDIVIDUAL
+    ========================================================== */
+
+    function crearGraficoJugadorEficiencia(
+        reporte
+    ) {
+
+        const contenedor =
+            document.getElementById(
+                "contenedorGraficoEficiencia"
+            );
+
+
+        contenedor.classList.remove(
+            "hidden"
+        );
+
+
+        graficoEficiencia =
+            echarts.init(
+                document.getElementById(
+                    "graficoEficiencia"
+                )
+            );
+
+
+        const partidosJugador =
+            Number(
+                reporte.partidos ?? 0
+            );
+
+
+        const goles =
+            Number(
+                reporte.goles ?? 0
+            );
+
+
+        const asistencias =
+            Number(
+                reporte.asistencias ?? 0
+            );
+
+
+        const golesPartido =
+            partidosJugador > 0
+                ? Number(
+                    (
+                        goles /
+                        partidosJugador
+                    ).toFixed(2)
+                )
+                : 0;
+
+
+        const asistenciasPartido =
+            partidosJugador > 0
+                ? Number(
+                    (
+                        asistencias /
+                        partidosJugador
+                    ).toFixed(2)
+                )
+                : 0;
+
+
+        const totalPartido =
+            partidosJugador > 0
+                ? Number(
+                    (
+                        (
+                            goles +
+                            asistencias
+                        ) /
+                        partidosJugador
+                    ).toFixed(2)
+                )
+                : 0;
+
+
+        graficoEficiencia.setOption({
+
+            ...temaBase(),
+
+            tooltip: {
+
+                ...temaBase().tooltip,
+
+                trigger:
+                    "axis",
+
+                axisPointer: {
+
+                    type:
+                        "shadow"
+
+                },
+
+                formatter:
+                    function(params) {
+
+                        let texto = "";
+
+                        params.forEach(
+                            param => {
+
+                                texto +=
+                                    `${param.name}: <b>${Number(param.value).toFixed(2)}</b> por partido<br>`;
+
+                            }
+                        );
+
+
+                        return texto;
+
+                    }
+
+            },
+
+            grid: {
+
+                left:
+                    "7%",
+
+                right:
+                    "7%",
+
+                top:
+                    "12%",
+
+                bottom:
+                    "13%",
+
+                containLabel:
+                    true
+
+            },
+
+            xAxis: {
+
+                type:
+                    "category",
+
+                data: [
+
+                    "Goles",
+                    "Asistencias",
+                    "G + A"
+
+                ],
+
+                axisLabel: {
+
+                    color:
+                        "#cbd5e1",
+
+                    fontWeight:
+                        800
+
+                }
+
+            },
+
+            yAxis: {
+
+                type:
+                    "value",
+
+                min:
+                    0,
+
+                name:
+                    "Promedio por partido",
+
+                nameTextStyle: {
+
+                    color:
+                        "#64748b",
+
+                    fontWeight:
+                        700
+
+                },
+
+                axisLabel: {
+
+                    color:
+                        "#64748b"
+
+                },
+
+                splitLine: {
+
+                    lineStyle: {
+
+                        color:
+                            "#1e293b"
+
+                    }
+
+                }
+
+            },
+
+            series: [
+
+                {
+
+                    type:
+                        "bar",
+
+                    data: [
+
+                        golesPartido,
+                        asistenciasPartido,
+                        totalPartido
+
+                    ],
+
+                    barWidth:
+                        55,
+
+                    itemStyle: {
+
+                        color:
+                            "#10b981",
+
+                        borderRadius:
+                            [9, 9, 0, 0]
+
+                    },
+
+                    label: {
+
+                        show:
+                            true,
+
+                        position:
+                            "top",
+
+                        color:
+                            "#10b981",
+
+                        fontWeight:
+                            900,
+
+                        formatter:
+                            function(params) {
+
+                                return Number(
+                                    params.value
+                                ).toFixed(2);
+
+                            }
+
+                    }
+
+                }
+
+            ]
+
+        });
+
+    }
+
+
+
+    function numero(valor) {
+        const n = Number(valor);
+        return Number.isFinite(n) ? n : 0;
+    }
+
+
+    function extraerReportes(data) {
+        if (Array.isArray(data)) {
+            return data.filter(Boolean);
+        }
+
+        if (data?.content && Array.isArray(data.content)) {
+            return data.content.filter(Boolean);
+        }
+
+        if (data?.data && Array.isArray(data.data)) {
+            return data.data.filter(Boolean);
+        }
+
+        return data ? [data] : [];
+    }
+
+
+    function sumarIncidencias(reportes) {
+        return reportes.flatMap(r =>
+            Array.isArray(r?.incidencias)
+                ? r.incidencias
+                : []
+        );
+    }
+
+
+    function agregarReportesJugadores(reportes) {
+
+        const grupos = new Map();
+
+        reportes.forEach(reporte => {
+
+            const jugadorId =
+                reporte?.jugadorId ??
+                reporte?.jugador?.id;
+
+            if (jugadorId == null) {
+                return;
+            }
+
+            const id = String(jugadorId);
+
+            if (!grupos.has(id)) {
+                grupos.set(id, {
+                    jugadorId: Number(jugadorId),
+                    partidos: 0,
+                    titulares: 0,
+                    minutos: 0,
+                    goles: 0,
+                    asistencias: 0,
+                    amarillas: 0,
+                    rojas: 0,
+                    incidencias: []
+                });
+            }
+
+            const total = grupos.get(id);
+
+            total.partidos += numero(reporte.partidos);
+            total.titulares += numero(reporte.titulares);
+            total.minutos += numero(reporte.minutos);
+            total.goles += numero(reporte.goles);
+            total.asistencias += numero(reporte.asistencias);
+            total.amarillas += numero(reporte.amarillas);
+            total.rojas += numero(reporte.rojas);
+
+            if (Array.isArray(reporte.incidencias)) {
+                total.incidencias.push(...reporte.incidencias);
+            }
+        });
+
+        return [...grupos.values()];
+    }
+
+
+    async function cargarReporteJugador(id, alcance) {
+
+        const token = getJwt();
+        const anio = document.getElementById("anio")?.value;
+        const mes = document.getElementById("mes")?.value;
+        const campeonatoId = document.getElementById("campeonatoId")?.value;
+        const partidoId = document.getElementById("partidoId")?.value;
+
+        let url = "";
+
+        if (alcance === "mes") {
+            url = `/api/estadisticas/mes/${anio}/${mes}/jugador/${id}`;
+        } else if (alcance === "campeonato") {
+            url = `/api/estadisticas/campeonato/${campeonatoId}/jugador/${id}`;
+        } else if (alcance === "partido") {
+            url = `/api/estadisticas/partido/${partidoId}/jugador/${id}`;
+        } else {
+            url = `/api/estadisticas/jugador/${id}/acumulado`;
+        }
+
+        const response = await fetch(url, {
+            headers: {
+                "Authorization": "Bearer " + token,
+                "Accept": "application/json"
+            }
+        });
+
+        if (!response.ok) {
+            return [];
+        }
+
+        return extraerReportes(await response.json());
+    }
+
+
+    async function generarReporteTodosJugadores() {
+
+        const alcance =
+            document.getElementById("alcance")?.value;
+
+        const categoriaId =
+            document.getElementById("categoriaId")?.value;
+
+        const jugadoresCategoria =
+            jugadoresDeCategoria();
+
+        if (!categoriaId) {
+            throw new Error(
+                "Seleccioná una categoría antes de generar el reporte."
+            );
+        }
+
+        if (alcance === "acumulado") {
+            throw new Error(
+                "El reporte acumulado permite consultar solamente un jugador."
+            );
+        }
+
+        if (!jugadoresCategoria.length) {
+            return [];
+        }
+
+        if (alcance === "campeonato") {
+            validarCampeonatoCategoria();
+        }
+
+        if (alcance === "mes") {
+            const anio = document.getElementById("anio")?.value;
+            const mes = document.getElementById("mes")?.value;
+
+            if (!anio || !mes) {
+                throw new Error("Seleccioná el año y el mes.");
+            }
+        }
+
+        if (alcance === "partido") {
+            if (!document.getElementById("partidoId")?.value) {
+                throw new Error("Seleccioná un partido.");
+            }
+        }
+
+        const resultados =
+            await Promise.all(
+                jugadoresCategoria.map(j =>
+                    cargarReporteJugador(j.id, alcance)
+                )
+            );
+
+        return agregarReportesJugadores(
+            resultados.flat()
+        );
+    }
+
+
+    function normalizarReporteEquipo(reporte, fallbackPartidos = []) {
+
+        const partidos =
+            numero(reporte?.partidos) ||
+            fallbackPartidos.length;
+
+        let golesEnContra =
+            reporte?.golesEnContra ??
+            reporte?.golesRecibidos ??
+            reporte?.golesEnContraTotal;
+
+        if (golesEnContra == null) {
+            golesEnContra = 0;
+        }
+
+        return {
+            ...reporte,
+            partidos,
+            golesEnContra: numero(golesEnContra),
+            golesRecibidos: numero(
+                reporte?.golesRecibidos ?? golesEnContra
+            )
+        };
+    }
+
+
+    /* =========================================================
+       MOSTRAR REPORTE
+    ========================================================== */
+
+
+    function mostrarReporte(data) {
+
+        const resultado =
+            document.getElementById("resultado");
+
+        const vacio =
+            document.getElementById("estadoVacio");
+
+        resultado.classList.remove("hidden");
+        vacio.classList.add("hidden");
+
+        document.getElementById("contenedorTarjetas")
+            .classList.add("hidden");
+
+        document.getElementById("contenedorTarjetasEquipo")
+            .classList.add("hidden");
+
+        document.getElementById("contenedorTabla")
+            .classList.add("hidden");
+
+        document.getElementById("contenedorIncidencias")
+            .classList.add("hidden");
+
+        destruirGraficosJugador();
+        destruirGraficosEquipo();
+
+        const alcance =
+            document.getElementById("alcance")?.value;
+
+        /* =====================================================
+           ENTRENADOR
+        ===================================================== */
+
+        if (tipoReporte === "entrenador") {
+
+            let reporte =
+                obtenerObjetoReporte(
+                    data,
+                    document.getElementById("entrenadorId")?.value,
+                    "entrenadorId"
+                );
+
+            if (!reporte) {
+                mostrarVacio();
+                return;
+            }
+
+            reporte =
+                normalizarReporteEquipo(reporte);
+
+            document.getElementById("tituloResultado")
+                .textContent = "Reporte de entrenador";
+
+            document.getElementById("subtituloResultado")
+                .textContent =
+                `${reporte.entrenadorNombre || nombreEntrenador(reporte.entrenadorId || document.getElementById("entrenadorId")?.value)} · ${descripcionAlcance()}`;
+
+            document.getElementById("contenedorTarjetasEquipo")
+                .classList.remove("hidden");
+
+            mostrarTarjetasEquipo(
+                reporte,
+                alcance === "partido"
+            );
+
+            if (alcance !== "partido") {
+                mostrarGraficosEquipo(reporte);
+            }
+
+            return;
+        }
+
+
+        /* =====================================================
+           CATEGORIA
+        ===================================================== */
+
+        if (tipoReporte === "categoria") {
+
+            let reporte =
+                obtenerObjetoReporte(
+                    data,
+                    document.getElementById("categoriaId")?.value,
+                    "categoriaId"
+                );
+
+            if (!reporte) {
+                mostrarVacio();
+                return;
+            }
+
+            reporte =
+                normalizarReporteEquipo(reporte);
+
+            document.getElementById("tituloResultado")
+                .textContent = "Reporte de categoría";
+
+            document.getElementById("subtituloResultado")
+                .textContent =
+                `${reporte.categoriaNombre || nombreCategoria(reporte.categoriaId || document.getElementById("categoriaId")?.value)} · ${descripcionAlcance()}`;
+
+            document.getElementById("contenedorTarjetasEquipo")
+                .classList.remove("hidden");
+
+            mostrarTarjetasEquipo(
+                reporte,
+                alcance === "partido"
+            );
+
+            if (alcance !== "partido") {
+                mostrarGraficosEquipo(reporte);
+            }
+
+            return;
+        }
+
+
+        /* =====================================================
+           JUGADORES
+        ===================================================== */
+
+        let reportes =
+            extraerReportes(data);
+
+        if (!reportes.length) {
+            mostrarVacio();
+            return;
+        }
+
+        const alcanceJugador =
+            document.getElementById("alcanceJugador")?.value || "uno";
+
+        if (alcanceJugador === "uno") {
+
+            const reporte = reportes[0];
+
+            document.getElementById("tituloResultado")
+                .textContent = "Reporte individual";
+
+            document.getElementById("subtituloResultado")
+                .textContent =
+                `${nombreJugador(reporte.jugadorId)} · ${descripcionAlcance()}`;
+
+            document.getElementById("contenedorTarjetas")
+                .classList.remove("hidden");
+
+            mostrarTarjetasJugador(reporte);
+            mostrarIncidencias([reporte]);
+
+            if (alcance !== "partido") {
+                mostrarGraficosJugador([reporte]);
+            }
+
+            return;
+        }
+
+        /*
+         * TODOS:
+         * solamente existe para mes, campeonato y partido.
+         * El backend devuelve reportes individuales y los mostramos
+         * como una tabla comparativa.
+         */
+
+        reportes =
+            filtrarReportesJugadoresPorCategoria(
+                reportes,
+                document.getElementById("categoriaId")?.value
+            );
+
+        if (!reportes.length) {
+            mostrarVacio();
+            return;
+        }
+
+        document.getElementById("tituloResultado")
+            .textContent = "Reporte de jugadores";
+
+        document.getElementById("subtituloResultado")
+            .textContent =
+            `${nombreCategoria(document.getElementById("categoriaId")?.value)} · ${descripcionAlcance()}`;
+
+        mostrarTabla(reportes);
+        mostrarIncidencias(reportes);
+        mostrarGraficosJugador(reportes);
+    }
+
+
+    /* =========================================================
+       DESCRIPCION ALCANCE
+    ========================================================== */
+
+    function descripcionAlcance() {
+
+        const alcance =
+            document.getElementById(
+                "alcance"
+            ).value;
+
+
+        if (
+            alcance ===
+            "acumulado"
+        ) {
+
+            return "Acumulado";
+
+        }
+
+
+        if (
+            alcance ===
+            "mes"
+        ) {
+
+            const anio =
+                document.getElementById(
+                    "anio"
+                ).value;
+
+
+            const mes =
+                document.getElementById(
+                    "mes"
+                ).value;
+
+
+            const nombresMeses = [
+
+                "",
+                "Enero",
+                "Febrero",
+                "Marzo",
+                "Abril",
+                "Mayo",
+                "Junio",
+                "Julio",
+                "Agosto",
+                "Septiembre",
+                "Octubre",
+                "Noviembre",
+                "Diciembre"
+
+            ];
+
+
+            return `${nombresMeses[Number(mes)] || mes} ${anio}`;
+
+        }
+
+
+        if (
+            alcance ===
+            "campeonato"
+        ) {
+
+            return nombreCampeonato(
+                document.getElementById(
+                    "campeonatoId"
+                ).value
+            );
+
+        }
+
+
+        if (
+            alcance ===
+            "partido"
+        ) {
+
+            return descripcionPartido(
+                document.getElementById(
+                    "partidoId"
+                ).value
+            );
+
+        }
+
+
+        return "";
+
+    }
+
+
+
+    /* =========================================================
+       VACIO
+    ========================================================== */
+
+    function mostrarVacio() {
+
+        document
+            .getElementById(
+                "resultado"
+            )
+            .classList.remove(
+                "hidden"
+            );
+
+
+        document
+            .getElementById(
+                "estadoVacio"
+            )
+            .classList.remove(
+                "hidden"
+            );
+
+
+        document
+            .getElementById(
+                "contenedorTarjetas"
+            )
+            .innerHTML = "";
+
+
+        document
+            .getElementById(
+                "contenedorTarjetasEquipo"
+            )
+            .innerHTML = "";
+
+
+        document
+            .getElementById(
+                "contenedorTabla"
+            )
+            .classList.add(
+                "hidden"
+            );
+
+
+        document
+            .getElementById(
+                "contenedorIncidencias"
+            )
+            .classList.add(
+                "hidden"
+            );
+
+
+        destruirGraficosJugador();
+        destruirGraficosEquipo();
+
+    }
+
+
+
+    /* =========================================================
+       GENERAR REPORTE
+    ========================================================== */
+
+    async function generarReporte() {
+
+        const token = getJwt();
+
+        if (!token) {
+            window.location.href = "/login";
+            return;
+        }
+
+        const loading =
+            document.getElementById("loading");
+
+        const resultado =
+            document.getElementById("resultado");
+
+        const errorEstado =
+            document.getElementById("estadoError");
+
+        try {
+
+            const alcance =
+                document.getElementById("alcance")?.value;
+
+            const alcanceJugador =
+                document.getElementById("alcanceJugador")?.value;
+
+            if (
+                alcance === "campeonato" &&
+                (
+                    tipoReporte === "jugador" ||
+                    tipoReporte === "categoria" ||
+                    tipoReporte === "entrenador"
+                )
+            ) {
+                validarCampeonatoCategoria();
+            }
+
+            loading.classList.remove("hidden");
+            resultado.classList.add("hidden");
+            errorEstado.classList.add("hidden");
+
+            let data;
+
+            if (
+                tipoReporte === "jugador" &&
+                alcanceJugador === "todos"
+            ) {
+
+                data =
+                    await generarReporteTodosJugadores();
+
+            } else {
+
+                const url = generarUrl();
+
+                const response =
+                    await fetch(
+                        url,
+                        {
+                            method: "GET",
+                            headers: {
+                                "Authorization":
+                                    "Bearer " + token,
+                                "Accept":
+                                    "application/json"
+                            }
+                        }
+                    );
+
+                if (
+                    response.status === 401 ||
+                    response.status === 403
+                ) {
+                    throw new Error(
+                        "No tenés permisos para consultar este reporte."
+                    );
+                }
+
+                if (!response.ok) {
+
+                    let mensaje =
+                        "No se pudo generar el reporte.";
+
+                    try {
+
+                        const errorData =
+                            await response.json();
+
+                        mensaje =
+                            errorData.mensaje ||
+                            errorData.message ||
+                            mensaje;
+
+                    } catch (_) {}
+
+                    throw new Error(mensaje);
+                }
+
+                data =
+                    await response.json();
+            }
+
+            console.log(
+                "Reporte recibido:",
+                data
+            );
+
+            mostrarReporte(data);
+
+        } catch (error) {
+
+            console.error(
+                "Error generando reporte:",
+                error
+            );
+
+            resultado.classList.add("hidden");
+            errorEstado.classList.remove("hidden");
+
+            document.getElementById(
+                "textoError"
+            ).textContent =
+                error.message ||
+                "No se pudo generar el reporte.";
+
+        } finally {
+
+            loading.classList.add("hidden");
+
+        }
+    }
+
+
+    /* =========================================================
+       EVENTOS
+    ========================================================== */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        async function() {
+
+            try {
+
+                const token =
+                    getJwt();
+
+
+                if (!token) {
+
+                    window.location.href =
+                        "/login";
+
+                    return;
+
+                }
+
+
+                const anio =
+                    document.getElementById(
+                        "anio"
+                    );
+
+
+                const mes =
+                    document.getElementById(
+                        "mes"
+                    );
+
+
+                if (anio) {
+
+                    anio.value =
+                        new Date()
+                            .getFullYear();
+
+                }
+
+
+                if (mes) {
+
+                    mes.value =
+                        new Date()
+                            .getMonth() + 1;
+
+                }
+
+
+
+                /* =================================================
+                   TIPOS
+                ================================================= */
+
+                document
+                    .querySelectorAll(
+                        ".tipoReporte"
+                    )
+                    .forEach(
+                        boton => {
+
+                            boton.addEventListener(
+                                "click",
+                                function() {
+
+                                    tipoReporte =
+                                        this.dataset.tipo;
+
+
+                                    document
+                                        .querySelectorAll(
+                                            ".tipoReporte"
+                                        )
+                                        .forEach(
+                                            b => {
+
+                                                b.classList.remove(
+                                                    "border-emerald-500"
+                                                );
+
+                                                b.classList.add(
+                                                    "border-slate-800"
+                                                );
+
+                                            }
+                                        );
+
+
+                                    this.classList.remove(
+                                        "border-slate-800"
+                                    );
+
+
+                                    this.classList.add(
+                                        "border-emerald-500"
+                                    );
+
+
+                                    document
+                                        .getElementById(
+                                            "resultado"
+                                        )
+                                        .classList.add(
+                                            "hidden"
+                                        );
+
+
+                                    document
+                                        .getElementById(
+                                            "estadoError"
+                                        )
+                                        .classList.add(
+                                            "hidden"
+                                        );
+
+
+                                    destruirGraficosJugador();
+                                    destruirGraficosEquipo();
+
+
+                                    actualizarFiltros();
+
+                                }
+                            );
+
+                        }
+                    );
+
+
+
+                /* =================================================
+                   ALCANCE JUGADOR
+                ================================================= */
+
+                const alcanceJugador =
+                    document.getElementById(
+                        "alcanceJugador"
+                    );
+
+
+                if (alcanceJugador) {
+
+                    alcanceJugador.addEventListener(
+                        "change",
+                        function() {
+
+                            if (
+                                document.getElementById("alcance")?.value ===
+                                "acumulado" &&
+                                this.value === "todos"
+                            ) {
+                                this.value = "uno";
+                            }
+
+                            const jugador =
+                                document.getElementById(
+                                    "jugadorId"
+                                );
+
+
+                            if (jugador) {
+
+                                jugador.value =
+                                    "";
+
+                            }
+
+
+                            document
+                                .getElementById(
+                                    "resultado"
+                                )
+                                .classList.add(
+                                    "hidden"
+                                );
+
+
+                            actualizarFiltros();
+
+                        }
+                    );
+
+                }
+
+
+
+                /* =================================================
+                   ALCANCE
+                ================================================= */
+
+                const alcance =
+                    document.getElementById(
+                        "alcance"
+                    );
+
+
+                alcance.addEventListener(
+                    "change",
+                    function() {
+
+                        const opcionTodos =
+                            document.getElementById("opcionTodosJugadores");
+
+                        const alcanceJugador =
+                            document.getElementById("alcanceJugador");
+
+                        if (opcionTodos && alcanceJugador) {
+
+                            const esAcumulado =
+                                this.value === "acumulado";
+
+                            opcionTodos.disabled =
+                                esAcumulado;
+
+                            opcionTodos.hidden =
+                                esAcumulado;
+
+                            if (esAcumulado &&
+                                alcanceJugador.value === "todos") {
+                                alcanceJugador.value = "uno";
+                            }
+                        }
+
+                        document
+                            .getElementById(
+                                "resultado"
+                            )
+                            .classList.add(
+                                "hidden"
+                            );
+
+
+                        document
+                            .getElementById(
+                                "estadoError"
+                            )
+                            .classList.add(
+                                "hidden"
+                            );
+
+
+                        /*
+                         * Si cambiamos a partido
+                         * actualizamos inmediatamente
+                         * los partidos según categoría.
+                         */
+
+                        actualizarFiltros();
+
+                    }
+                );
+
+
+
+                /* =================================================
+                   CATEGORIA
+                ================================================= */
+
+                const categoria =
+                    document.getElementById(
+                        "categoriaId"
+                    );
+
+
+                categoria.addEventListener(
+                    "change",
+                    function() {
+
+                        const jugador =
+                            document.getElementById(
+                                "jugadorId"
+                            );
+
+
+                        const partido =
+                            document.getElementById(
+                                "partidoId"
+                            );
+
+
+                        if (jugador) {
+
+                            jugador.value =
+                                "";
+
+                        }
+
+
+                        if (partido) {
+
+                            partido.value =
+                                "";
+
+                        }
+
+
+                        actualizarSelectorJugador();
+
+                        actualizarSelectorPartido();
+
+
+                        document
+                            .getElementById(
+                                "resultado"
+                            )
+                            .classList.add(
+                                "hidden"
+                            );
+
+
+                        document
+                            .getElementById(
+                                "estadoError"
+                            )
+                            .classList.add(
+                                "hidden"
+                            );
+
+                    }
+                );
+
+
+
+                /* =================================================
+                   CAMPEONATO
+                ================================================= */
+
+                const campeonato =
+                    document.getElementById(
+                        "campeonatoId"
+                    );
+
+
+                if (campeonato) {
+
+                    campeonato.addEventListener(
+                        "change",
+                        function() {
+
+                            document
+                                .getElementById(
+                                    "resultado"
+                                )
+                                .classList.add(
+                                    "hidden"
+                                );
+
+
+                            document
+                                .getElementById(
+                                    "estadoError"
+                                )
+                                .classList.add(
+                                    "hidden"
+                                );
+
+                        }
+                    );
+
+                }
+
+
+
+                /* =================================================
+                   ENTRENADOR
+                ================================================= */
+
+                const entrenador =
+                    document.getElementById(
+                        "entrenadorId"
+                    );
+
+
+                if (entrenador) {
+
+                    entrenador.addEventListener(
+                        "change",
+                        function() {
+
+                            document
+                                .getElementById(
+                                    "resultado"
+                                )
+                                .classList.add(
+                                    "hidden"
+                                );
+
+
+                            document
+                                .getElementById(
+                                    "estadoError"
+                                )
+                                .classList.add(
+                                    "hidden"
+                                );
+
+                        }
+                    );
+
+                }
+
+
+
+                /* =================================================
+                   PARTIDO
+                ================================================= */
+
+                const partido =
+                    document.getElementById(
+                        "partidoId"
+                    );
+
+
+                if (partido) {
+
+                    partido.addEventListener(
+                        "change",
+                        function() {
+
+                            document
+                                .getElementById(
+                                    "resultado"
+                                )
+                                .classList.add(
+                                    "hidden"
+                                );
+
+
+                            document
+                                .getElementById(
+                                    "estadoError"
+                                )
+                                .classList.add(
+                                    "hidden"
+                                );
+
+                        }
+                    );
+
+                }
+
+
+
+                /* =================================================
+                   BOTON
+                ================================================= */
+
+                document
+                    .getElementById(
+                        "btnGenerar"
+                    )
+                    .addEventListener(
+                        "click",
+                        generarReporte
+                    );
+
+
+
+                /* =================================================
+                   CARGAR DATOS
+                ================================================= */
+
+                await Promise.all([
+
+                    cargarCategorias(),
+
+                    cargarJugadores(),
+
+                    cargarPartidos(),
+
+                    cargarCampeonatos(),
+
+                    cargarEntrenadores()
+
+                ]);
+
+
+                actualizarSelectorCategoria();
+
+                actualizarSelectorJugador();
+
+                actualizarSelectorPartido();
+
+                actualizarSelectorCampeonato();
+
+                actualizarSelectorEntrenador();
+
+                actualizarFiltros();
+
+                const opcionTodosInicial =
+                    document.getElementById("opcionTodosJugadores");
+
+                if (opcionTodosInicial) {
+                    opcionTodosInicial.disabled =
+                        document.getElementById("alcance")?.value === "acumulado";
+
+                    opcionTodosInicial.hidden =
+                        document.getElementById("alcance")?.value === "acumulado";
+                }
+
+                console.log(
+                    "Reportes inicializados correctamente."
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error inicializando reportes:",
+                    error
+                );
+
+
+                const estadoError =
+                    document.getElementById(
+                        "estadoError"
+                    );
+
+
+                const textoError =
+                    document.getElementById(
+                        "textoError"
+                    );
+
+
+                estadoError.classList.remove(
+                    "hidden"
+                );
+
+
+                textoError.textContent =
+                    error.message ||
+                    "No se pudieron cargar los datos.";
+
+            }
+
+        }
+    );
+
+
+
+    /* =========================================================
+       RESIZE
+    ========================================================== */
+
+    window.addEventListener(
+        "resize",
+        function() {
+
+            [
+
+                graficoIndividual,
+                graficoAtaque,
+                graficoParticipacion,
+                graficoDisciplina,
+                graficoEficiencia,
+
+                graficoResultadosEquipo,
+                graficoGolesEquipo,
+                graficoEficienciaEquipo,
+                graficoPromedioEquipo
+
+            ].forEach(
+                grafico => {
+
+                    if (
+                        grafico &&
+                        typeof grafico.resize ===
+                        "function"
+                    ) {
+
+                        try {
+
+                            grafico.resize();
+
+                        } catch (_) {}
+
+                    }
+
+                }
+            );
+
+        }
+    );
+
+</script>
+
+
+</div>
+
+</body>
+
+</html>

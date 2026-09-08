@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: mainLayout(~{::#content})}"
+      lang="es">
+
+<head>
+
+```
+<meta charset="UTF-8">
+
+<title>Estadísticas</title>
+
+<link rel="icon" href="data:,">
+```
+
+</head>
+
+<body>
+
+<div id="content" class="max-w-[1200px] mx-auto">
+
+```
+<!-- ========================================================= -->
+<!-- HEADER -->
+<!-- ========================================================= -->
+
+<div class="flex flex-col md:flex-row
+            md:items-center justify-between
+            gap-6 mb-8">
+
+    <div>
+
+        <h1 class="text-4xl font-black text-white
+                   tracking-tight italic uppercase">
+
+            Estadísticas
+
+        </h1>
+
+        <p class="text-emerald-500 font-bold mt-1">
+
+            Rendimiento de los jugadores por partido.
+
+        </p>
+
+    </div>
+
+
+    <div class="flex flex-wrap gap-3">
+
+        <a th:href="@{/estadisticas/reportes}"
+           class="px-5 py-3 rounded-xl
+                  bg-slate-800
+                  text-slate-300
+                  hover:bg-slate-700
+                  font-bold
+                  transition-all">
+
+            <i class="fa-solid fa-chart-pie mr-2"></i>
+
+            Reportes
+
+        </a>
+
+
+        <a th:href="@{/estadisticas/nuevo}"
+           class="px-6 py-3 rounded-xl
+                  bg-emerald-500
+                  hover:bg-emerald-400
+                  text-slate-900
+                  font-black
+                  uppercase
+                  text-xs
+                  tracking-widest
+                  shadow-lg
+                  shadow-emerald-500/20
+                  transition-all">
+
+            <i class="fa-solid fa-plus mr-2"></i>
+
+            Nueva estadística
+
+        </a>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- FILTROS -->
+<!-- ========================================================= -->
+
+<div class="bg-[#0f172a]
+            border border-slate-800
+            rounded-2xl
+            p-4
+            mb-8">
+
+    <div class="flex flex-col lg:flex-row gap-3">
+
+
+        <!-- BUSCAR JUGADOR -->
+
+        <div class="relative flex-1">
+
+            <i class="fa-solid fa-user
+                      absolute left-4 top-1/2
+                      -translate-y-1/2
+                      text-emerald-500
+                      text-xs">
+            </i>
+
+
+            <input
+                id="inputJugador"
+                type="text"
+                placeholder="Buscar por jugador..."
+                autocomplete="off"
+                class="w-full
+                       bg-slate-900
+                       border border-slate-800
+                       text-white
+                       placeholder-slate-600
+                       rounded-xl
+                       pl-11 pr-4
+                       py-3
+                       text-sm
+                       font-medium
+                       outline-none
+                       focus:border-emerald-500
+                       transition-all">
+
+        </div>
+
+
+        <!-- BUSCAR PARTIDO -->
+
+        <div class="relative flex-1">
+
+            <i class="fa-solid fa-futbol
+                      absolute left-4 top-1/2
+                      -translate-y-1/2
+                      text-emerald-500
+                      text-xs">
+            </i>
+
+
+            <input
+                id="inputPartido"
+                type="text"
+                placeholder="Buscar por partido..."
+                autocomplete="off"
+                class="w-full
+                       bg-slate-900
+                       border border-slate-800
+                       text-white
+                       placeholder-slate-600
+                       rounded-xl
+                       pl-11 pr-4
+                       py-3
+                       text-sm
+                       font-medium
+                       outline-none
+                       focus:border-emerald-500
+                       transition-all">
+
+        </div>
+
+
+        <!-- TODOS -->
+
+        <button
+            id="btnTodos"
+            type="button"
+            class="bg-emerald-500
+                   hover:bg-emerald-400
+                   text-slate-900
+                   px-6 py-3
+                   rounded-xl
+                   font-black
+                   text-xs
+                   uppercase
+                   tracking-widest
+                   transition-all
+                   whitespace-nowrap">
+
+            Todos
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- TITULO LISTADO -->
+<!-- ========================================================= -->
+
+<div class="flex items-center justify-between mb-5">
+
+    <div>
+
+        <h2 id="tituloListado"
+            class="text-lg
+                   font-black
+                   text-white
+                   uppercase
+                   tracking-tight">
+
+            Últimas estadísticas
+
+        </h2>
+
+
+        <p id="subtituloListado"
+           class="text-slate-600
+                  text-xs
+                  font-bold
+                  mt-1">
+
+            Mostrando las últimas 3 estadísticas registradas.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- TABLA -->
+<!-- ========================================================= -->
+
+<div class="bg-[#0f172a]
+            border border-slate-800
+            rounded-[2rem]
+            overflow-hidden">
+
+
+    <div class="overflow-x-auto">
+
+        <table class="w-full">
+
+            <thead class="bg-slate-800/60">
+
+            <tr class="text-left">
+
+                <th class="px-6 py-4
+                           text-[10px]
+                           font-black
+                           text-slate-500
+                           uppercase
+                           tracking-widest">
+
+                    Jugador
+
+                </th>
+
+
+                <th class="px-6 py-4
+                           text-[10px]
+                           font-black
+                           text-slate-500
+                           uppercase
+                           tracking-widest">
+
+                    Partido
+
+                </th>
+
+
+                <th class="px-6 py-4
+                           text-center
+                           text-[10px]
+                           font-black
+                           text-slate-500
+                           uppercase">
+
+                    Min.
+
+                </th>
+
+
+                <th class="px-6 py-4
+                           text-center
+                           text-[10px]
+                           font-black
+                           text-slate-500
+                           uppercase">
+
+                    ⚽
+
+                </th>
+
+
+                <th class="px-6 py-4
+                           text-center
+                           text-[10px]
+                           font-black
+                           text-slate-500
+                           uppercase">
+
+                    Asist.
+
+                </th>
+
+
+                <th class="px-6 py-4
+                           text-center
+                           text-[10px]
+                           font-black
+                           text-slate-500
+                           uppercase">
+
+                    🟨
+
+                </th>
+
+
+                <th class="px-6 py-4
+                           text-center
+                           text-[10px]
+                           font-black
+                           text-slate-500
+                           uppercase">
+
+                    🟥
+
+                </th>
+
+
+                <th class="px-6 py-4
+                           text-center
+                           text-[10px]
+                           font-black
+                           text-slate-500
+                           uppercase">
+
+                    Titular
+
+                </th>
+
+
+                <th class="px-6 py-4
+                           text-right
+                           text-[10px]
+                           font-black
+                           text-slate-500
+                           uppercase">
+
+                    Acciones
+
+                </th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody id="tablaEstadisticas"
+                   class="divide-y divide-slate-800">
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- LOADING -->
+    <!-- ===================================================== -->
+
+    <div id="loading"
+         class="py-20 text-center">
+
+        <div class="inline-block
+                    animate-spin
+                    w-10 h-10
+                    border-4
+                    border-emerald-500
+                    border-t-transparent
+                    rounded-full">
+        </div>
+
+
+        <p class="text-slate-500
+                  mt-4
+                  font-bold
+                  uppercase
+                  tracking-widest
+                  text-xs">
+
+            Cargando estadísticas...
+
+        </p>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- VACÍO -->
+    <!-- ===================================================== -->
+
+    <div id="estadoVacio"
+         class="hidden
+                text-center
+                py-20">
+
+        <div class="w-16 h-16
+                    mx-auto mb-5
+                    rounded-2xl
+                    bg-slate-800
+                    flex items-center
+                    justify-center">
+
+            <i class="fa-solid fa-chart-line
+                      text-2xl
+                      text-slate-600">
+            </i>
+
+        </div>
+
+
+        <h3 class="text-lg
+                   font-black
+                   text-white">
+
+            No hay estadísticas
+
+        </h3>
+
+
+        <p class="text-slate-500 mt-2">
+
+            No se encontraron estadísticas con esos filtros.
+
+        </p>
+
+
+        <a th:href="@{/estadisticas/nuevo}"
+           class="inline-block
+                  mt-5
+                  px-5 py-3
+                  rounded-xl
+                  bg-emerald-500
+                  text-slate-900
+                  font-bold
+                  hover:bg-emerald-400
+                  transition">
+
+            Crear estadística
+
+        </a>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- ERROR -->
+    <!-- ===================================================== -->
+
+    <div id="estadoError"
+         class="hidden
+                m-6
+                p-6
+                bg-red-500/10
+                border border-red-500/20
+                rounded-2xl
+                text-center">
+
+        <i class="fa-solid fa-circle-exclamation
+                  text-red-500 text-2xl mb-3">
+        </i>
+
+
+        <p id="textoError"
+           class="text-red-400 font-bold">
+
+            Error al cargar las estadísticas.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- JAVASCRIPT -->
+<!-- IMPORTANTE: QUEDA DENTRO DE #content -->
+<!-- ========================================================= -->
+
+<script>
+
+
+    // =========================================================
+    // VARIABLES
+    // =========================================================
+
+    let jugadores = [];
+
+    let partidos = [];
+
+    let estadisticas = [];
+
+
+    // =========================================================
+    // JWT
+    // =========================================================
+
+    function getJwt() {
+
+        const cookie =
+            document.cookie
+                .split('; ')
+                .find(row =>
+                    row.startsWith('token=')
+                );
+
+
+        return cookie
+            ? cookie.substring(6)
+            : null;
+
+    }
+
+
+    // =========================================================
+    // ESCAPAR HTML
+    // =========================================================
+
+    function escapeHtml(str) {
+
+        const div =
+            document.createElement('div');
+
+
+        div.textContent =
+            str ?? '';
+
+
+        return div.innerHTML;
+
+    }
+
+
+    // =========================================================
+    // NORMALIZAR RESPUESTA
+    // =========================================================
+
+    function normalizarLista(data) {
+
+        if (Array.isArray(data)) {
+
+            return data;
+
+        }
+
+
+        if (
+            data &&
+            Array.isArray(data.content)
+        ) {
+
+            return data.content;
+
+        }
+
+
+        if (
+            data &&
+            Array.isArray(data.data)
+        ) {
+
+            return data.data;
+
+        }
+
+
+        if (
+            data &&
+            typeof data === 'object'
+        ) {
+
+            return [data];
+
+        }
+
+
+        return [];
+
+    }
+
+
+    // =========================================================
+    // FORMATEAR FECHA
+    // =========================================================
+
+    function formatearFecha(fecha) {
+
+        if (!fecha) {
+
+            return '';
+
+        }
+
+
+        const partes =
+            String(fecha).split('-');
+
+
+        if (partes.length !== 3) {
+
+            return fecha;
+
+        }
+
+
+        return `${partes[2]}/${partes[1]}/${partes[0]}`;
+
+    }
+
+
+    // =========================================================
+    // CARGAR DATOS
+    // =========================================================
+
+    async function cargarDatos() {
+
+        const token =
+            getJwt();
+
+
+        if (!token) {
+
+            window.location.href =
+                "/login";
+
+            return;
+
+        }
+
+
+        const loading =
+            document.getElementById(
+                "loading"
+            );
+
+
+        const errorEstado =
+            document.getElementById(
+                "estadoError"
+            );
+
+
+        errorEstado.classList.add(
+            "hidden"
+        );
+
+
+        loading.classList.remove(
+            "hidden"
+        );
+
+
+        try {
+
+
+            // =================================================
+            // CARGAR ESTADÍSTICAS
+            // =================================================
+
+            const estadisticasResponse =
+                await fetch(
+                    "/api/estadisticas",
+                    {
+
+                        method: "GET",
+
+                        headers: {
+
+                            "Authorization":
+                                "Bearer " + token,
+
+                            "Accept":
+                                "application/json"
+
+                        }
+
+                    }
+                );
+
+
+            if (
+                estadisticasResponse.status === 401 ||
+                estadisticasResponse.status === 403
+            ) {
+
+                throw new Error(
+                    "No tenés permisos para consultar las estadísticas."
+                );
+
+            }
+
+
+            if (!estadisticasResponse.ok) {
+
+                throw new Error(
+                    "Error al obtener las estadísticas."
+                );
+
+            }
+
+
+            const estadisticasData =
+                await estadisticasResponse.json();
+
+
+            console.log(
+                "Respuesta /api/estadisticas:",
+                estadisticasData
+            );
+
+
+            estadisticas =
+                normalizarLista(
+                    estadisticasData
+                );
+
+
+            // =================================================
+            // CARGAR JUGADORES
+            // =================================================
+
+            const jugadoresResponse =
+                await fetch(
+                    "/api/jugadores",
+                    {
+
+                        method: "GET",
+
+                        headers: {
+
+                            "Authorization":
+                                "Bearer " + token,
+
+                            "Accept":
+                                "application/json"
+
+                        }
+
+                    }
+                );
+
+
+            if (
+                jugadoresResponse.status === 401 ||
+                jugadoresResponse.status === 403
+            ) {
+
+                throw new Error(
+                    "No tenés permisos para consultar los jugadores."
+                );
+
+            }
+
+
+            if (jugadoresResponse.ok) {
+
+                const jugadoresData =
+                    await jugadoresResponse.json();
+
+
+                console.log(
+                    "Respuesta /api/jugadores:",
+                    jugadoresData
+                );
+
+
+                jugadores =
+                    normalizarLista(
+                        jugadoresData
+                    );
+
+            } else {
+
+                jugadores = [];
+
+            }
+
+
+            // =================================================
+            // CARGAR PARTIDOS
+            // =================================================
+
+            const partidosResponse =
+                await fetch(
+                    "/api/partidos",
+                    {
+
+                        method: "GET",
+
+                        headers: {
+
+                            "Authorization":
+                                "Bearer " + token,
+
+                            "Accept":
+                                "application/json"
+
+                        }
+
+                    }
+                );
+
+
+            if (
+                partidosResponse.status === 401 ||
+                partidosResponse.status === 403
+            ) {
+
+                throw new Error(
+                    "No tenés permisos para consultar los partidos."
+                );
+
+            }
+
+
+            if (partidosResponse.ok) {
+
+                const partidosData =
+                    await partidosResponse.json();
+
+
+                console.log(
+                    "Respuesta /api/partidos:",
+                    partidosData
+                );
+
+
+                partidos =
+                    normalizarLista(
+                        partidosData
+                    );
+
+            } else {
+
+                partidos = [];
+
+            }
+
+
+            console.log(
+                "Estadísticas normalizadas:",
+                estadisticas
+            );
+
+
+            console.log(
+                "Jugadores normalizados:",
+                jugadores
+            );
+
+
+            console.log(
+                "Partidos normalizados:",
+                partidos
+            );
+
+
+            // =================================================
+            // MOSTRAR
+            // =================================================
+
+            mostrarEstadisticas();
+
+
+        } catch (error) {
+
+            console.error(
+                "Error cargando estadísticas:",
+                error
+            );
+
+
+            loading.classList.add(
+                "hidden"
+            );
+
+
+            errorEstado.classList.remove(
+                "hidden"
+            );
+
+
+            document.getElementById(
+                "textoError"
+            ).textContent =
+                error.message ||
+                "No se pudieron cargar las estadísticas.";
+
+        }
+
+    }
+
+
+    // =========================================================
+    // OBTENER JUGADOR
+    // =========================================================
+
+    function obtenerJugador(id) {
+
+        return jugadores.find(
+            jugador =>
+                Number(jugador.id) ===
+                Number(id)
+        );
+
+    }
+
+
+    // =========================================================
+    // NOMBRE JUGADOR
+    // =========================================================
+
+    function nombreJugador(id) {
+
+        const jugador =
+            obtenerJugador(id);
+
+
+        if (!jugador) {
+
+            return `Jugador #${id}`;
+
+        }
+
+
+        const nombre =
+            jugador.nombre ??
+            jugador.nombres ??
+            "";
+
+
+        const apellido =
+            jugador.apellido ??
+            jugador.apellidos ??
+            "";
+
+
+        const completo =
+            `${nombre} ${apellido}`.trim();
+
+
+        return completo ||
+               `Jugador #${id}`;
+
+    }
+
+
+    // =========================================================
+    // OBTENER PARTIDO
+    // =========================================================
+
+    function obtenerPartido(id) {
+
+        return partidos.find(
+            partido =>
+                Number(partido.id) ===
+                Number(id)
+        );
+
+    }
+
+
+    // =========================================================
+    // DESCRIPCIÓN PARTIDO
+    // =========================================================
+
+    function descripcionPartido(id) {
+
+        const partido =
+            obtenerPartido(id);
+
+
+        if (!partido) {
+
+            return `Partido #${id}`;
+
+        }
+
+
+        const esLocal =
+            partido.local === true ||
+            partido.local === "true";
+
+
+        const condicion =
+            esLocal
+                ? "Local"
+                : "Visitante";
+
+
+        const fecha =
+            formatearFecha(
+                partido.fecha
+            );
+
+
+        const rival =
+            partido.rival ||
+            "Rival";
+
+
+        return `${fecha} · ${condicion} vs ${rival}`;
+
+    }
+
+
+    // =========================================================
+    // TEXTO BUSCABLE DEL JUGADOR
+    // =========================================================
+
+    function textoJugador(id) {
+
+        const jugador =
+            obtenerJugador(id);
+
+
+        if (!jugador) {
+
+            return `jugador ${id}`
+                .toLowerCase();
+
+        }
+
+
+        const nombre =
+            jugador.nombre ??
+            jugador.nombres ??
+            "";
+
+
+        const apellido =
+            jugador.apellido ??
+            jugador.apellidos ??
+            "";
+
+
+        return `${nombre} ${apellido} ${id}`
+            .toLowerCase();
+
+    }
+
+
+    // =========================================================
+    // TEXTO BUSCABLE DEL PARTIDO
+    // =========================================================
+
+    function textoPartido(id) {
+
+        const partido =
+            obtenerPartido(id);
+
+
+        if (!partido) {
+
+            return `partido ${id}`
+                .toLowerCase();
+
+        }
+
+
+        const rival =
+            partido.rival || "";
+
+
+        const jornada =
+            partido.jornada || "";
+
+
+        const fecha =
+            partido.fecha || "";
+
+
+        const descripcion =
+            descripcionPartido(id);
+
+
+        return `
+
+            ${rival}
+
+            ${jornada}
+
+            ${fecha}
+
+            ${descripcion}
+
+            ${id}
+
+        `.toLowerCase();
+
+    }
+
+
+    // =========================================================
+    // MOSTRAR ESTADÍSTICAS
+    // =========================================================
+
+    function mostrarEstadisticas() {
+
+        const tabla =
+            document.getElementById(
+                "tablaEstadisticas"
+            );
+
+
+        const loading =
+            document.getElementById(
+                "loading"
+            );
+
+
+        const vacio =
+            document.getElementById(
+                "estadoVacio"
+            );
+
+
+        const inputJugador =
+            document.getElementById(
+                "inputJugador"
+            );
+
+
+        const inputPartido =
+            document.getElementById(
+                "inputPartido"
+            );
+
+
+        loading.classList.add(
+            "hidden"
+        );
+
+
+        tabla.innerHTML =
+            "";
+
+
+        // =====================================================
+        // TEXTOS DE FILTRO
+        // =====================================================
+
+        const textoJugadorFiltro =
+            inputJugador.value
+                .trim()
+                .toLowerCase();
+
+
+        const textoPartidoFiltro =
+            inputPartido.value
+                .trim()
+                .toLowerCase();
+
+
+        const hayBusqueda =
+            textoJugadorFiltro !== "" ||
+            textoPartidoFiltro !== "";
+
+
+        // =====================================================
+        // COPIAR ESTADÍSTICAS
+        // =====================================================
+
+        let filtradas =
+            [...estadisticas];
+
+
+        // =====================================================
+        // FILTRO JUGADOR
+        // =====================================================
+
+        if (textoJugadorFiltro !== "") {
+
+            filtradas =
+                filtradas.filter(
+                    estadistica =>
+
+                        textoJugador(
+                            estadistica.jugadorId
+                        ).includes(
+                            textoJugadorFiltro
+                        )
+
+                );
+
+        }
+
+
+        // =====================================================
+        // FILTRO PARTIDO
+        // =====================================================
+
+        if (textoPartidoFiltro !== "") {
+
+            filtradas =
+                filtradas.filter(
+                    estadistica =>
+
+                        textoPartido(
+                            estadistica.partidoId
+                        ).includes(
+                            textoPartidoFiltro
+                        )
+
+                );
+
+        }
+
+
+        // =====================================================
+        // ORDENAR POR FECHA DEL PARTIDO
+        // MÁS RECIENTE PRIMERO
+        // =====================================================
+
+        filtradas.sort(
+            (a, b) => {
+
+                const partidoA =
+                    obtenerPartido(
+                        a.partidoId
+                    );
+
+
+                const partidoB =
+                    obtenerPartido(
+                        b.partidoId
+                    );
+
+
+                const fechaA =
+                    partidoA?.fecha
+                        ? new Date(
+                            partidoA.fecha +
+                            "T00:00:00"
+                          ).getTime()
+                        : 0;
+
+
+                const fechaB =
+                    partidoB?.fecha
+                        ? new Date(
+                            partidoB.fecha +
+                            "T00:00:00"
+                          ).getTime()
+                        : 0;
+
+
+                if (
+                    fechaB !== fechaA
+                ) {
+
+                    return fechaB - fechaA;
+
+                }
+
+
+                // Si tienen la misma fecha,
+                // la estadística con ID mayor va primero
+
+                return Number(
+                    b.id || 0
+                ) -
+                Number(
+                    a.id || 0
+                );
+
+            }
+        );
+
+
+        // =====================================================
+        // SIN BÚSQUEDA → SOLO ÚLTIMAS 3
+        // =====================================================
+
+        if (!hayBusqueda) {
+
+            filtradas =
+                filtradas.slice(
+                    0,
+                    3
+                );
+
+
+            document.getElementById(
+                "tituloListado"
+            ).textContent =
+                "Últimas estadísticas";
+
+
+            document.getElementById(
+                "subtituloListado"
+            ).textContent =
+                "Mostrando las últimas 3 estadísticas registradas.";
+
+        }
+
+
+        // =====================================================
+        // CON BÚSQUEDA → TODAS
+        // =====================================================
+
+        else {
+
+            document.getElementById(
+                "tituloListado"
+            ).textContent =
+                "Resultados de búsqueda";
+
+
+            document.getElementById(
+                "subtituloListado"
+            ).textContent =
+                `${filtradas.length} estadística${filtradas.length === 1 ? "" : "s"} encontrada${filtradas.length === 1 ? "" : "s"}.`;
+
+        }
+
+
+        // =====================================================
+        // SIN RESULTADOS
+        // =====================================================
+
+        if (
+            filtradas.length === 0
+        ) {
+
+            vacio.classList.remove(
+                "hidden"
+            );
+
+
+            const titulo =
+                document.querySelector(
+                    "#estadoVacio h3"
+                );
+
+
+            const descripcion =
+                document.querySelector(
+                    "#estadoVacio p"
+                );
+
+
+            if (hayBusqueda) {
+
+                titulo.textContent =
+                    "No se encontraron resultados";
+
+
+                descripcion.textContent =
+                    "Probá con otro jugador o partido.";
+
+            } else {
+
+                titulo.textContent =
+                    "No hay estadísticas";
+
+
+                descripcion.textContent =
+                    "Todavía no se cargaron estadísticas.";
+
+            }
+
+
+            return;
+
+        }
+
+
+        vacio.classList.add(
+            "hidden"
+        );
+
+
+        // =====================================================
+        // CREAR FILAS
+        // =====================================================
+
+        filtradas.forEach(
+            estadistica => {
+
+
+                const fila =
+                    document.createElement(
+                        "tr"
+                    );
+
+
+                fila.className =
+                    "hover:bg-slate-800/40 transition";
+
+
+                const titular =
+                    estadistica.titular === true ||
+                    estadistica.titular === "true";
+
+
+                fila.innerHTML = `
+
+                    <!-- ===================================== -->
+                    <!-- JUGADOR -->
+                    <!-- ===================================== -->
+
+                    <td class="px-6 py-5">
+
+                        <div class="flex items-center gap-3">
+
+                            <div class="w-10 h-10
+                                        rounded-xl
+                                        bg-emerald-500/10
+                                        flex items-center
+                                        justify-center
+                                        text-emerald-500">
+
+                                <i class="fa-solid fa-user"></i>
+
+                            </div>
+
+
+                            <div>
+
+                                <p class="font-black text-white">
+
+                                    ${escapeHtml(
+                                        nombreJugador(
+                                            estadistica.jugadorId
+                                        )
+                                    )}
+
+                                </p>
+
+
+                                <p class="text-[10px]
+                                          text-slate-600
+                                          font-bold">
+
+                                    ID #${escapeHtml(
+                                        estadistica.jugadorId
+                                    )}
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+
+                    <!-- ===================================== -->
+                    <!-- PARTIDO -->
+                    <!-- ===================================== -->
+
+                    <td class="px-6 py-5">
+
+                        <span class="text-sm
+                                     font-bold
+                                     text-slate-300">
+
+                            ${escapeHtml(
+                                descripcionPartido(
+                                    estadistica.partidoId
+                                )
+                            )}
+
+                        </span>
+
+                    </td>
+
+
+                    <!-- ===================================== -->
+                    <!-- MINUTOS -->
+                    <!-- ===================================== -->
+
+                    <td class="px-6 py-5
+                               text-center
+                               font-black
+                               text-white">
+
+                        ${estadistica.minutos ?? 0}
+
+                    </td>
+
+
+                    <!-- ===================================== -->
+                    <!-- GOLES -->
+                    <!-- ===================================== -->
+
+                    <td class="px-6 py-5
+                               text-center
+                               font-black
+                               text-emerald-400">
+
+                        ${estadistica.goles ?? 0}
+
+                    </td>
+
+
+                    <!-- ===================================== -->
+                    <!-- ASISTENCIAS -->
+                    <!-- ===================================== -->
+
+                    <td class="px-6 py-5
+                               text-center
+                               font-bold
+                               text-white">
+
+                        ${estadistica.asistencias ?? 0}
+
+                    </td>
+
+
+                    <!-- ===================================== -->
+                    <!-- AMARILLAS -->
+                    <!-- ===================================== -->
+
+                    <td class="px-6 py-5
+                               text-center
+                               font-bold
+                               text-white">
+
+                        ${estadistica.amarillas ?? 0}
+
+                    </td>
+
+
+                    <!-- ===================================== -->
+                    <!-- ROJAS -->
+                    <!-- ===================================== -->
+
+                    <td class="px-6 py-5
+                               text-center
+                               font-bold
+                               text-white">
+
+                        ${estadistica.rojas ?? 0}
+
+                    </td>
+
+
+                    <!-- ===================================== -->
+                    <!-- TITULAR -->
+                    <!-- ===================================== -->
+
+                    <td class="px-6 py-5 text-center">
+
+                        ${
+                            titular
+                                ? `
+
+                                    <span class="inline-flex
+                                                 px-3 py-1
+                                                 rounded-full
+                                                 text-[10px]
+                                                 font-black
+                                                 uppercase
+                                                 bg-emerald-500/10
+                                                 text-emerald-400">
+
+                                        Sí
+
+                                    </span>
+
+                                  `
+                                : `
+
+                                    <span class="inline-flex
+                                                 px-3 py-1
+                                                 rounded-full
+                                                 text-[10px]
+                                                 font-black
+                                                 uppercase
+                                                 bg-slate-800
+                                                 text-slate-500">
+
+                                        No
+
+                                    </span>
+
+                                  `
+                        }
+
+                    </td>
+
+
+                    <!-- ===================================== -->
+                    <!-- ACCIONES -->
+                    <!-- ===================================== -->
+
+                    <td class="px-6 py-5 text-right">
+
+                    <div class="flex items-center justify-end gap-2">
+
+                    <!-- EDITAR -->
+
+                <a
+                    href="/estadisticas/nuevo?id=${estadistica.id}"
+                    title="Editar estadística"
+                    class="w-10 h-10
+                    rounded-xl
+                    bg-emerald-500/10
+                    text-emerald-500
+                    hover:bg-emerald-500
+                    hover:text-slate-900
+                    flex items-center
+                    justify-center
+                    transition-all">
+
+                    <i class="fa-solid fa-pen-to-square"></i>
+
+                </a>
+                <!-- ELIMINAR -->
+
+                <button
+                    type="button"
+                    onclick="eliminarEstadistica(${estadistica.id ?? 0})"
+                    title="Eliminar estadística"
+                    class="w-10 h-10
+                    rounded-xl
+                    bg-slate-800
+                    text-slate-400
+                    hover:bg-red-500/10
+                    hover:text-red-500
+                    flex items-center
+                    justify-center
+                    transition-all">
+
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+                </div>
+                </td>  
+
+                `;
+
+
+                tabla.appendChild(
+                    fila
+                );
+
+            }
+        );
+
+    }
+
+
+    // =========================================================
+    // ELIMINAR ESTADÍSTICA
+    // =========================================================
+
+    async function eliminarEstadistica(
+        id
+    ) {
+
+        if (!id) {
+
+            alert(
+                "No se pudo identificar la estadística."
+            );
+
+            return;
+
+        }
+
+
+        const confirmar =
+            confirm(
+                "¿Seguro que querés eliminar esta estadística?"
+            );
+
+
+        if (!confirmar) {
+
+            return;
+
+        }
+
+
+        const token =
+            getJwt();
+
+
+        if (!token) {
+
+            alert(
+                "Sesión expirada."
+            );
+
+
+            window.location.href =
+                "/login";
+
+
+            return;
+
+        }
+
+
+        try {
+
+            const response =
+                await fetch(
+                    `/api/estadisticas/${id}`,
+                    {
+
+                        method: "DELETE",
+
+                        headers: {
+
+                            "Authorization":
+                                "Bearer " + token,
+
+                            "Accept":
+                                "application/json"
+
+                        }
+
+                    }
+                );
+
+
+            if (!response.ok) {
+
+                let mensaje =
+                    "No se pudo eliminar la estadística.";
+
+
+                try {
+
+                    const errorData =
+                        await response.json();
+
+
+                    if (
+                        errorData.mensaje
+                    ) {
+
+                        mensaje =
+                            errorData.mensaje;
+
+                    } else if (
+                        errorData.message
+                    ) {
+
+                        mensaje =
+                            errorData.message;
+
+                    }
+
+                } catch (_) {}
+
+
+                throw new Error(
+                    mensaje
+                );
+
+            }
+
+
+            await cargarDatos();
+
+
+        } catch (error) {
+
+            console.error(
+                "Error eliminando estadística:",
+                error
+            );
+
+
+            alert(
+                error.message ||
+                "No se pudo eliminar la estadística."
+            );
+
+        }
+
+    }
+
+
+    // =========================================================
+    // EVENTOS
+    // =========================================================
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+
+            // =================================================
+            // BUSCAR JUGADOR
+            // =================================================
+
+            document
+                .getElementById(
+                    "inputJugador"
+                )
+                .addEventListener(
+                    "input",
+                    function () {
+
+                        mostrarEstadisticas();
+
+                    }
+                );
+
+
+            // =================================================
+            // BUSCAR PARTIDO
+            // =================================================
+
+            document
+                .getElementById(
+                    "inputPartido"
+                )
+                .addEventListener(
+                    "input",
+                    function () {
+
+                        mostrarEstadisticas();
+
+                    }
+                );
+
+
+            // =================================================
+            // BOTÓN TODOS
+            // =================================================
+
+            document
+                .getElementById(
+                    "btnTodos"
+                )
+                .addEventListener(
+                    "click",
+                    function () {
+
+
+                        document
+                            .getElementById(
+                                "inputJugador"
+                            )
+                            .value =
+                            "";
+
+
+                        document
+                            .getElementById(
+                                "inputPartido"
+                            )
+                            .value =
+                            "";
+
+
+                        mostrarEstadisticas();
+
+                    }
+                );
+
+
+            // =================================================
+            // CARGAR DATOS
+            // =================================================
+
+            cargarDatos();
+
+        }
+    );
+
+</script>
+```
+
+</div>
+
+</body>
+
+</html>

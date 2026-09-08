@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:fragment="mainLayout(content)"
+      lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Complejo Deportivo Justiniano Posse</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0a0f1d;
+            color: #f8fafc;
+        }
+
+        .sidebar-active {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 4px solid #10b981;
+            color: #10b981;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 10px;
+        }
+
+        /* Evita que el contenido quede debajo del sidebar */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0 !important;
+            }
+        }
+
+    </style>
+</head>
+
+
+<body class="flex min-h-screen">
+
+
+<!-- ========================================================= -->
+<!-- SIDEBAR -->
+<!-- ========================================================= -->
+
+<aside id="sidebar"
+       class="sidebar fixed inset-y-0 left-0 w-72 bg-[#0f172a] border-r border-slate-800 flex flex-col z-50">
+
+    <!-- LOGO -->
+    <div class="p-8">
+
+        <div class="flex items-center gap-4">
+
+            <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFoWW9Qj6yO6eX2UjfyWmJNxQw_9EheO0KJF-zaevWvl1fBtSP_zBFzYk&s=10"
+                class="w-12 h-12 object-contain"
+                alt="Logo CDJP">
+
+            <div>
+
+                <h2 class="text-xl font-extrabold tracking-tighter">
+                    
+                </h2>
+
+                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-tight">
+                    Complejo Deportivo<br>
+                    Justiniano Posse
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ===================================================== -->
+    <!-- NAVEGACIÓN -->
+    <!-- ===================================================== -->
+
+    <nav class="flex-1 px-4 space-y-1 overflow-y-auto">
+
+
+        <!-- DASHBOARD -->
+
+        <a th:href="@{/dashboard}"
+           data-page="dashboard"
+           class="menu-item flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-xl transition-all">
+
+            <i class="fa-solid fa-layer-group w-5"></i>
+
+            <span class="font-semibold">
+                Inicio
+            </span>
+
+        </a>
+
+
+        <!-- JUGADORES -->
+
+        <a th:href="@{/jugadores}"
+           data-page="jugadores"
+           class="menu-item flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-xl transition-all">
+
+            <i class="fa-solid fa-users w-5"></i>
+
+            <span class="font-semibold">
+                Jugadores
+            </span>
+
+        </a>
+
+
+        <!-- CATEGORÍAS -->
+
+        <a th:href="@{/categorias}"
+           data-page="categorias"
+           class="menu-item flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-xl transition-all">
+
+            <i class="fa-solid fa-tags w-5"></i>
+
+            <span class="font-semibold">
+                Categorías
+            </span>
+
+        </a>
+
+
+        <!-- ENTRENADORES -->
+
+        <a th:href="@{/entrenadores}"
+           data-page="entrenadores"
+           class="menu-item flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-xl transition-all">
+
+            <i class="fa-solid fa-user-tie w-5"></i>
+
+            <span class="font-semibold">
+                Entrenadores
+            </span>
+
+        </a>
+
+
+        <!-- PARTIDOS -->
+
+        <a th:href="@{/partidos}"
+           data-page="partidos"
+           class="menu-item flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-xl transition-all">
+
+            <i class="fa-solid fa-calendar-days w-5"></i>
+
+            <span class="font-semibold">
+                Partidos
+            </span>
+
+        </a>
+
+
+        <!-- CAMPEONATOS -->
+
+        <a th:href="@{/campeonatos}"
+           data-page="campeonatos"
+           class="menu-item flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-xl transition-all">
+
+            <i class="fa-solid fa-trophy w-5"></i>
+
+            <span class="font-semibold">
+                Campeonatos
+            </span>
+
+        </a>
+
+
+        <!-- ESTADÍSTICAS -->
+
+        <a th:href="@{/estadisticas}"
+           data-page="estadisticas"
+           class="menu-item flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-xl transition-all">
+
+            <i class="fa-solid fa-chart-line w-5"></i>
+
+            <span class="font-semibold">
+                Estadísticas
+            </span>
+
+        </a>
+
+
+        <!-- INCIDENCIAS -->
+
+        <a th:href="@{/incidencias}"
+           data-page="incidencias"
+           class="menu-item flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-xl transition-all">
+
+            <i class="fa-solid fa-notes-medical w-5"></i>
+
+            <span class="font-semibold">
+                Incidencias
+            </span>
+
+        </a>
+
+
+        <!-- REPORTES -->
+
+        <a th:href="@{/reportes}"
+           data-page="reportes"
+           class="menu-item flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-xl transition-all border-t border-slate-800 pt-4">
+
+            <i class="fa-solid fa-file-contract w-5"></i>
+
+            <span class="font-semibold">
+                Reportes
+            </span>
+
+        </a>
+
+
+        <!-- CONFIGURACIÓN -->
+
+        <a th:href="@{/configuracion}"
+           data-page="configuracion"
+           id="menuConfiguracion"
+           class="menu-item flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-xl transition-all">
+
+            <i class="fa-solid fa-gear w-5"></i>
+
+            <span class="font-semibold">
+                Configuración
+            </span>
+
+        </a>
+
+    </nav>
+
+
+    <!-- ===================================================== -->
+    <!-- PARTE INFERIOR -->
+    <!-- ===================================================== -->
+
+    <div class="p-6">
+
+        <div class="bg-emerald-500/5 rounded-2xl p-4 border border-emerald-500/10 mb-4">
+
+            <div class="flex items-center gap-2 text-emerald-500 mb-1">
+
+                <i class="fa-solid fa-shield-halved text-xs"></i>
+
+                <span class="text-[10px] font-black uppercase tracking-widest">
+                    Desde 1973
+                </span>
+
+            </div>
+
+            <p class="text-[10px] text-slate-400 leading-relaxed">
+                El fútbol de Justiniano Posse en una sola plataforma.
+            </p>
+
+        </div>
+
+
+        <!-- LOGOUT -->
+
+        <button
+            onclick="logout()"
+            class="flex items-center gap-4 text-red-500 font-bold px-4 hover:translate-x-2 transition-transform">
+
+            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+
+            <span>
+                Cerrar sesión
+            </span>
+
+        </button>
+
+    </div>
+
+</aside>
+
+
+
+<!-- ========================================================= -->
+<!-- CONTENIDO PRINCIPAL -->
+<!-- ========================================================= -->
+
+<main class="main-content flex-1 ml-72 flex flex-col min-h-screen">
+
+
+    <!-- ===================================================== -->
+    <!-- HEADER -->
+    <!-- ===================================================== -->
+
+    <header
+        class="h-20 border-b border-slate-800 flex items-center px-10 justify-between sticky top-0 bg-[#0a0f1d]/80 backdrop-blur-xl z-40">
+
+
+        <!-- IZQUIERDA -->
+
+        <div class="flex items-center gap-3">
+
+            <!-- BOTÓN MOBILE -->
+
+            <button
+                onclick="toggleSidebar()"
+                class="md:hidden text-white text-xl">
+
+                <i class="fa-solid fa-bars"></i>
+
+            </button>
+
+
+            <h1
+                id="pageTitle"
+                class="font-bold text-slate-200">
+
+                Complejo Deportivo Justiniano Posse
+
+            </h1>
+
+        </div>
+
+
+        <!-- DERECHA -->
+
+        <div class="flex items-center gap-6">
+
+
+            <!-- NOTIFICACIONES -->
+
+            <div class="relative">
+
+                <i
+                    class="fa-solid fa-bell text-slate-500 cursor-pointer hover:text-emerald-500 transition-colors">
+                </i>
+
+                <span
+                    class="absolute -top-1 -right-1 w-2 h-2 bg-emerald-500 rounded-full border-2 border-[#0a0f1d]">
+                </span>
+
+            </div>
+
+
+            <!-- USUARIO -->
+
+            <div
+                class="flex items-center gap-3 pl-6 border-l border-slate-800">
+
+
+                <div class="text-right">
+
+                    <!-- EMAIL -->
+
+                    <p
+                        id="usuarioEmail"
+                        class="text-xs font-bold text-slate-200">
+
+                        Usuario
+
+                    </p>
+
+
+                    <!-- ROL -->
+
+                    <p
+                        id="usuarioRol"
+                        class="text-[10px] text-emerald-500 font-black uppercase tracking-widest">
+
+                        Usuario
+
+                    </p>
+
+                </div>
+
+
+                <!-- AVATAR -->
+
+                <div
+                    id="usuarioAvatar"
+                    class="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-500 font-bold">
+
+                    US
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- ===================================================== -->
+    <!-- CONTENIDO DE CADA PÁGINA -->
+    <!-- ===================================================== -->
+
+    <section class="p-10 max-w-[1600px] mx-auto w-full">
+
+        <div th:replace="${content}"></div>
+
+    </section>
+
+</main>
+
+
+
+<!-- ========================================================= -->
+<!-- JAVASCRIPT GLOBAL -->
+<!-- ========================================================= -->
+
+<script>
+
+
+    /* =========================================================
+       JWT
+    ========================================================= */
+
+    function getJwt() {
+
+        const cookie = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('token='));
+
+        return cookie
+            ? cookie.split('=')[1]
+            : null;
+    }
+
+
+
+    /* =========================================================
+       DATOS DEL USUARIO
+    ========================================================= */
+
+    function cargarUsuario() {
+
+        const token = getJwt();
+
+        if (!token) {
+
+            window.location.href = "/login";
+
+            return;
+        }
+
+
+        /*
+         * El login devuelve:
+         *
+         * token
+         * rol
+         * id
+         * nombre
+         *
+         * Pero el JWT también contiene el email/rol.
+         */
+
+
+        try {
+
+            const payload = JSON.parse(
+                atob(token.split('.')[1])
+            );
+
+
+            const email =
+                payload.sub ||
+                payload.email ||
+                "Usuario";
+
+
+            const rol =
+                payload.rol ||
+                payload.role ||
+                payload.authorities ||
+                "Usuario";
+
+
+            document.getElementById("usuarioEmail").innerText =
+                email;
+
+
+            /*
+             * Si authorities viene como array
+             */
+
+            let rolTexto = rol;
+
+            if (Array.isArray(rol)) {
+
+                rolTexto = rol[0];
+
+            }
+
+
+            rolTexto = String(rolTexto)
+                .replace("ROLE_", "")
+                .replace("Role_", "")
+                .replace("ROLE", "")
+                .toLowerCase();
+
+
+            /*
+             * Mostrar nombre amigable
+             */
+
+            if (rolTexto === "admin") {
+
+                rolTexto = "Administrador";
+
+            } else if (rolTexto === "entrenador") {
+
+                rolTexto = "Entrenador";
+
+            } else if (rolTexto === "consulta") {
+
+                rolTexto = "Consulta";
+
+            } else {
+
+                rolTexto =
+                    rolTexto.charAt(0).toUpperCase() +
+                    rolTexto.slice(1);
+
+            }
+
+
+            document.getElementById("usuarioRol").innerText =
+                rolTexto;
+
+
+            /*
+             * Iniciales
+             */
+
+            const iniciales =
+                email.substring(0, 2).toUpperCase();
+
+
+            document.getElementById("usuarioAvatar").innerText =
+                iniciales;
+
+
+            /*
+             * Guardamos el rol para usarlo
+             * en otras funciones.
+             */
+
+            window.usuarioRol = rolTexto.toLowerCase();
+
+
+        } catch (error) {
+
+            console.error(
+                "Error leyendo JWT:",
+                error
+            );
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       PÁGINA ACTIVA
+    ========================================================= */
+
+    function marcarPaginaActual() {
+
+        const path =
+            window.location.pathname;
+
+
+        const menuItems =
+            document.querySelectorAll(".menu-item");
+
+
+        menuItems.forEach(item => {
+
+            const page =
+                item.dataset.page;
+
+
+            if (
+                path.includes("/" + page)
+            ) {
+
+                item.classList.add(
+                    "sidebar-active"
+                );
+
+                item.classList.remove(
+                    "text-slate-400"
+                );
+
+            }
+
+        });
+
+
+        /*
+         * Título del header
+         */
+
+        const titulos = {
+
+            dashboard: "Inicio",
+
+            jugadores: "Jugadores",
+
+            categorias: "Categorías",
+
+            entrenadores: "Entrenadores",
+
+            partidos: "Partidos",
+
+            campeonatos: "Campeonatos",
+
+            estadisticas: "Estadísticas",
+
+            incidencias: "Incidencias",
+
+            reportes: "Reportes",
+
+            configuracion: "Configuración"
+
+        };
+
+
+        let paginaEncontrada =
+            Object.keys(titulos)
+                .find(p => path.includes("/" + p));
+
+
+        if (paginaEncontrada) {
+
+            document.getElementById(
+                "pageTitle"
+            ).innerText =
+                titulos[paginaEncontrada];
+
+        }
+
+    }
+
+
+
+    /* =========================================================
+       LOGOUT
+    ========================================================= */
+
+    function logout() {
+
+        /*
+         * Eliminamos JWT
+         */
+
+        document.cookie =
+            "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
+
+
+        /*
+         * También limpiamos posibles datos
+         * guardados en localStorage.
+         */
+
+        localStorage.removeItem("token");
+        localStorage.removeItem("rol");
+        localStorage.removeItem("usuario");
+
+
+        window.location.href =
+            "/login";
+
+    }
+
+
+
+    /* =========================================================
+       SIDEBAR MOBILE
+    ========================================================= */
+
+    function toggleSidebar() {
+
+        const sidebar =
+            document.getElementById("sidebar");
+
+
+        sidebar.classList.toggle("open");
+
+    }
+
+
+
+    /* =========================================================
+       INICIALIZACIÓN
+    ========================================================= */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            cargarUsuario();
+
+            marcarPaginaActual();
+
+        }
+    );
+
+</script>
+
+
+</body>
+</html>

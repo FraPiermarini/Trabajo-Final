@@ -8,11 +8,10 @@ import com.example.Trabajo.Final.feature.Campeonato.Models.Campeonato;
 import com.example.Trabajo.Final.feature.Campeonato.Repositories.CampeonatoRepository;
 import com.example.Trabajo.Final.feature.Categoria.Models.Categoria;
 import com.example.Trabajo.Final.feature.Categoria.Repositories.CategoriaRepository;
-import com.example.Trabajo.Final.feature.Estadistica.Dtos.Request.EstadisticaRequestDto;
-import com.example.Trabajo.Final.feature.Estadistica.Models.Estadistica;
+import com.example.Trabajo.Final.feature.Entrenador.Models.Entrenador;
+import com.example.Trabajo.Final.feature.Entrenador.Repositories.EntrenadorRepository;
 import com.example.Trabajo.Final.feature.Estadistica.Repositories.EstadisticaRepository;
 import com.example.Trabajo.Final.feature.Exceptions.RecursoNoEncontradoException;
-import com.example.Trabajo.Final.feature.Jugador.Models.Jugador;
 import com.example.Trabajo.Final.feature.Jugador.Repositories.JugadorRepository;
 import com.example.Trabajo.Final.feature.Partido.Dtos.Request.PartidoPatchDto;
 import com.example.Trabajo.Final.feature.Partido.Dtos.Request.PartidoPutDto;
@@ -30,8 +29,7 @@ public class PartidoServiceImpl implements PartidoService{
     private final PartidoRepository partidoRepository;
     private final CategoriaRepository categoriaRepository;
    private final CampeonatoRepository campeonatoRepository;
-   private final EstadisticaRepository estadisticaRepository;
-   private final JugadorRepository jugadorRepository;
+   private final EntrenadorRepository entrenadorRepository;
 
    public PartidoResponseDto crearPartido(PartidoRequestDto dto){
     Partido nuevoPartido = new Partido();
@@ -42,33 +40,15 @@ public class PartidoServiceImpl implements PartidoService{
         .orElseThrow(() -> new RecursoNoEncontradoException("Campeonato con id " + dto.getCampeonatoId() + " no encontrado"));
     nuevoPartido.setCampeonato(campeonato);
     nuevoPartido.setResultado(dto.getResultado());
-    nuevoPartido.setRival(dto.getRival());
+    nuevoPartido.setLocal(dto.getLocal());
     Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
         .orElseThrow(() ->  new RecursoNoEncontradoException("Categoria con id " + dto.getCategoriaId() + " no encontrada"));
     nuevoPartido.setCategoria(categoria);
+    Entrenador entrenador = entrenadorRepository.findById(dto.getEntrenadorId())
+        .orElseThrow(() -> new RecursoNoEncontradoException("Entrenador con id " + dto.getEntrenadorId() + " no encontrado" ));
+    nuevoPartido.setEntrenador(entrenador);
     Partido guardado = partidoRepository.save(nuevoPartido);
-    if (dto.getEstadisticas() != null) {
-
-    for (EstadisticaRequestDto estadisticaDto : dto.getEstadisticas()) {
-
-        Jugador jugador = jugadorRepository.findById(estadisticaDto.getJugadorId())
-            .orElseThrow(() -> new RecursoNoEncontradoException("Jugador con id" + estadisticaDto.getJugadorId() + " no encontrado"));
-
-        Estadistica estadistica = new Estadistica();
-
-        estadistica.setJugador(jugador);
-        estadistica.setPartido(guardado);
-        estadistica.setMinutos(estadisticaDto.getMinutos());
-        estadistica.setGoles(estadisticaDto.getGoles());
-        estadistica.setAsistencias(estadisticaDto.getAsistencias());
-        estadistica.setRojas(estadisticaDto.getRojas());
-        estadistica.setAmarillas(estadisticaDto.getAmarillas());
-        estadistica.setTitular(estadisticaDto.getTitular());
-
-        estadisticaRepository.save(estadistica);
-    }
-}
-    return convertirDto(partidoRepository.save(nuevoPartido));
+    return convertirDto(guardado);
     }
 
     public List<PartidoResponseDto> obtenerPartidos() {
@@ -107,31 +87,9 @@ public class PartidoServiceImpl implements PartidoService{
         Categoria categoria = categoriaRepository.findById(dto.getCategoriaId())
         .orElseThrow(() ->  new RecursoNoEncontradoException("Categoria con id " + dto.getCategoriaId() + " no encontrada"));
         partido.setCategoria(categoria);
-        if (dto.getEstadisticas() != null) {
-
-        for (EstadisticaRequestDto estadisticaDto : dto.getEstadisticas()) {
-
-            Estadistica estadistica = estadisticaRepository
-                    .findByJugadorIdAndPartidoId(
-                            estadisticaDto.getJugadorId(),
-                            partido.getId()
-                    )
-                    .orElseThrow(() -> new RecursoNoEncontradoException(
-                            "Estadística del jugador con id "
-                            + estadisticaDto.getJugadorId()
-                            + " no encontrada para este partido"
-                    ));
-
-            estadistica.setMinutos(estadisticaDto.getMinutos());
-            estadistica.setGoles(estadisticaDto.getGoles());
-            estadistica.setAsistencias(estadisticaDto.getAsistencias());
-            estadistica.setRojas(estadisticaDto.getRojas());
-            estadistica.setAmarillas(estadisticaDto.getAmarillas());
-            estadistica.setTitular(estadisticaDto.getTitular());
-
-            estadisticaRepository.save(estadistica);
-        }
-    }
+        Entrenador entrenador = entrenadorRepository.findById(dto.getEntrenadorId())
+        .orElseThrow(() -> new RecursoNoEncontradoException("Entrenador con id " + dto.getEntrenadorId() + " no encontrado" ));
+        partido.setEntrenador(entrenador);
     return convertirDto(partidoRepository.save(partido));
 }
 
@@ -163,6 +121,9 @@ public class PartidoServiceImpl implements PartidoService{
     }
     if(p.getCampeonato() != null){
         dto.setCampeonatoId(p.getCampeonato().getId());
+    }
+    if(p.getCampeonato() != null){
+        dto.setEntrenadorId(p.getEntrenador().getId());
     }
     return dto;
   }

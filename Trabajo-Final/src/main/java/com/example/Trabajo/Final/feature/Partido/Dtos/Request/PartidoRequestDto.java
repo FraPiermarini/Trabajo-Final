@@ -1,11 +1,6 @@
 package com.example.Trabajo.Final.feature.Partido.Dtos.Request;
 
 import java.time.LocalDate;
-import java.util.List;
-
-import com.example.Trabajo.Final.feature.Estadistica.Dtos.Request.EstadisticaRequestDto;
-
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -16,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PartidoRequestDto {
-    @NotBlank(message = "La fecha es requerida")
+    @NotNull(message = "La fecha es requerida")
     private LocalDate fecha;
 
     @NotBlank(message = "La jornada es requerida")
@@ -25,7 +20,7 @@ public class PartidoRequestDto {
     @NotBlank(message = "El rival es requerido")
     private String rival;
 
-    @NotBlank(message = "El id del campeonato es requerido")
+    @NotNull(message = "El id del campeonato es requerido")
     private Long campeonatoId;
 
     @NotBlank(message = "El resultado es requerido")
@@ -34,11 +29,11 @@ public class PartidoRequestDto {
     @NotNull
     private Boolean local;
 
-    @NotBlank(message = "El id de la categoria es requerido")
+    @NotNull(message = "El id de la categoria es requerido")
     private Long categoriaId;
 
-    @Valid 
-    private List<EstadisticaRequestDto> estadisticas;
+    @NotNull(message = "El id del entrenador es requerido")
+    private Long entrenadorId;
 
 
 }

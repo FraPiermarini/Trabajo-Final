@@ -33,9 +33,11 @@ public class CategoriaServiceImpl implements CategoriaService{
         nuevaCategoria.setNombre(dto.getNombre());
         nuevaCategoria.setAño(dto.getAño());
         nuevaCategoria.setDescripcion(dto.getDescripcion());
+        if(dto.getEntrenadorId() != null){
         Entrenador entrenador = entrenadorRepository.findById(dto.getEntrenadorId())
             .orElseThrow(() -> new RecursoNoEncontradoException("Entrenador con id " + dto.getEntrenadorId() + " no encontrado"));
         nuevaCategoria.setEntrenador(entrenador); 
+        }
         return convertirDto(categoriaRepository.save(nuevaCategoria));
     }
 

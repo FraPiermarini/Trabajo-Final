@@ -1,10 +1,6 @@
 package com.example.Trabajo.Final.feature.Partido.Dtos.Request;
 
 import java.time.LocalDate;
-import java.util.List;
-
-import com.example.Trabajo.Final.feature.Estadistica.Dtos.Request.EstadisticaRequestDto;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,5 +16,5 @@ public class PartidoPutDto {
     private String resultado;
     private Boolean local;
     private Long categoriaId;
-    private List<EstadisticaRequestDto> estadisticas;
+    private Long entrenadorId;
 }

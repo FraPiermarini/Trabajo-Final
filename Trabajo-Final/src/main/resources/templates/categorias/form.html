@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: mainLayout(~{::#content})}"
+      lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Categoría</title>
+    <link rel="icon" href="data:,">
+</head>
+
+<body>
+
+<div id="content" class="max-w-[1000px] mx-auto">
+
+```
+<!-- HEADER -->
+<div class="flex items-center gap-4 mb-10">
+
+    <a th:href="@{/categorias}"
+       class="w-11 h-11 flex items-center justify-center
+              bg-[#0f172a] border border-slate-800 rounded-xl
+              text-slate-400 hover:text-emerald-500
+              hover:border-emerald-500/30 transition-all">
+
+        <i class="fa-solid fa-arrow-left"></i>
+
+    </a>
+
+    <div>
+
+        <h1 id="formTitle"
+            class="text-4xl font-black text-white italic uppercase tracking-tight">
+            Nueva Categoría
+        </h1>
+
+        <p class="text-emerald-500 font-bold mt-1">
+            Completá los datos de la categoría.
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- FORMULARIO -->
+<form id="categoriaForm">
+
+    <input type="hidden" id="categoriaId">
+
+
+    <div class="bg-[#0f172a] border border-slate-800
+                rounded-[2.5rem] p-8">
+
+        <!-- CABECERA -->
+        <div class="flex items-center gap-4 mb-8">
+
+            <div class="w-12 h-12 rounded-2xl
+                        bg-emerald-500/10
+                        flex items-center justify-center
+                        text-emerald-500">
+
+                <i class="fa-solid fa-layer-group text-xl"></i>
+
+            </div>
+
+            <div>
+
+                <h2 class="text-xl font-black text-white uppercase italic">
+                    Datos de la categoría
+                </h2>
+
+                <p class="text-xs text-slate-600
+                          font-bold uppercase tracking-widest mt-1">
+                    Información general
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- CAMPOS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+            <!-- NOMBRE -->
+            <div class="space-y-2">
+
+                <label for="nombre"
+                       class="text-[10px] font-black text-slate-500
+                              uppercase tracking-widest ml-1">
+                    Nombre
+                </label>
+
+                <input type="text"
+                       id="nombre"
+                       required
+                       maxlength="100"
+                       placeholder="Ej: Primera, Sub 17, Sub 15..."
+                       class="w-full bg-[#0a0f1d]
+                              border border-slate-800
+                              text-slate-200 px-5 py-4
+                              rounded-xl outline-none
+                              focus:ring-2 focus:ring-emerald-500
+                              focus:border-transparent
+                              transition-all">
+
+            </div>
+
+
+            <!-- AÑO -->
+            <div class="space-y-2">
+
+                <label for="año"
+                       class="text-[10px] font-black text-slate-500
+                              uppercase tracking-widest ml-1">
+                    Año
+                </label>
+
+                <input type="text"
+                       id="año"
+                       required
+                       maxlength="4"
+                       placeholder="Ej: 2026"
+                       class="w-full bg-[#0a0f1d]
+                              border border-slate-800
+                              text-slate-200 px-5 py-4
+                              rounded-xl outline-none
+                              focus:ring-2 focus:ring-emerald-500
+                              focus:border-transparent
+                              transition-all">
+
+            </div>
+
+
+            <!-- DESCRIPCIÓN -->
+            <div class="space-y-2 md:col-span-2">
+
+                <label for="descripcion"
+                       class="text-[10px] font-black text-slate-500
+                              uppercase tracking-widest ml-1">
+                    Descripción
+                </label>
+
+                <textarea id="descripcion"
+                          required
+                          rows="4"
+                          maxlength="150"
+                          placeholder="Descripción de la categoría..."
+                          class="w-full bg-[#0a0f1d]
+                                 border border-slate-800
+                                 text-slate-200 px-5 py-4
+                                 rounded-xl outline-none
+                                 focus:ring-2 focus:ring-emerald-500
+                                 focus:border-transparent
+                                 transition-all resize-none"></textarea>
+
+            </div>
+
+
+            <!-- ENTRENADOR -->
+            <div class="space-y-2 md:col-span-2">
+
+                <label for="entrenadorId"
+                       class="text-[10px] font-black text-slate-500
+                              uppercase tracking-widest ml-1">
+                    Entrenador
+                </label>
+
+                <select id="entrenadorId"
+                        required
+                        class="w-full bg-[#0a0f1d]
+                               border border-slate-800
+                               text-slate-200 px-5 py-4
+                               rounded-xl outline-none
+                               focus:ring-2 focus:ring-emerald-500
+                               focus:border-transparent
+                               transition-all">
+
+                    <option value="">
+                        Seleccione un entrenador...
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- BOTONES -->
+        <div class="flex justify-end gap-3 mt-8 pt-8
+                    border-t border-slate-800">
+
+            <a th:href="@{/categorias}"
+               class="px-6 py-3 rounded-xl
+                      border border-slate-800
+                      bg-[#0a0f1d]
+                      text-slate-400 hover:text-white
+                      font-bold transition-all">
+
+                Cancelar
+
+            </a>
+
+            <button type="submit"
+                    id="submitButton"
+                    class="px-8 py-3 rounded-xl
+                           bg-emerald-500 hover:bg-emerald-400
+                           text-slate-900 font-black
+                           uppercase text-xs tracking-widest
+                           shadow-lg shadow-emerald-500/20
+                           transition-all">
+
+                <i class="fa-solid fa-floppy-disk mr-2"></i>
+                Guardar categoría
+
+            </button>
+
+        </div>
+
+    </div>
+
+</form>
+
+
+<!-- ========================================================= -->
+<!-- JAVASCRIPT - DENTRO DE #content -->
+<!-- ========================================================= -->
+
+<script>
+
+    // =========================================================
+    // OBTENER JWT
+    // =========================================================
+
+    function getJwt() {
+
+        const cookie = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('token='));
+
+        return cookie
+            ? cookie.substring(6)
+            : null;
+    }
+
+
+    // =========================================================
+    // CARGAR ENTRENADORES
+    // =========================================================
+
+    async function cargarEntrenadores() {
+
+        const select =
+            document.getElementById('entrenadorId');
+
+        const token = getJwt();
+
+        if (!token) {
+
+            alert("Sesión expirada.");
+
+            window.location.href = "/login";
+
+            return false;
+        }
+
+
+        try {
+
+            const res = await fetch('/api/entrenadores', {
+
+                method: 'GET',
+
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Accept': 'application/json'
+                }
+
+            });
+
+
+            if (!res.ok) {
+
+                if (res.status === 401 ||
+                    res.status === 403) {
+
+                    throw new Error(
+                        "No tenés permisos para consultar los entrenadores."
+                    );
+
+                }
+
+                throw new Error(
+                    "No se pudieron cargar los entrenadores."
+                );
+            }
+
+
+            const data = await res.json();
+
+            console.log(
+                "Respuesta /api/entrenadores:",
+                data
+            );
+
+
+            // Soporta array directo o respuesta paginada
+            let entrenadores = [];
+
+            if (Array.isArray(data)) {
+
+                entrenadores = data;
+
+            } else if (
+                data &&
+                Array.isArray(data.content)
+            ) {
+
+                entrenadores = data.content;
+
+            } else if (
+                data &&
+                typeof data === 'object'
+            ) {
+
+                entrenadores = [data];
+            }
+
+
+            // Limpiar opciones anteriores
+            select.innerHTML = `
+                <option value="">
+                    Seleccione un entrenador...
+                </option>
+            `;
+
+
+            if (entrenadores.length === 0) {
+
+                console.warn(
+                    "No hay entrenadores registrados."
+                );
+
+                select.innerHTML = `
+                    <option value="">
+                        No hay entrenadores registrados
+                    </option>
+                `;
+
+                return false;
+            }
+
+
+            // Agregar entrenadores
+            entrenadores.forEach(entrenador => {
+
+                if (!entrenador.id) {
+                    return;
+                }
+
+                const option =
+                    document.createElement('option');
+
+                option.value = entrenador.id;
+
+                option.textContent =
+                    `${entrenador.nombre || ''} ${entrenador.apellido || ''}`.trim();
+
+                select.appendChild(option);
+
+            });
+
+
+            return true;
+
+
+        } catch (error) {
+
+            console.error(
+                "Error cargando entrenadores:",
+                error
+            );
+
+            alert(
+                error.message ||
+                "No se pudieron cargar los entrenadores."
+            );
+
+            return false;
+        }
+    }
+
+
+    // =========================================================
+    // CARGAR CATEGORÍA PARA EDITAR
+    // =========================================================
+
+    async function cargarCategoria(id) {
+
+        const token = getJwt();
+
+        if (!token) {
+
+            window.location.href = "/login";
+
+            return;
+        }
+
+
+        try {
+
+            const res = await fetch(
+                `/api/categorias/${id}`,
+                {
+                    method: 'GET',
+
+                    headers: {
+                        'Authorization':
+                            'Bearer ' + token,
+
+                        'Accept':
+                            'application/json'
+                    }
+                }
+            );
+
+
+            if (!res.ok) {
+
+                throw new Error(
+                    "No se pudo obtener la categoría."
+                );
+            }
+
+
+            const categoria =
+                await res.json();
+
+            console.log(
+                "Categoría obtenida:",
+                categoria
+            );
+
+
+            document.getElementById(
+                'categoriaId'
+            ).value = categoria.id;
+
+
+            document.getElementById(
+                'nombre'
+            ).value = categoria.nombre || '';
+
+
+            document.getElementById(
+                'año'
+            ).value = categoria.año || '';
+
+
+            document.getElementById(
+                'descripcion'
+            ).value =
+                categoria.descripcion || '';
+
+
+            // Obtener ID del entrenador
+            let entrenadorId =
+                categoria.entrenadorId;
+
+
+            // Por si el backend devuelve
+            // el objeto entrenador
+            if (
+                !entrenadorId &&
+                categoria.entrenador
+            ) {
+
+                entrenadorId =
+                    categoria.entrenador.id;
+            }
+
+
+            if (entrenadorId) {
+
+                document.getElementById(
+                    'entrenadorId'
+                ).value = entrenadorId;
+            }
+
+
+            document.getElementById(
+                'formTitle'
+            ).innerText =
+                "Editar Categoría";
+
+
+            document.getElementById(
+                'submitButton'
+            ).innerHTML =
+                '<i class="fa-solid fa-pen mr-2"></i> Actualizar categoría';
+
+
+        } catch (error) {
+
+            console.error(
+                "Error cargando categoría:",
+                error
+            );
+
+            alert(
+                error.message ||
+                "No se pudo cargar la categoría."
+            );
+        }
+    }
+
+
+    // =========================================================
+    // INICIALIZAR
+    // =========================================================
+
+    document.addEventListener(
+        'DOMContentLoaded',
+        async function () {
+
+            // Primero cargamos los entrenadores
+            const entrenadoresCargados =
+                await cargarEntrenadores();
+
+
+            // Después comprobamos si es edición
+            const params =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+            const id =
+                params.get('id');
+
+
+            if (id) {
+
+                // Es importante cargar la categoría
+                // después de llenar el select
+                if (entrenadoresCargados) {
+
+                    await cargarCategoria(id);
+
+                } else {
+
+                    alert(
+                        "No se puede editar la categoría porque no se pudieron cargar los entrenadores."
+                    );
+                }
+            }
+
+        }
+    );
+
+
+    // =========================================================
+    // GUARDAR / ACTUALIZAR
+    // =========================================================
+
+    document.getElementById(
+        'categoriaForm'
+    ).addEventListener(
+        'submit',
+        async function (e) {
+
+            e.preventDefault();
+
+
+            const token = getJwt();
+
+
+            if (!token) {
+
+                alert("Sesión expirada.");
+
+                window.location.href =
+                    "/login";
+
+                return;
+            }
+
+
+            const id =
+                document.getElementById(
+                    'categoriaId'
+                ).value;
+
+
+            const nombre =
+                document.getElementById(
+                    'nombre'
+                ).value.trim();
+
+
+            const año =
+                document.getElementById(
+                    'año'
+                ).value.trim();
+
+
+            const descripcion =
+                document.getElementById(
+                    'descripcion'
+                ).value.trim();
+
+
+            const entrenadorId =
+                document.getElementById(
+                    'entrenadorId'
+                ).value;
+
+
+            // =================================================
+            // VALIDACIONES
+            // =================================================
+
+            if (!nombre) {
+
+                alert(
+                    "El nombre es obligatorio."
+                );
+
+                return;
+            }
+
+
+            if (!año) {
+
+                alert(
+                    "El año es obligatorio."
+                );
+
+                return;
+            }
+
+
+            if (!descripcion) {
+
+                alert(
+                    "La descripción es obligatoria."
+                );
+
+                return;
+            }
+
+
+            if (!entrenadorId) {
+
+                alert(
+                    "Debés seleccionar un entrenador."
+                );
+
+                return;
+            }
+
+
+            // =================================================
+            // DATOS
+            // =================================================
+
+            const categoriaData = {
+
+                nombre: nombre,
+
+                año: año,
+
+                descripcion: descripcion,
+
+                entrenadorId:
+                    Number(entrenadorId)
+            };
+
+
+            console.log(
+                "Enviando categoría:",
+                categoriaData
+            );
+
+
+            // =================================================
+            // BOTÓN
+            // =================================================
+
+            const boton =
+                document.getElementById(
+                    'submitButton'
+                );
+
+
+            boton.disabled = true;
+
+            boton.innerHTML =
+                '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Guardando...';
+
+
+            try {
+
+                const url = id
+                    ? `/api/categorias/${id}`
+                    : '/api/categorias';
+
+
+                const method = id
+                    ? 'PUT'
+                    : 'POST';
+
+
+                const res = await fetch(
+                    url,
+                    {
+
+                        method: method,
+
+                        headers: {
+
+                            'Content-Type':
+                                'application/json',
+
+                            'Authorization':
+                                'Bearer ' + token,
+
+                            'Accept':
+                                'application/json'
+                        },
+
+                        body:
+                            JSON.stringify(
+                                categoriaData
+                            )
+                    }
+                );
+
+
+                // =================================================
+                // ERROR
+                // =================================================
+
+                if (!res.ok) {
+
+                    let mensaje =
+                        "No se pudo guardar la categoría.";
+
+
+                    try {
+
+                        const errorData =
+                            await res.json();
+
+
+                        if (errorData.mensaje) {
+
+                            mensaje =
+                                errorData.mensaje;
+
+                        } else if (
+                            errorData.message
+                        ) {
+
+                            mensaje =
+                                errorData.message;
+
+                        }
+
+                    } catch (_) {
+
+                        const texto =
+                            await res.text();
+
+                        if (texto) {
+                            console.error(
+                                "Respuesta del servidor:",
+                                texto
+                            );
+                        }
+                    }
+
+
+                    throw new Error(mensaje);
+                }
+
+
+                // =================================================
+                // ÉXITO
+                // =================================================
+
+                alert(
+                    id
+                        ? "Categoría actualizada correctamente."
+                        : "Categoría creada correctamente."
+                );
+
+
+                window.location.href =
+                    "/categorias";
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error guardando categoría:",
+                    error
+                );
+
+
+                alert(
+                    error.message ||
+                    "Error al guardar la categoría."
+                );
+
+
+                boton.disabled = false;
+
+                boton.innerHTML =
+                    '<i class="fa-solid fa-floppy-disk mr-2"></i> ' +
+                    (
+                        id
+                            ? "Actualizar categoría"
+                            : "Guardar categoría"
+                    );
+            }
+
+        }
+    );
+
+</script>
+</div>
+
+</body>
+</html>

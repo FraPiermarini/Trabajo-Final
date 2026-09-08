@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: mainLayout(~{::#content})}"
+      lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Nuevo Partido</title>
+    <link rel="icon" href="data:,">
+</head>
+
+<body>
+
+<div id="content" class="max-w-[1000px] mx-auto">
+
+<!-- HEADER -->
+<div class="flex items-center gap-4 mb-10">
+
+    <a th:href="@{/partidos}"
+       class="w-11 h-11 flex items-center justify-center
+              bg-[#0f172a] border border-slate-800 rounded-xl
+              text-slate-400 hover:text-emerald-500
+              hover:border-emerald-500/30 transition-all">
+
+        <i class="fa-solid fa-arrow-left"></i>
+
+    </a>
+
+    <div>
+
+        <h1 id="formTitle"
+            class="text-4xl font-black text-white
+                   italic uppercase tracking-tight">
+
+            Nuevo Partido
+
+        </h1>
+
+        <p class="text-emerald-500 font-bold mt-1">
+
+            Completá los datos del partido.
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- FORMULARIO -->
+<form id="partidoForm">
+
+    <input type="hidden" id="partidoId">
+
+
+    <div class="bg-[#0f172a] border border-slate-800
+                rounded-[2.5rem] p-8">
+
+        <!-- CABECERA -->
+        <div class="flex items-center gap-4 mb-8">
+
+            <div class="w-12 h-12 rounded-2xl
+                        bg-emerald-500/10
+                        flex items-center justify-center
+                        text-emerald-500">
+
+                <i class="fa-solid fa-futbol text-xl"></i>
+
+            </div>
+
+            <div>
+
+                <h2 class="text-xl font-black text-white uppercase italic">
+                    Datos del partido
+                </h2>
+
+                <p class="text-xs text-slate-600
+                          font-bold uppercase tracking-widest mt-1">
+
+                    Información general
+
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- CAMPOS -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+
+            <!-- FECHA -->
+            <div class="space-y-2">
+
+                <label for="fecha"
+                       class="text-[10px] font-black text-slate-500
+                              uppercase tracking-widest ml-1">
+
+                    Fecha
+
+                </label>
+
+                <input type="date"
+                       id="fecha"
+                       required
+                       class="w-full bg-[#0a0f1d]
+                              border border-slate-800
+                              text-slate-200 px-5 py-4
+                              rounded-xl outline-none
+                              focus:ring-2 focus:ring-emerald-500
+                              focus:border-transparent
+                              transition-all">
+
+            </div>
+
+
+            <!-- JORNADA -->
+            <div class="space-y-2">
+
+                <label for="jornada"
+                       class="text-[10px] font-black text-slate-500
+                              uppercase tracking-widest ml-1">
+
+                    Jornada
+
+                </label>
+
+                <input type="text"
+                       id="jornada"
+                       required
+                       maxlength="50"
+                       placeholder="Ej: Fecha 8"
+                       class="w-full bg-[#0a0f1d]
+                              border border-slate-800
+                              text-slate-200 px-5 py-4
+                              rounded-xl outline-none
+                              focus:ring-2 focus:ring-emerald-500
+                              focus:border-transparent
+                              transition-all">
+
+            </div>
+
+
+            <!-- RIVAL -->
+            <div class="space-y-2">
+
+                <label for="rival"
+                       class="text-[10px] font-black text-slate-500
+                              uppercase tracking-widest ml-1">
+
+                    Rival
+
+                </label>
+
+                <input type="text"
+                       id="rival"
+                       required
+                       maxlength="100"
+                       placeholder="Ej: Belgrano"
+                       class="w-full bg-[#0a0f1d]
+                              border border-slate-800
+                              text-slate-200 px-5 py-4
+                              rounded-xl outline-none
+                              focus:ring-2 focus:ring-emerald-500
+                              focus:border-transparent
+                              transition-all">
+
+            </div>
+
+
+            <!-- RESULTADO -->
+            <div class="space-y-2">
+
+                <label for="resultado"
+                       class="text-[10px] font-black text-slate-500
+                              uppercase tracking-widest ml-1">
+
+                    Resultado
+
+                </label>
+
+                <input type="text"
+                       id="resultado"
+                       required
+                       maxlength="20"
+                       placeholder="Ej: 3-1"
+                       class="w-full bg-[#0a0f1d]
+                              border border-slate-800
+                              text-slate-200 px-5 py-4
+                              rounded-xl outline-none
+                              focus:ring-2 focus:ring-emerald-500
+                              focus:border-transparent
+                              transition-all">
+
+            </div>
+
+
+            <!-- CAMPEONATO -->
+            <div class="space-y-2">
+
+                <label for="campeonatoId"
+                       class="text-[10px] font-black text-slate-500
+                              uppercase tracking-widest ml-1">
+
+                    Campeonato
+
+                </label>
+
+                <select id="campeonatoId"
+                        required
+                        class="w-full bg-[#0a0f1d]
+                               border border-slate-800
+                               text-slate-200 px-5 py-4
+                               rounded-xl outline-none
+                               focus:ring-2 focus:ring-emerald-500
+                               focus:border-transparent
+                               transition-all">
+
+                    <option value="">
+                        Seleccione un campeonato...
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- CATEGORÍA -->
+            <div class="space-y-2">
+
+                <label for="categoriaId"
+                       class="text-[10px] font-black text-slate-500
+                              uppercase tracking-widest ml-1">
+
+                    Categoría
+
+                </label>
+
+                <select id="categoriaId"
+                        required
+                        class="w-full bg-[#0a0f1d]
+                               border border-slate-800
+                               text-slate-200 px-5 py-4
+                               rounded-xl outline-none
+                               focus:ring-2 focus:ring-emerald-500
+                               focus:border-transparent
+                               transition-all">
+
+                    <option value="">
+                        Seleccione una categoría...
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- ENTRENADOR -->
+            <div class="space-y-2">
+
+                <label for="entrenadorId"
+                       class="text-[10px] font-black text-slate-500
+                              uppercase tracking-widest ml-1">
+
+                    Entrenador
+
+                </label>
+
+                <select id="entrenadorId"
+                        required
+                        class="w-full bg-[#0a0f1d]
+                               border border-slate-800
+                               text-slate-200 px-5 py-4
+                               rounded-xl outline-none
+                               focus:ring-2 focus:ring-emerald-500
+                               focus:border-transparent
+                               transition-all">
+
+                    <option value="">
+                        Seleccione un entrenador...
+                    </option>
+
+                </select>
+
+            </div>
+
+
+            <!-- LOCAL / VISITANTE -->
+            <div class="space-y-2 md:col-span-2">
+
+                <label for="local"
+                       class="text-[10px] font-black text-slate-500
+                              uppercase tracking-widest ml-1">
+
+                    Condición
+
+                </label>
+
+                <select id="local"
+                        required
+                        class="w-full bg-[#0a0f1d]
+                               border border-slate-800
+                               text-slate-200 px-5 py-4
+                               rounded-xl outline-none
+                               focus:ring-2 focus:ring-emerald-500
+                               focus:border-transparent
+                               transition-all">
+
+                    <option value="">
+                        Seleccione una condición...
+                    </option>
+
+                    <option value="true">
+                        Local
+                    </option>
+
+                    <option value="false">
+                        Visitante
+                    </option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- BOTONES -->
+        <div class="flex justify-end gap-3 mt-8 pt-8
+                    border-t border-slate-800">
+
+            <a th:href="@{/partidos}"
+               class="px-6 py-3 rounded-xl
+                      border border-slate-800
+                      bg-[#0a0f1d]
+                      text-slate-400 hover:text-white
+                      font-bold transition-all">
+
+                Cancelar
+
+            </a>
+
+            <button type="submit"
+                    id="submitButton"
+                    class="px-8 py-3 rounded-xl
+                           bg-emerald-500 hover:bg-emerald-400
+                           text-slate-900 font-black
+                           uppercase text-xs tracking-widest
+                           shadow-lg shadow-emerald-500/20
+                           transition-all">
+
+                <i class="fa-solid fa-floppy-disk mr-2"></i>
+
+                Guardar partido
+
+            </button>
+
+        </div>
+
+    </div>
+
+</form>
+
+
+<script>
+
+    // =========================================================
+    // JWT
+    // =========================================================
+
+    function getJwt() {
+
+        const cookie = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('token='));
+
+        return cookie
+            ? cookie.substring(6)
+            : null;
+    }
+
+
+    // =========================================================
+    // ESCAPAR HTML
+    // =========================================================
+
+    function escapeHtml(str) {
+
+        const div = document.createElement('div');
+
+        div.textContent = str ?? '';
+
+        return div.innerHTML;
+    }
+
+
+    // =========================================================
+    // CARGAR CATEGORÍAS
+    // =========================================================
+
+    async function cargarCategorias() {
+
+        const select =
+            document.getElementById('categoriaId');
+
+        const token = getJwt();
+
+        if (!token) {
+
+            window.location.href = "/login";
+
+            return false;
+        }
+
+        try {
+
+            const res = await fetch('/api/categorias', {
+
+                method: 'GET',
+
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                    'Accept': 'application/json'
+                }
+
+            });
+
+
+            if (!res.ok) {
+
+                throw new Error(
+                    "No se pudieron cargar las categorías."
+                );
+
+            }
+
+
+            const data = await res.json();
+
+
+            let categorias = [];
+
+
+            if (Array.isArray(data)) {
+
+                categorias = data;
+
+            } else if (
+                data &&
+                Array.isArray(data.content)
+            ) {
+
+                categorias = data.content;
+
+            } else if (
+                data &&
+                typeof data === 'object'
+            ) {
+
+                categorias = [data];
+
+            }
+
+
+            select.innerHTML = `
+                <option value="">
+                    Seleccione una categoría...
+                </option>
+            `;
+
+
+            categorias.forEach(categoria => {
+
+                if (!categoria.id) {
+                    return;
+                }
+
+
+                const option =
+                    document.createElement('option');
+
+
+                option.value =
+                    categoria.id;
+
+
+                option.textContent =
+                    categoria.nombre ||
+                    `Categoría ${categoria.id}`;
+
+
+                select.appendChild(option);
+
+            });
+
+
+            return true;
+
+
+        } catch (error) {
+
+            console.error(
+                "Error cargando categorías:",
+                error
+            );
+
+            alert(error.message);
+
+            return false;
+
+        }
+
+    }
+
+
+    // =========================================================
+    // CARGAR CAMPEONATOS
+    // =========================================================
+
+    async function cargarCampeonatos() {
+
+        const select =
+            document.getElementById('campeonatoId');
+
+        const token = getJwt();
+
+
+        if (!token) {
+
+            window.location.href = "/login";
+
+            return false;
+
+        }
+
+
+        try {
+
+            const res =
+                await fetch('/api/campeonatos', {
+
+                    method: 'GET',
+
+                    headers: {
+
+                        'Authorization':
+                            'Bearer ' + token,
+
+                        'Accept':
+                            'application/json'
+
+                    }
+
+                });
+
+
+            if (!res.ok) {
+
+                throw new Error(
+                    "No se pudieron cargar los campeonatos."
+                );
+
+            }
+
+
+            const data =
+                await res.json();
+
+
+            let campeonatos = [];
+
+
+            if (Array.isArray(data)) {
+
+                campeonatos = data;
+
+            } else if (
+                data &&
+                Array.isArray(data.content)
+            ) {
+
+                campeonatos =
+                    data.content;
+
+            } else if (
+                data &&
+                typeof data === 'object'
+            ) {
+
+                campeonatos = [data];
+
+            }
+
+
+            select.innerHTML = `
+                <option value="">
+                    Seleccione un campeonato...
+                </option>
+            `;
+
+
+            campeonatos.forEach(campeonato => {
+
+                if (!campeonato.id) {
+                    return;
+                }
+
+
+                const option =
+                    document.createElement('option');
+
+
+                option.value =
+                    campeonato.id;
+
+
+                option.textContent =
+                    campeonato.nombre ||
+                    `Campeonato ${campeonato.id}`;
+
+
+                select.appendChild(option);
+
+            });
+
+
+            return true;
+
+
+        } catch (error) {
+
+            console.error(
+                "Error cargando campeonatos:",
+                error
+            );
+
+            alert(error.message);
+
+            return false;
+
+        }
+
+    }
+
+
+    // =========================================================
+    // CARGAR ENTRENADORES
+    // =========================================================
+
+    async function cargarEntrenadores() {
+
+        const select =
+            document.getElementById('entrenadorId');
+
+        const token = getJwt();
+
+
+        if (!token) {
+
+            window.location.href = "/login";
+
+            return false;
+
+        }
+
+
+        try {
+
+            const res =
+                await fetch('/api/entrenadores', {
+
+                    method: 'GET',
+
+                    headers: {
+
+                        'Authorization':
+                            'Bearer ' + token,
+
+                        'Accept':
+                            'application/json'
+
+                    }
+
+                });
+
+
+            if (!res.ok) {
+
+                throw new Error(
+                    "No se pudieron cargar los entrenadores."
+                );
+
+            }
+
+
+            const data =
+                await res.json();
+
+
+            let entrenadores = [];
+
+
+            if (Array.isArray(data)) {
+
+                entrenadores = data;
+
+            } else if (
+                data &&
+                Array.isArray(data.content)
+            ) {
+
+                entrenadores =
+                    data.content;
+
+            } else if (
+                data &&
+                typeof data === 'object'
+            ) {
+
+                entrenadores = [data];
+
+            }
+
+
+            select.innerHTML = `
+                <option value="">
+                    Seleccione un entrenador...
+                </option>
+            `;
+
+
+            entrenadores.forEach(entrenador => {
+
+                if (!entrenador.id) {
+                    return;
+                }
+
+
+                const option =
+                    document.createElement('option');
+
+
+                option.value =
+                    entrenador.id;
+
+
+                option.textContent =
+                    `${entrenador.nombre || ''} ${entrenador.apellido || ''}`.trim()
+                    || `Entrenador ${entrenador.id}`;
+
+
+                select.appendChild(option);
+
+            });
+
+
+            return true;
+
+
+        } catch (error) {
+
+            console.error(
+                "Error cargando entrenadores:",
+                error
+            );
+
+            alert(error.message);
+
+            return false;
+
+        }
+
+    }
+
+
+    // =========================================================
+    // CARGAR PARTIDO PARA EDITAR
+    // =========================================================
+
+    async function cargarPartido(id) {
+
+        const token = getJwt();
+
+
+        if (!token) {
+
+            window.location.href = "/login";
+
+            return;
+
+        }
+
+
+        try {
+
+            const res =
+                await fetch(
+                    `/api/partidos/${id}`,
+                    {
+
+                        method: 'GET',
+
+                        headers: {
+
+                            'Authorization':
+                                'Bearer ' + token,
+
+                            'Accept':
+                                'application/json'
+
+                        }
+
+                    }
+                );
+
+
+            if (!res.ok) {
+
+                throw new Error(
+                    "No se pudo obtener el partido."
+                );
+
+            }
+
+
+            const partido =
+                await res.json();
+
+
+            console.log(
+                "Partido obtenido:",
+                partido
+            );
+
+
+            document.getElementById('partidoId').value =
+                partido.id || '';
+
+
+            document.getElementById('fecha').value =
+                partido.fecha || '';
+
+
+            document.getElementById('jornada').value =
+                partido.jornada || '';
+
+
+            document.getElementById('rival').value =
+                partido.rival || '';
+
+
+            document.getElementById('resultado').value =
+                partido.resultado || '';
+
+
+            if (partido.campeonatoId) {
+
+                document.getElementById('campeonatoId').value =
+                    partido.campeonatoId;
+
+            }
+
+
+            if (partido.categoriaId) {
+
+                document.getElementById('categoriaId').value =
+                    partido.categoriaId;
+
+            }
+
+
+            if (partido.entrenadorId) {
+
+                document.getElementById('entrenadorId').value =
+                    partido.entrenadorId;
+
+            }
+
+
+            if (partido.local !== null &&
+                partido.local !== undefined) {
+
+                document.getElementById('local').value =
+                    String(partido.local);
+
+            }
+
+
+            document.getElementById('formTitle').innerText =
+                "Editar Partido";
+
+
+            document.getElementById('submitButton').innerHTML =
+                '<i class="fa-solid fa-pen mr-2"></i> Actualizar partido';
+
+
+        } catch (error) {
+
+            console.error(
+                "Error cargando partido:",
+                error
+            );
+
+            alert(
+                error.message ||
+                "No se pudo cargar el partido."
+            );
+
+        }
+
+    }
+
+
+    // =========================================================
+    // INICIALIZAR
+    // =========================================================
+
+    document.addEventListener(
+        'DOMContentLoaded',
+        async function () {
+
+            const categoriasCargadas =
+                await cargarCategorias();
+
+
+            const campeonatosCargados =
+                await cargarCampeonatos();
+
+
+            const entrenadoresCargados =
+                await cargarEntrenadores();
+
+
+            const params =
+                new URLSearchParams(
+                    window.location.search
+                );
+
+
+            const id =
+                params.get('id');
+
+
+            if (id) {
+
+                if (
+                    categoriasCargadas &&
+                    campeonatosCargados &&
+                    entrenadoresCargados
+                ) {
+
+                    await cargarPartido(id);
+
+                }
+
+            }
+
+        }
+    );
+
+
+    // =========================================================
+    // GUARDAR / ACTUALIZAR
+    // =========================================================
+
+    document.getElementById('partidoForm')
+        .addEventListener(
+            'submit',
+            async function (e) {
+
+                e.preventDefault();
+
+
+                const token = getJwt();
+
+
+                if (!token) {
+
+                    alert("Sesión expirada.");
+
+                    window.location.href =
+                        "/login";
+
+                    return;
+
+                }
+
+
+                const id =
+                    document.getElementById(
+                        'partidoId'
+                    ).value;
+
+
+                const fecha =
+                    document.getElementById(
+                        'fecha'
+                    ).value;
+
+
+                const jornada =
+                    document.getElementById(
+                        'jornada'
+                    ).value.trim();
+
+
+                const rival =
+                    document.getElementById(
+                        'rival'
+                    ).value.trim();
+
+
+                const campeonatoId =
+                    document.getElementById(
+                        'campeonatoId'
+                    ).value;
+
+
+                const resultado =
+                    document.getElementById(
+                        'resultado'
+                    ).value.trim();
+
+
+                const local =
+                    document.getElementById(
+                        'local'
+                    ).value;
+
+
+                const categoriaId =
+                    document.getElementById(
+                        'categoriaId'
+                    ).value;
+
+
+                const entrenadorId =
+                    document.getElementById(
+                        'entrenadorId'
+                    ).value;
+
+
+                // =================================================
+                // VALIDACIONES
+                // =================================================
+
+                if (!fecha) {
+
+                    alert("La fecha es obligatoria.");
+
+                    return;
+
+                }
+
+
+                if (!jornada) {
+
+                    alert("La jornada es obligatoria.");
+
+                    return;
+
+                }
+
+
+                if (!rival) {
+
+                    alert("El rival es obligatorio.");
+
+                    return;
+
+                }
+
+
+                if (!campeonatoId) {
+
+                    alert("Debés seleccionar un campeonato.");
+
+                    return;
+
+                }
+
+
+                if (!resultado) {
+
+                    alert("El resultado es obligatorio.");
+
+                    return;
+
+                }
+
+
+                if (local === '') {
+
+                    alert(
+                        "Debés seleccionar si el partido es local o visitante."
+                    );
+
+                    return;
+
+                }
+
+
+                if (!categoriaId) {
+
+                    alert("Debés seleccionar una categoría.");
+
+                    return;
+
+                }
+
+
+                if (!entrenadorId) {
+
+                    alert("Debés seleccionar un entrenador.");
+
+                    return;
+
+                }
+
+
+                // =================================================
+                // DATOS
+                // =================================================
+
+                const partidoData = {
+
+                    fecha: fecha,
+
+                    jornada: jornada,
+
+                    rival: rival,
+
+                    campeonatoId:
+                        Number(campeonatoId),
+
+                    resultado: resultado,
+
+                    local:
+                        local === 'true',
+
+                    categoriaId:
+                        Number(categoriaId),
+
+                    entrenadorId:
+                        Number(entrenadorId)
+
+                };
+
+
+                console.log(
+                    "Enviando partido:",
+                    partidoData
+                );
+
+
+                // =================================================
+                // BOTÓN
+                // =================================================
+
+                const boton =
+                    document.getElementById(
+                        'submitButton'
+                    );
+
+
+                boton.disabled = true;
+
+
+                boton.innerHTML =
+                    '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Guardando...';
+
+
+                try {
+
+                    const url = id
+                        ? `/api/partidos/${id}`
+                        : '/api/partidos';
+
+
+                    const method = id
+                        ? 'PUT'
+                        : 'POST';
+
+
+                    const res =
+                        await fetch(
+                            url,
+                            {
+
+                                method: method,
+
+                                headers: {
+
+                                    'Content-Type':
+                                        'application/json',
+
+                                    'Authorization':
+                                        'Bearer ' + token,
+
+                                    'Accept':
+                                        'application/json'
+
+                                },
+
+                                body:
+                                    JSON.stringify(
+                                        partidoData
+                                    )
+
+                            }
+                        );
+
+
+                    if (!res.ok) {
+
+                        let mensaje =
+                            "No se pudo guardar el partido.";
+
+
+                        try {
+
+                            const errorData =
+                                await res.json();
+
+
+                            if (errorData.mensaje) {
+
+                                mensaje =
+                                    errorData.mensaje;
+
+                            } else if (
+                                errorData.message
+                            ) {
+
+                                mensaje =
+                                    errorData.message;
+
+                            }
+
+                        } catch (_) {
+
+                            const texto =
+                                await res.text();
+
+                            if (texto) {
+
+                                console.error(
+                                    "Respuesta del servidor:",
+                                    texto
+                                );
+
+                            }
+
+                        }
+
+
+                        throw new Error(mensaje);
+
+                    }
+
+
+                    alert(
+                        id
+                            ? "Partido actualizado correctamente."
+                            : "Partido creado correctamente."
+                    );
+
+
+                    window.location.href =
+                        "/partidos";
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Error guardando partido:",
+                        error
+                    );
+
+
+                    alert(
+                        error.message ||
+                        "Error al guardar el partido."
+                    );
+
+
+                    boton.disabled = false;
+
+
+                    boton.innerHTML =
+                        '<i class="fa-solid fa-floppy-disk mr-2"></i> ' +
+                        (
+                            id
+                                ? "Actualizar partido"
+                                : "Guardar partido"
+                        );
+
+                }
+
+            }
+        );
+
+</script>
+
+</div>
+
+</body>
+</html>

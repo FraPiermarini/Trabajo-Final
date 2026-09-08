@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout :: mainLayout(~{::#content})}"
+      lang="es">
+
+<head>
+
+```
+<meta charset="UTF-8">
+
+<title>Categorías</title>
+
+<link rel="icon" href="data:,">
+```
+
+</head>
+
+<body>
+
+<div id="content" class="max-w-[1200px] mx-auto">
+<!-- HEADER -->
+
+<div class="flex flex-col md:flex-row
+            md:items-center justify-between
+            gap-6 mb-10">
+
+    <div>
+
+        <h1 class="text-4xl font-black text-white
+                   tracking-tight italic uppercase">
+
+            Categorías
+
+        </h1>
+
+
+        <p class="text-emerald-500 font-bold mt-1">
+
+            Las divisiones formativas y competitivas del club.
+
+        </p>
+
+    </div>
+
+
+    <!-- AGREGAR -->
+
+    <a th:href="@{/categorias/nuevo}"
+       class="bg-[#10b981]
+              hover:bg-[#059669]
+              text-slate-900
+              px-6 py-3
+              rounded-xl
+              font-bold
+              flex items-center gap-2
+              shadow-lg
+              shadow-emerald-500/20
+              transition-all
+              transform active:scale-95">
+
+        <i class="fa-solid fa-plus"></i>
+
+        <span>
+            Agregar categoría
+        </span>
+
+    </a>
+
+</div>
+
+
+<!-- LISTADO -->
+
+<div id="categoriasGrid"
+     class="grid grid-cols-1 md:grid-cols-2
+            lg:grid-cols-3 gap-6">
+
+
+    <!-- LOADING -->
+
+    <div id="loading"
+         class="col-span-full py-20 text-center">
+
+        <div class="inline-block
+                    animate-spin
+                    w-10 h-10
+                    border-4
+                    border-emerald-500
+                    border-t-transparent
+                    rounded-full">
+        </div>
+
+
+        <p class="text-slate-500 mt-4
+                  font-bold uppercase
+                  tracking-widest text-xs">
+
+            Cargando categorías...
+
+        </p>
+
+    </div>
+
+</div>
+
+
+<!-- ========================================================= -->
+<!-- JAVASCRIPT - DENTRO DE #content -->
+<!-- ========================================================= -->
+
+<script>
+
+
+    // =========================================================
+    // OBTENER JWT
+    // =========================================================
+
+    function getJwt() {
+
+        const cookie =
+            document.cookie
+                .split('; ')
+                .find(row =>
+                    row.startsWith('token=')
+                );
+
+
+        return cookie
+            ? cookie.substring(6)
+            : null;
+    }
+
+
+    // =========================================================
+    // ESCAPAR HTML
+    // =========================================================
+
+    function escapeHtml(str) {
+
+        const div =
+            document.createElement('div');
+
+        div.textContent =
+            str ?? '';
+
+        return div.innerHTML;
+    }
+
+
+    // =========================================================
+    // CARGAR CATEGORÍAS
+    // =========================================================
+
+    async function cargarCategorias() {
+
+        const grid =
+            document.getElementById(
+                'categoriasGrid'
+            );
+
+
+        const token = getJwt();
+
+
+        if (!token) {
+
+            grid.innerHTML = `
+
+                <div class="col-span-full py-20
+                            text-center
+                            border-2 border-dashed
+                            border-slate-800
+                            rounded-[2rem]">
+
+                    <p class="text-red-500 font-bold">
+
+                        Sesión expirada.
+
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+        }
+
+
+        try {
+
+            const res =
+                await fetch(
+                    '/api/categorias',
+                    {
+
+                        method: 'GET',
+
+                        headers: {
+
+                            'Authorization':
+                                'Bearer ' + token,
+
+                            'Accept':
+                                'application/json'
+                        }
+
+                    }
+                );
+
+
+            // =================================================
+            // ERROR HTTP
+            // =================================================
+
+            if (!res.ok) {
+
+                if (
+                    res.status === 401 ||
+                    res.status === 403
+                ) {
+
+                    throw new Error(
+                        "No tenés permisos para consultar las categorías."
+                    );
+                }
+
+
+                throw new Error(
+                    "Error al obtener las categorías."
+                );
+            }
+
+
+            const data =
+                await res.json();
+
+
+            console.log(
+                "Respuesta /api/categorias:",
+                data
+            );
+
+
+            // =================================================
+            // SOPORTAR ARRAY O PAGINACIÓN
+            // =================================================
+
+            let categorias = [];
+
+
+            if (Array.isArray(data)) {
+
+                categorias = data;
+
+            } else if (
+                data &&
+                Array.isArray(data.content)
+            ) {
+
+                categorias =
+                    data.content;
+
+            } else if (
+                data &&
+                typeof data === 'object'
+            ) {
+
+                categorias = [data];
+            }
+
+
+            grid.innerHTML = '';
+
+
+            // =================================================
+            // SIN CATEGORÍAS
+            // =================================================
+
+            if (categorias.length === 0) {
+
+                grid.innerHTML = `
+
+                    <div class="col-span-full py-20
+                                text-center
+                                border-2 border-dashed
+                                border-slate-800
+                                rounded-[2rem]">
+
+                        <div class="w-16 h-16
+                                    mx-auto mb-5
+                                    rounded-2xl
+                                    bg-slate-800
+                                    flex items-center
+                                    justify-center">
+
+                            <i class="fa-solid
+                                      fa-layer-group
+                                      text-2xl
+                                      text-slate-600">
+                            </i>
+
+                        </div>
+
+
+                        <p class="text-slate-500
+                                  font-bold">
+
+                            No hay categorías registradas.
+
+                        </p>
+
+
+                        <p class="text-slate-700
+                                  text-xs mt-2">
+
+                            Creá la primera categoría
+                            para comenzar.
+
+                        </p>
+
+                    </div>
+
+                `;
+
+                return;
+            }
+
+
+            // =================================================
+            // MOSTRAR CATEGORÍAS
+            // =================================================
+
+
+
+            categorias.forEach(categoria => {
+
+            // JUGADORES
+            const cantidadJugadores = Array.isArray(categoria.jugadores)
+             ? categoria.jugadores.length
+            : 0;
+
+            // DESCRIPCIÓN
+            const descripcion = categoria.descripcion ||
+             'División de competencia y formación técnica del club.';
+
+           // ENTRENADOR
+          let entrenadorNombre = 'Sin entrenador';
+           if (categoria.entrenador) {
+           entrenadorNombre = `${categoria.entrenador.nombre || ''} ${categoria.entrenador.apellido || ''}`.trim();
+          } else if (categoria.entrenadorNombre) {
+              entrenadorNombre = categoria.entrenadorNombre;
+          } else if (categoria.entrenadorId) {
+           entrenadorNombre = `Entrenador asignado (ID: ${categoria.entrenadorId})`;
+          }
+  
+          // CARD
+           const card = document.createElement('div');
+            card.className = `bg-[#0f172a]
+                      border border-slate-800
+                      p-8 rounded-[2rem]
+                      hover:border-emerald-500/50
+                      transition-all
+                      group relative`;
+
+           card.innerHTML = `
+           <!-- ICONO -->
+            <div class="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500 mb-6">
+            <i class="fa-solid fa-layer-group text-2xl"></i>
+            </div>
+
+            <!-- NOMBRE -->
+             <h3 class="text-2xl font-black text-white mb-2 italic tracking-tighter">
+                 ${escapeHtml(categoria.nombre || '')}
+             </h3>
+
+             <!-- AÑO -->
+            <p class="text-emerald-500 text-xs font-black uppercase tracking-widest mb-3">
+            Año: ${escapeHtml(String(categoria.año ?? ''))}
+            </p>
+
+            <!-- DESCRIPCIÓN -->
+            <p class="text-slate-500 text-sm mb-6 leading-relaxed font-medium">
+            ${escapeHtml(descripcion)}
+             </p>
+
+             <!-- INFORMACIÓN -->
+            <div class="border-t border-slate-800 pt-6 space-y-3">
+            <!-- JUGADORES -->
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-users text-emerald-500 text-xs"></i>
+                <span class="text-xs font-bold text-slate-300">
+                    ${cantidadJugadores} jugador${cantidadJugadores === 1 ? '' : 'es'}
+                </span>
+            </div>
+
+            <!-- ENTRENADOR -->
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-user-tie text-emerald-500 text-xs"></i>
+                <span class="text-xs font-bold text-slate-300">
+                    ${escapeHtml(entrenadorNombre)}
+                </span>
+            </div>
+        </div>
+
+        <!-- ACCIONES -->
+        <div class="mt-6 flex gap-2">
+            <a href="/categorias/nuevo?id=${categoria.id}"
+               class="flex-1 bg-emerald-500/10 hover:bg-emerald-500 text-emerald-500 hover:text-slate-900 py-3 rounded-xl font-bold transition-all text-xs uppercase tracking-widest text-center">
+                <i class="fa-solid fa-pen-to-square mr-1"></i>
+                Editar
+            </a>
+            <button type="button"
+                    class="btn-eliminar w-12 bg-slate-800 hover:bg-red-500/20 text-slate-400 hover:text-red-500 rounded-xl transition-all"
+                    data-id="${categoria.id}"
+                    data-nombre="${escapeHtml(categoria.nombre || '')}">
+                <i class="fa-solid fa-trash-can"></i>
+            </button>
+            </div>
+            `;
+
+        grid.appendChild(card);
+    });
+
+
+
+            // =================================================
+            // EVENTOS ELIMINAR
+            // =================================================
+
+            grid
+                .querySelectorAll(
+                    '.btn-eliminar'
+                )
+                .forEach(btn => {
+
+                    btn.addEventListener(
+                        'click',
+                        function () {
+
+                            eliminarCategoria(
+                                this.dataset.id,
+                                this.dataset.nombre
+                            );
+
+                        }
+                    );
+
+                });
+
+
+        } catch (error) {
+
+            console.error(
+                "Error al cargar categorías:",
+                error
+            );
+
+
+            grid.innerHTML = `
+
+                <div class="col-span-full
+                            p-10
+                            bg-red-500/10
+                            border border-red-500/20
+                            rounded-[2rem]
+                            text-red-500
+                            text-center">
+
+                    <i class="fa-solid
+                              fa-circle-exclamation
+                              text-xl mb-3">
+                    </i>
+
+
+                    <p class="font-black">
+
+                        ERROR AL CARGAR LAS CATEGORÍAS
+
+                    </p>
+
+
+                    <p class="text-xs
+                              mt-2
+                              text-red-400">
+
+                        ${escapeHtml(
+                            error.message
+                        )}
+
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
+
+    // =========================================================
+    // ELIMINAR CATEGORÍA
+    // =========================================================
+
+    async function eliminarCategoria(
+        id,
+        nombre
+    ) {
+
+
+        if (
+            !confirm(
+                `¿Seguro que querés eliminar la categoría "${nombre}"?`
+            )
+        ) {
+
+            return;
+        }
+
+
+        const token = getJwt();
+
+
+        if (!token) {
+
+            alert("Sesión expirada.");
+
+            window.location.href =
+                "/login";
+
+            return;
+        }
+
+
+        try {
+
+            const res =
+                await fetch(
+                    `/api/categorias/${id}`,
+                    {
+
+                        method: 'DELETE',
+
+                        headers: {
+
+                            'Authorization':
+                                'Bearer ' + token,
+
+                            'Accept':
+                                'application/json'
+                        }
+
+                    }
+                );
+
+
+            if (!res.ok) {
+
+                let mensaje =
+                    "No se pudo eliminar la categoría.";
+
+
+                try {
+
+                    const errorData =
+                        await res.json();
+
+
+                    if (
+                        errorData.mensaje
+                    ) {
+
+                        mensaje =
+                            errorData.mensaje;
+
+                    } else if (
+                        errorData.message
+                    ) {
+
+                        mensaje =
+                            errorData.message;
+                    }
+
+                } catch (_) {}
+
+
+                throw new Error(
+                    mensaje
+                );
+            }
+
+
+            // Volver a cargar lista
+            await cargarCategorias();
+
+
+        } catch (error) {
+
+            console.error(
+                "Error eliminando categoría:",
+                error
+            );
+
+
+            alert(
+                error.message ||
+                "Error al eliminar la categoría."
+            );
+        }
+
+    }
+
+
+    // =========================================================
+    // INICIAR
+    // =========================================================
+
+    document.addEventListener(
+        'DOMContentLoaded',
+        function () {
+
+            cargarCategorias();
+
+        }
+    );
+
+</script>
+</div>
+
+</body>
+</html>
