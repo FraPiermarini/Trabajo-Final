@@ -81,6 +81,7 @@ public class CategoriaServiceImpl implements CategoriaService{
         if(c.getEntrenador() != null){
             dto.setEntrenadorId(c.getEntrenador().getId());
             dto.setNombreEntrenador(c.getEntrenador().getNombre());
+            dto.setApellidoEntrenador(c.getEntrenador().getApellido());
         }
         List<JugadorDto> jugadores = new ArrayList<>();
         for(Jugador jugador : c.getJugadores()){

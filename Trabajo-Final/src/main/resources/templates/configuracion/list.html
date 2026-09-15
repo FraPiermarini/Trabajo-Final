@@ -1,81 +1,1304 @@
-<th:block th:replace="~{layout :: mainLayout(~{::#content})}">
-<div id="content" class="max-w-[1200px] mx-auto space-y-12">
-    
-    <div>
-        <h1 class="text-4xl font-black text-white italic uppercase tracking-tighter">Configuración</h1>
-        <p class="text-emerald-500 font-bold text-sm">Perfil de la cuenta y administración del sistema.</p>
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout :: mainLayout(~{::#content})}"
+      lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>Configuración</title>
+
+    <link rel="icon" href="data:,">
+
+</head>
+
+<body>
+
+<div id="content"
+     class="max-w-[1200px] mx-auto"
+     th:attr="data-es-admin=${#authorization.expression('hasRole(''ADMIN'')')}">
+
+
+    <!-- ========================================================= -->
+    <!-- HEADER -->
+    <!-- ========================================================= -->
+
+    <div class="flex flex-col md:flex-row
+                md:items-center justify-between
+                gap-6 mb-10">
+
+        <div>
+
+            <h1 class="text-4xl font-black text-white
+                       tracking-tight italic uppercase">
+
+                Configuración
+
+            </h1>
+
+            <p class="text-emerald-500 font-bold mt-1">
+
+                Perfil de la cuenta y administración del sistema.
+
+            </p>
+
+        </div>
+
     </div>
+
+
+    <!-- ========================================================= -->
+    <!-- CONTENIDO -->
+    <!-- ========================================================= -->
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+
+        <!-- ===================================================== -->
         <!-- MI CUENTA -->
+        <!-- ===================================================== -->
+
         <div class="lg:col-span-1 space-y-6">
-            <h3 class="text-xs font-black text-slate-500 uppercase tracking-[0.3em] ml-4">Mi cuenta</h3>
-            <div class="bg-[#0f172a] border border-slate-800 p-8 rounded-[2.5rem] text-center space-y-6">
-                <div class="w-24 h-24 rounded-full bg-emerald-500/10 border-2 border-emerald-500/20 mx-auto flex items-center justify-center text-3xl font-black text-emerald-500 shadow-2xl shadow-emerald-500/10">
+
+            <h3 class="text-xs font-black text-slate-500
+                       uppercase tracking-[0.3em] ml-4">
+
+                Mi cuenta
+
+            </h3>
+
+
+            <div class="bg-[#0f172a]
+                        border border-slate-800
+                        p-8
+                        rounded-[2.5rem]
+                        text-center
+                        space-y-6">
+
+
+                <!-- AVATAR -->
+
+                <div class="w-24 h-24
+                            rounded-full
+                            bg-emerald-500/10
+                            border-2
+                            border-emerald-500/20
+                            mx-auto
+                            flex items-center
+                            justify-center
+                            text-3xl
+                            font-black
+                            text-emerald-500
+                            shadow-2xl
+                            shadow-emerald-500/10">
+
                     AD
+
                 </div>
+
+
+                <!-- INFORMACION -->
+
                 <div>
-                    <h2 class="text-xl font-black text-white" th:text="${#authentication.name}">admin@admin.com</h2>
-                    <span class="bg-emerald-500/10 text-emerald-500 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-emerald-500/20 mt-2 inline-block">Administrador</span>
+
+                    <h2 class="text-xl font-black text-white"
+                        th:text="${#authentication.name}">
+
+                        admin@admin.com
+
+                    </h2>
+
+
+                    <span class="bg-emerald-500/10
+                                 text-emerald-500
+                                 px-4 py-1
+                                 rounded-full
+                                 text-[10px]
+                                 font-black
+                                 uppercase
+                                 tracking-widest
+                                 border
+                                 border-emerald-500/20
+                                 mt-2
+                                 inline-block">
+
+                        Administrador
+
+                    </span>
+
                 </div>
-                
+
+
+                <!-- PERMISOS -->
+
                 <div class="pt-6 space-y-3">
-                    <div class="flex justify-between items-center text-sm p-4 bg-[#0a0f1d] rounded-2xl border border-slate-800">
-                        <span class="text-slate-500 font-bold">Permisos de escritura</span>
-                        <span class="text-emerald-500 font-black italic uppercase text-xs">Habilitados</span>
+
+
+                    <div class="flex justify-between
+                                items-center
+                                text-sm
+                                p-4
+                                bg-[#0a0f1d]
+                                rounded-2xl
+                                border
+                                border-slate-800">
+
+                        <span class="text-slate-500 font-bold">
+
+                            Permisos de escritura
+
+                        </span>
+
+                        <span class="text-emerald-500
+                                     font-black
+                                     italic
+                                     uppercase
+                                     text-xs">
+
+                            Habilitados
+
+                        </span>
+
                     </div>
-                    <div class="flex justify-between items-center text-sm p-4 bg-[#0a0f1d] rounded-2xl border border-slate-800">
-                        <span class="text-slate-500 font-bold">Administración de usuarios</span>
-                        <span class="text-emerald-500 font-black italic uppercase text-xs">Disponible</span>
+
+
+                    <div class="flex justify-between
+                                items-center
+                                text-sm
+                                p-4
+                                bg-[#0a0f1d]
+                                rounded-2xl
+                                border
+                                border-slate-800">
+
+                        <span class="text-slate-500 font-bold">
+
+                            Administración de usuarios
+
+                        </span>
+
+                        <span class="text-emerald-500
+                                     font-black
+                                     italic
+                                     uppercase
+                                     text-xs">
+
+                            Disponible
+
+                        </span>
+
                     </div>
+
                 </div>
+
             </div>
+
         </div>
 
-        <!-- LISTADO USUARIOS -->
+
+
+        <!-- ===================================================== -->
+        <!-- USUARIOS -->
+        <!-- ===================================================== -->
+
         <div class="lg:col-span-2 space-y-6">
-            <h3 class="text-xs font-black text-slate-500 uppercase tracking-[0.3em] ml-4">Usuarios del sistema</h3>
-            <div class="bg-[#0f172a] border border-slate-800 rounded-[2.5rem] overflow-hidden">
-                <table class="w-full text-left">
-                    <thead>
-                        <tr class="bg-slate-900/50 border-b border-slate-800">
-                            <th class="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest">Usuario</th>
-                            <th class="px-8 py-5 text-[10px] font-black text-slate-500 uppercase tracking-widest text-center">Rol</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-800/50">
-                        <tr>
-                            <td class="px-8 py-5">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center font-bold text-xs text-slate-400 italic">AA</div>
-                                    <div>
-                                        <p class="font-bold text-slate-200">Admin Admin</p>
-                                        <p class="text-xs text-slate-500">admin@admin.com</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-8 py-5 text-center">
-                                <span class="bg-emerald-500/10 text-emerald-500 px-4 py-1 rounded-full text-[9px] font-black uppercase border border-emerald-500/20">Administrador</span>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td class="px-8 py-5">
-                                <div class="flex items-center gap-4">
-                                    <div class="w-10 h-10 rounded-xl bg-slate-800 flex items-center justify-center font-bold text-xs text-slate-400 italic">EE</div>
-                                    <div>
-                                        <p class="font-bold text-slate-200">Entrenador Entrenador</p>
-                                        <p class="text-xs text-slate-500">entrenador@entrenador.com</p>
-                                    </div>
-                                </div>
-                            </td>
-                            <td class="px-8 py-5 text-center">
-                                <span class="bg-amber-500/10 text-amber-500 px-4 py-1 rounded-full text-[9px] font-black uppercase border border-amber-500/20">Entrenador</span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+
+
+            <!-- TITULO + BUSCADOR -->
+
+            <div class="flex flex-col
+                        md:flex-row
+                        md:items-end
+                        md:justify-between
+                        gap-4">
+
+
+                <div>
+
+                    <h3 class="text-xs font-black
+                               text-slate-500
+                               uppercase
+                               tracking-[0.3em]
+                               ml-4">
+
+                        Usuarios del sistema
+
+                    </h3>
+
+
+                    <p class="text-slate-600
+                              text-xs
+                              ml-4
+                              mt-1">
+
+                        Últimos usuarios registrados
+
+                    </p>
+
+                </div>
+
+
+                <!-- BUSCADOR -->
+
+                <div class="relative">
+
+                    <i class="fa-solid
+                              fa-magnifying-glass
+                              absolute
+                              left-4
+                              top-1/2
+                              -translate-y-1/2
+                              text-slate-500">
+                    </i>
+
+
+                    <input
+                        type="text"
+                        id="searchInput"
+                        placeholder="Buscar usuario..."
+                        class="w-full
+                               md:w-72
+                               pl-11
+                               pr-5
+                               py-3
+                               bg-[#0f172a]
+                               border
+                               border-slate-800
+                               rounded-xl
+                               focus:ring-2
+                               focus:ring-emerald-500
+                               outline-none
+                               transition-all
+                               text-slate-300
+                               font-medium">
+
+                </div>
+
             </div>
+
+
+
+            <!-- ================================================= -->
+            <!-- LISTADO -->
+            <!-- ================================================= -->
+
+            <div class="bg-[#0f172a]
+                        border border-slate-800
+                        rounded-[2.5rem]
+                        overflow-hidden">
+
+
+                <div class="overflow-x-auto">
+
+                    <table class="w-full text-left">
+
+                        <thead>
+
+                            <tr class="bg-slate-900/50
+                                       border-b
+                                       border-slate-800">
+
+
+                                <th class="px-8 py-5
+                                           text-[10px]
+                                           font-black
+                                           text-slate-500
+                                           uppercase
+                                           tracking-widest">
+
+                                    Usuario
+
+                                </th>
+
+
+                                <th class="px-8 py-5
+                                           text-[10px]
+                                           font-black
+                                           text-slate-500
+                                           uppercase
+                                           tracking-widest
+                                           text-center">
+
+                                    Rol
+
+                                </th>
+
+
+                                <th class="px-8 py-5
+                                           text-[10px]
+                                           font-black
+                                           text-slate-500
+                                           uppercase
+                                           tracking-widest
+                                           text-center">
+
+                                    Acción
+
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody id="usuariosList"
+                               class="divide-y
+                                      divide-slate-800/50">
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+
+                <!-- LOADING -->
+
+                <div id="loadingUsuarios"
+                     class="py-16 text-center">
+
+                    <div class="inline-block
+                                animate-spin
+                                w-10
+                                h-10
+                                border-4
+                                border-emerald-500
+                                border-t-transparent
+                                rounded-full">
+
+                    </div>
+
+
+                    <p class="text-slate-500
+                              mt-4
+                              font-bold
+                              uppercase
+                              tracking-widest
+                              text-xs">
+
+                        Cargando usuarios...
+
+                    </p>
+
+                </div>
+
+
+
+                <!-- SIN USUARIOS -->
+
+                <div id="sinUsuarios"
+                     class="hidden
+                            py-16
+                            text-center">
+
+                    <div class="w-16 h-16
+                                mx-auto
+                                mb-5
+                                rounded-2xl
+                                bg-slate-800
+                                flex
+                                items-center
+                                justify-center">
+
+                        <i class="fa-solid
+                                  fa-users-slash
+                                  text-2xl
+                                  text-slate-600">
+                        </i>
+
+                    </div>
+
+
+                    <p class="text-slate-500
+                              font-bold">
+
+                        No se encontraron usuarios.
+
+                    </p>
+
+                </div>
+
+
+            </div>
+
         </div>
+
     </div>
+
+
+
+    <!-- ========================================================= -->
+    <!-- JAVASCRIPT -->
+    <!-- IMPORTANTE: TIENE QUE ESTAR DENTRO DE #content -->
+    <!-- ========================================================= -->
+
+    <script>
+
+        // =========================================================
+        // JWT
+        // =========================================================
+
+        function getJwt() {
+
+            const cookie =
+                document.cookie
+                    .split('; ')
+                    .find(row =>
+                        row.startsWith('token=')
+                    );
+
+            return cookie
+                ? cookie.substring(6)
+                : null;
+
+        }
+
+
+
+        // =========================================================
+        // ESCAPAR HTML
+        // =========================================================
+
+        function escapeHtml(str) {
+
+            const div =
+                document.createElement('div');
+
+            div.textContent =
+                str ?? '';
+
+            return div.innerHTML;
+
+        }
+
+
+
+        // =========================================================
+        // VARIABLES
+        // =========================================================
+
+        let usuarios = [];
+
+
+
+        // =========================================================
+        // CARGAR USUARIOS
+        // =========================================================
+
+        async function cargarUsuarios() {
+
+            const container =
+                document.getElementById(
+                    'usuariosList'
+                );
+
+            const loading =
+                document.getElementById(
+                    'loadingUsuarios'
+                );
+
+            const sinUsuarios =
+                document.getElementById(
+                    'sinUsuarios'
+                );
+
+            const token =
+                getJwt();
+
+
+
+            // =====================================================
+            // SIN TOKEN
+            // =====================================================
+
+            if (!token) {
+
+                loading.classList.add('hidden');
+
+                container.innerHTML = `
+
+                    <tr>
+
+                        <td colspan="3"
+                            class="px-8 py-10 text-center">
+
+                            <p class="text-red-500
+                                      font-black
+                                      uppercase">
+
+                                Sesión expirada.
+
+                            </p>
+
+                            <p class="text-slate-500
+                                      text-sm
+                                      mt-2">
+
+                                Iniciá sesión nuevamente.
+
+                            </p>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+                return;
+
+            }
+
+
+
+            // =====================================================
+            // FETCH
+            // =====================================================
+
+            try {
+
+                const res =
+                    await fetch(
+                        '/api/usuarios',
+                        {
+
+                            method: 'GET',
+
+                            headers: {
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            }
+
+                        }
+                    );
+
+
+
+                console.log(
+                    'GET /api/usuarios:',
+                    res.status
+                );
+
+
+
+                // =================================================
+                // AUTORIZACION
+                // =================================================
+
+                if (
+                    res.status === 401 ||
+                    res.status === 403
+                ) {
+
+                    throw new Error(
+                        'No tenés permisos para consultar los usuarios.'
+                    );
+
+                }
+
+
+
+                // =================================================
+                // ERROR
+                // =================================================
+
+                if (!res.ok) {
+
+                    throw new Error(
+                        'Error al obtener los usuarios. Código: ' +
+                        res.status
+                    );
+
+                }
+
+
+
+                // =================================================
+                // JSON
+                // =================================================
+
+                const data =
+                    await res.json();
+
+
+                console.log(
+                    'Respuesta /api/usuarios:',
+                    data
+                );
+
+
+
+                // =================================================
+                // PROCESAR RESPUESTA
+                // =================================================
+
+                if (Array.isArray(data)) {
+
+                    usuarios = data;
+
+                }
+
+                else if (
+                    data &&
+                    Array.isArray(data.content)
+                ) {
+
+                    usuarios =
+                        data.content;
+
+                }
+
+                else if (
+                    data &&
+                    typeof data === 'object'
+                ) {
+
+                    usuarios = [data];
+
+                }
+
+                else {
+
+                    usuarios = [];
+
+                }
+
+
+
+                console.log(
+                    'Usuarios procesados:',
+                    usuarios
+                );
+
+
+
+                loading.classList.add('hidden');
+
+                mostrarUsuarios();
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    'Error al cargar usuarios:',
+                    error
+                );
+
+
+                loading.classList.add('hidden');
+
+
+                container.innerHTML = `
+
+                    <tr>
+
+                        <td colspan="3"
+                            class="px-8 py-10 text-center">
+
+                            <i class="fa-solid
+                                      fa-circle-exclamation
+                                      text-red-500
+                                      text-2xl
+                                      mb-4">
+                            </i>
+
+                            <p class="text-red-500
+                                      font-black
+                                      uppercase">
+
+                                ERROR AL CARGAR LOS USUARIOS
+
+                            </p>
+
+                            <p class="text-xs
+                                      mt-2
+                                      text-red-400">
+
+                                ${escapeHtml(
+                                    error.message
+                                )}
+
+                            </p>
+
+                        </td>
+
+                    </tr>
+
+                `;
+
+            }
+
+        }
+
+
+
+        // =========================================================
+        // MOSTRAR USUARIOS
+        // =========================================================
+
+        function mostrarUsuarios() {
+
+            const container =
+                document.getElementById(
+                    'usuariosList'
+                );
+
+            const sinUsuarios =
+                document.getElementById(
+                    'sinUsuarios'
+                );
+
+            const searchInput =
+                document.getElementById(
+                    'searchInput'
+                );
+
+            const texto =
+                searchInput
+                    ? searchInput.value
+                        .toLowerCase()
+                        .trim()
+                    : '';
+
+
+
+            let lista;
+
+
+
+            // =====================================================
+            // SIN BUSQUEDA → ULTIMOS 5
+            // =====================================================
+
+            if (!texto) {
+
+                lista =
+                    [...usuarios]
+                        .sort(
+                            (a, b) =>
+                                Number(b.id) -
+                                Number(a.id)
+                        )
+                        .slice(0, 5);
+
+            }
+
+
+
+            // =====================================================
+            // CON BUSQUEDA → TODOS LOS COINCIDENTES
+            // =====================================================
+
+            else {
+
+                lista =
+                    usuarios.filter(usuario => {
+
+                        const nombre =
+                            `${usuario.nombre || ''} ${usuario.apellido || ''}`
+                                .toLowerCase();
+
+                        const email =
+                            String(
+                                usuario.email || ''
+                            )
+                            .toLowerCase();
+
+                        return (
+                            nombre.includes(texto) ||
+                            email.includes(texto)
+                        );
+
+                    });
+
+            }
+
+
+
+            container.innerHTML = '';
+
+
+
+            // =====================================================
+            // SIN RESULTADOS
+            // =====================================================
+
+            if (
+                !lista ||
+                lista.length === 0
+            ) {
+
+                sinUsuarios.classList.remove(
+                    'hidden'
+                );
+
+                return;
+
+            }
+
+
+            sinUsuarios.classList.add(
+                'hidden'
+            );
+
+
+
+            // =====================================================
+            // CREAR FILAS
+            // =====================================================
+
+            lista.forEach(usuario => {
+
+                const nombre =
+                    usuario.nombre || '';
+
+                const apellido =
+                    usuario.apellido || '';
+
+                const email =
+                    usuario.email || '';
+
+                const rol =
+                    usuario.rol || 'USUARIO';
+
+
+
+                const iniciales =
+                    `${nombre.charAt(0)}${apellido.charAt(0)}`
+                        .toUpperCase();
+
+
+
+                // =================================================
+                // ROL VISUAL
+                // =================================================
+
+                let rolClase =
+                    'bg-slate-500/10 text-slate-400 border-slate-500/20';
+
+                let rolTexto =
+                    'Usuario';
+
+
+
+                if (
+                    rol === 'ENTRENADOR'
+                ) {
+
+                    rolClase =
+                        'bg-amber-500/10 text-amber-500 border-amber-500/20';
+
+                    rolTexto =
+                        'Entrenador';
+
+                }
+
+
+
+                if (
+                    rol === 'ADMIN'
+                ) {
+
+                    rolClase =
+                        'bg-emerald-500/10 text-emerald-500 border-emerald-500/20';
+
+                    rolTexto =
+                        'Administrador';
+
+                }
+
+
+
+                // =================================================
+                // FILA
+                // =================================================
+
+                const fila =
+                    document.createElement('tr');
+
+                fila.className =
+                    'hover:bg-slate-900/30 transition';
+
+
+
+                fila.innerHTML = `
+
+                    <td class="px-8 py-5">
+
+                        <div class="flex items-center gap-4">
+
+                            <div class="w-10 h-10
+                                        rounded-xl
+                                        bg-slate-800
+                                        flex
+                                        items-center
+                                        justify-center
+                                        font-bold
+                                        text-xs
+                                        text-slate-400
+                                        italic
+                                        flex-shrink-0">
+
+                                ${escapeHtml(
+                                    iniciales
+                                )}
+
+                            </div>
+
+
+                            <div class="min-w-0">
+
+                                <p class="font-bold
+                                          text-slate-200
+                                          truncate">
+
+                                    ${escapeHtml(nombre)}
+                                    ${escapeHtml(apellido)}
+
+                                </p>
+
+
+                                <p class="text-xs
+                                          text-slate-500
+                                          truncate">
+
+                                    ${escapeHtml(email)}
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </td>
+
+
+
+                    <td class="px-8 py-5 text-center">
+
+                        <span class="${rolClase}
+                                     px-4 py-1
+                                     rounded-full
+                                     text-[9px]
+                                     font-black
+                                     uppercase
+                                     border">
+
+                            ${rolTexto}
+
+                        </span>
+
+                    </td>
+
+
+
+                    <td class="px-8 py-5">
+
+                        ${
+                            rol === 'ADMIN'
+
+                            ?
+
+                            `
+
+                            <div class="flex justify-center">
+
+                                <span class="text-[10px]
+                                             text-slate-600
+                                             font-black
+                                             uppercase
+                                             tracking-wider">
+
+                                    Cuenta protegida
+
+                                </span>
+
+                            </div>
+
+                            `
+
+                            :
+
+                            `
+
+                            <div class="flex
+                                        items-center
+                                        justify-center
+                                        gap-2">
+
+                                <select
+                                    id="rol-${usuario.id}"
+                                    class="bg-[#0a0f1d]
+                                           border
+                                           border-slate-700
+                                           rounded-xl
+                                           px-3
+                                           py-2
+                                           text-xs
+                                           font-bold
+                                           text-slate-300
+                                           outline-none
+                                           focus:border-emerald-500
+                                           transition">
+
+                                    <option
+                                        value="USUARIO"
+                                        ${rol === 'USUARIO'
+                                            ? 'selected'
+                                            : ''}>
+
+                                        Usuario
+
+                                    </option>
+
+
+                                    <option
+                                        value="ENTRENADOR"
+                                        ${rol === 'ENTRENADOR'
+                                            ? 'selected'
+                                            : ''}>
+
+                                        Entrenador
+
+                                    </option>
+
+                                </select>
+
+
+
+                                <button
+                                    type="button"
+                                    onclick="guardarRol(${usuario.id})"
+                                    class="bg-emerald-500
+                                           hover:bg-emerald-600
+                                           text-slate-950
+                                           px-4
+                                           py-2
+                                           rounded-xl
+                                           text-xs
+                                           font-black
+                                           uppercase
+                                           transition
+                                           shadow-lg
+                                           shadow-emerald-500/10">
+
+                                    Guardar
+
+                                </button>
+
+                            </div>
+
+                            `
+                        }
+
+                    </td>
+
+                `;
+
+
+
+                container.appendChild(
+                    fila
+                );
+
+            });
+
+        }
+
+
+
+        // =========================================================
+        // GUARDAR ROL
+        // =========================================================
+
+        async function guardarRol(id) {
+
+            const select =
+                document.getElementById(
+                    `rol-${id}`
+                );
+
+
+            if (!select) {
+
+                return;
+
+            }
+
+
+            const nuevoRol =
+                select.value;
+
+
+            const token =
+                getJwt();
+
+
+            if (!token) {
+
+                alert(
+                    'Sesión expirada.'
+                );
+
+                window.location.href =
+                    '/login';
+
+                return;
+
+            }
+
+
+
+            try {
+
+                const res =
+                    await fetch(
+                        `/api/usuarios/${id}/rol`,
+                        {
+
+                            method: 'PUT',
+
+                            headers: {
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Content-Type':
+                                    'application/json',
+
+                                'Accept':
+                                    'application/json'
+
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    rol: nuevoRol
+                                })
+
+                        }
+                    );
+
+
+
+                if (
+                    res.status === 401 ||
+                    res.status === 403
+                ) {
+
+                    throw new Error(
+                        'No tenés permisos para cambiar el rol.'
+                    );
+
+                }
+
+
+
+                const data =
+                    await res.json();
+
+
+
+                if (!res.ok) {
+
+                    throw new Error(
+                        data.message ||
+                        'No se pudo actualizar el rol.'
+                    );
+
+                }
+
+
+
+                const usuario =
+                    usuarios.find(
+                        u =>
+                            Number(u.id) ===
+                            Number(id)
+                    );
+
+
+                if (usuario) {
+
+                    usuario.rol =
+                        data.rol;
+
+                }
+
+
+
+                mostrarUsuarios();
+
+
+
+                alert(
+                    'Rol actualizado correctamente.'
+                );
+
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    'Error actualizando rol:',
+                    error
+                );
+
+
+                alert(
+                    error.message ||
+                    'Error al actualizar el rol.'
+                );
+
+            }
+
+        }
+
+
+
+        // =========================================================
+        // INICIAR
+        // =========================================================
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            function () {
+
+                const searchInput =
+                    document.getElementById(
+                        'searchInput'
+                    );
+
+
+                if (searchInput) {
+
+                    searchInput.addEventListener(
+                        'input',
+                        mostrarUsuarios
+                    );
+
+                }
+
+
+                cargarUsuarios();
+
+            }
+        );
+
+    </script>
+
 </div>
-</th:block>
+
+</body>
+
+</html>

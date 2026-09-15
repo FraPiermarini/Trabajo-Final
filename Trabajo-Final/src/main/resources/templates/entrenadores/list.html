@@ -1,5 +1,7 @@
 <!DOCTYPE html>
+
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:replace="~{layout :: mainLayout(~{::#content})}"
       lang="es">
 
@@ -10,12 +12,16 @@
 
 <body>
 
-<div id="content" class="max-w-[1200px] mx-auto">
+<div id="content"
+     class="max-w-[1200px] mx-auto"
+     th:attr="data-puede-editar=${#authorization.expression('hasAnyRole(''ENTRENADOR'',''ADMIN'')')}">
 
     <!-- HEADER -->
+
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
 
         <div>
+
             <h1 class="text-4xl font-black text-white tracking-tight italic uppercase">
                 Entrenadores
             </h1>
@@ -23,26 +29,102 @@
             <p class="text-emerald-500 font-bold mt-1">
                 El cuerpo técnico del Complejo Deportivo Justiniano Posse.
             </p>
+
         </div>
 
         <a th:href="@{/entrenadores/nuevo}"
+           sec:authorize="hasAnyRole('ENTRENADOR','ADMIN')"
            class="bg-[#10b981] hover:bg-[#059669] text-slate-900 px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-emerald-500/20 transition-all transform active:scale-95">
-
             <i class="fa-solid fa-plus"></i>
-
             <span>Agregar entrenador</span>
-
         </a>
 
     </div>
 
 
-    <!-- LISTADO -->
+    <!-- FILTROS -->
+
+    <div class="bg-[#0f172a]
+                border border-slate-800
+                rounded-2xl
+                p-4
+                mb-6">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+            <!-- BUSCADOR -->
+
+            <div class="relative">
+
+                <i class="fa-solid fa-magnifying-glass
+                          absolute left-4 top-1/2
+                          -translate-y-1/2
+                          text-slate-500"></i>
+
+                <input
+                    type="text"
+                    id="buscadorEntrenador"
+                    placeholder="Buscar por nombre o apellido..."
+                    class="w-full
+                           bg-[#0a0f1d]
+                           border border-slate-800
+                           rounded-xl
+                           py-3
+                           pl-11
+                           pr-4
+                           text-white
+                           placeholder-slate-600
+                           outline-none
+                           focus:border-emerald-500
+                           transition-all">
+
+            </div>
+
+
+            <!-- FILTRO CATEGORÍA -->
+
+            <div class="relative">
+
+                <i class="fa-solid fa-layer-group
+                          absolute left-4 top-1/2
+                          -translate-y-1/2
+                          text-slate-500
+                          pointer-events-none"></i>
+
+                <select
+                    id="filtroCategoria"
+                    class="w-full
+                           bg-[#0a0f1d]
+                           border border-slate-800
+                           rounded-xl
+                           py-3
+                           pl-11
+                           pr-10
+                           text-white
+                           outline-none
+                           focus:border-emerald-500
+                           transition-all
+                           appearance-none">
+
+                    <option value="">Todas las categorías</option>
+
+                </select>
+
+                <i class="fa-solid fa-chevron-down
+                          absolute right-4 top-1/2
+                          -translate-y-1/2
+                          text-slate-500
+                          pointer-events-none"></i>
+
+            </div>
+
+        </div>
+
+    </div>
+
 
     <div id="entrenadoresGrid"
-         class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-        <!-- LOADING -->
+         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 justify-items-center">
 
         <div id="loading"
              class="col-span-full py-20 text-center">
@@ -54,372 +136,1054 @@
     </div>
 
 
-    <!--
-        IMPORTANTE: el <script> tiene que quedar DENTRO de #content.
-        El layout usa th:replace="~{layout :: mainLayout(~{::#content})}",
-        que solo toma lo que está adentro del elemento #content. Si el
-        script queda afuera (como sibling después del </div> de cierre),
-        Thymeleaf nunca lo manda al navegador y la página se queda
-        cargando para siempre porque cargarEntrenadores() jamás se llama.
-    -->
-    <script>
+    <!-- PAGINACIÓN -->
 
-        // ============================================================
-        // OBTENER JWT
-        // ============================================================
+    <div id="paginacion"
+         class="flex items-center justify-center gap-2 mt-8">
+    </div>
 
-        function getJwt() {
 
-            const cookie = document.cookie
-                .split('; ')
-                .find(row => row.startsWith('token='));
+<script>
 
-            if (!cookie) {
-                return null;
+    let todosLosEntrenadores = [];
+
+    let paginaActual = 1;
+
+    const ENTRENADORES_POR_PAGINA = 6;
+
+
+    function puedeEditarRol() {
+
+        const content = document.getElementById('content');
+
+        return content?.dataset?.puedeEditar === 'true';
+
+    }
+
+
+    function getJwt() {
+
+        const cookie = document.cookie
+            .split('; ')
+            .find(row => row.startsWith('token='));
+
+        if (!cookie) {
+            return null;
+        }
+
+        return cookie.substring(6);
+
+    }
+
+
+    function escapeHtml(str) {
+
+        const div = document.createElement('div');
+
+        div.textContent = str ?? '';
+
+        return div.innerHTML;
+
+    }
+
+
+    function normalizarTexto(texto) {
+
+        return String(texto || '')
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+
+    }
+
+
+    function cargarOpcionesCategorias() {
+
+        const select = document.getElementById('filtroCategoria');
+
+        const categoriasMap = new Map();
+
+
+        todosLosEntrenadores.forEach(e => {
+
+            const categorias =
+                Array.isArray(e.categorias)
+                    ? e.categorias
+                    : [];
+
+
+            categorias.forEach(c => {
+
+                if (c && c.id != null) {
+
+                    categoriasMap.set(
+                        String(c.id),
+                        c.nombre || 'Sin nombre'
+                    );
+
+                }
+
+            });
+
+        });
+
+
+        const categorias =
+            Array.from(categoriasMap.entries())
+                .sort((a, b) =>
+                    a[1].localeCompare(
+                        b[1],
+                        'es',
+                        { sensitivity: 'base' }
+                    )
+                );
+
+
+        select.innerHTML = `
+            <option value="">Todas las categorías</option>
+        `;
+
+
+        categorias.forEach(([id, nombre]) => {
+
+            const option =
+                document.createElement('option');
+
+            option.value = id;
+
+            option.textContent = nombre;
+
+            select.appendChild(option);
+
+        });
+
+    }
+
+
+    function mostrarPaginacion(totalResultados) {
+
+        const paginacion =
+            document.getElementById('paginacion');
+
+
+        paginacion.innerHTML = '';
+
+
+        const totalPaginas =
+            Math.ceil(
+                totalResultados /
+                ENTRENADORES_POR_PAGINA
+            );
+
+
+        if (totalPaginas <= 1) {
+
+            return;
+
+        }
+
+
+        const botonAnterior =
+            document.createElement('button');
+
+
+        botonAnterior.innerHTML =
+            `<i class="fa-solid fa-chevron-left"></i>`;
+
+
+        botonAnterior.className =
+            `w-10 h-10
+             rounded-xl
+             border border-slate-800
+             bg-[#0f172a]
+             text-slate-400
+             hover:text-white
+             hover:border-emerald-500
+             transition-all
+             disabled:opacity-30
+             disabled:cursor-not-allowed`;
+
+
+        botonAnterior.disabled =
+            paginaActual === 1;
+
+
+        botonAnterior.addEventListener(
+            'click',
+            () => {
+
+                if (paginaActual > 1) {
+
+                    paginaActual--;
+
+                    mostrarEntrenadoresPagina();
+
+                }
+
             }
+        );
 
-            return cookie.substring(6);
+
+        paginacion.appendChild(
+            botonAnterior
+        );
+
+
+        for (
+            let i = 1;
+            i <= totalPaginas;
+            i++
+        ) {
+
+            const boton =
+                document.createElement('button');
+
+
+            boton.textContent = i;
+
+
+            boton.className =
+                `w-10 h-10
+                 rounded-xl
+                 border
+                 font-bold
+                 transition-all
+                 ${
+                     i === paginaActual
+
+                     ? 'bg-emerald-500 border-emerald-500 text-slate-900'
+
+                     : 'bg-[#0f172a] border-slate-800 text-slate-400 hover:text-white hover:border-emerald-500'
+                 }`;
+
+
+            boton.addEventListener(
+                'click',
+                () => {
+
+                    paginaActual = i;
+
+                    mostrarEntrenadoresPagina();
+
+                }
+            );
+
+
+            paginacion.appendChild(
+                boton
+            );
+
         }
 
 
-        // ============================================================
-        // ESCAPAR HTML (evita romper el markup con comillas / < >)
-        // ============================================================
+        const botonSiguiente =
+            document.createElement('button');
 
-        function escapeHtml(str) {
-            const div = document.createElement('div');
-            div.textContent = str ?? '';
-            return div.innerHTML;
+
+        botonSiguiente.innerHTML =
+            `<i class="fa-solid fa-chevron-right"></i>`;
+
+
+        botonSiguiente.className =
+            `w-10 h-10
+             rounded-xl
+             border border-slate-800
+             bg-[#0f172a]
+             text-slate-400
+             hover:text-white
+             hover:border-emerald-500
+             transition-all
+             disabled:opacity-30
+             disabled:cursor-not-allowed`;
+
+
+        botonSiguiente.disabled =
+            paginaActual === totalPaginas;
+
+
+        botonSiguiente.addEventListener(
+            'click',
+            () => {
+
+                if (
+                    paginaActual <
+                    totalPaginas
+                ) {
+
+                    paginaActual++;
+
+                    mostrarEntrenadoresPagina();
+
+                }
+
+            }
+        );
+
+
+        paginacion.appendChild(
+            botonSiguiente
+        );
+
+    }
+
+
+    function mostrarEntrenadoresPagina() {
+
+        const buscador =
+            normalizarTexto(
+                document.getElementById(
+                    'buscadorEntrenador'
+                ).value
+            );
+
+
+        const categoriaSeleccionada =
+            document.getElementById(
+                'filtroCategoria'
+            ).value;
+
+
+        const filtrados =
+            todosLosEntrenadores.filter(e => {
+
+                const nombre =
+                    normalizarTexto(
+                        `${e.nombre || ''} ${e.apellido || ''}`
+                    );
+
+
+                const coincideNombre =
+                    !buscador ||
+                    nombre.includes(buscador);
+
+
+                const categorias =
+                    Array.isArray(e.categorias)
+                        ? e.categorias
+                        : [];
+
+
+                const coincideCategoria =
+                    !categoriaSeleccionada ||
+                    categorias.some(c =>
+                        String(c.id) ===
+                        String(categoriaSeleccionada)
+                    );
+
+
+                return coincideNombre &&
+                       coincideCategoria;
+
+            });
+
+
+        const inicio =
+            (paginaActual - 1) *
+            ENTRENADORES_POR_PAGINA;
+
+
+        const fin =
+            inicio +
+            ENTRENADORES_POR_PAGINA;
+
+
+        const pagina =
+            filtrados.slice(
+                inicio,
+                fin
+            );
+
+
+        mostrarEntrenadores(
+            pagina,
+            filtrados.length
+        );
+
+    }
+
+
+    function mostrarEntrenadores(
+        lista,
+        totalResultados = lista.length
+    ) {
+
+        const grid =
+            document.getElementById('entrenadoresGrid');
+
+
+        grid.innerHTML = '';
+
+
+        if (totalResultados === 0) {
+
+            grid.innerHTML = `
+
+                <div class="col-span-full w-full min-h-[320px]
+                            flex items-center justify-center
+                            py-20 text-center
+                            border-2 border-dashed border-slate-800
+                            rounded-[2rem]
+                            text-slate-500 font-bold">
+
+                    No se encontraron entrenadores
+                    con esos filtros.
+
+                </div>
+
+            `;
+
+            mostrarPaginacion(0);
+
+            return;
+
         }
 
 
-        // ============================================================
-        // CARGAR ENTRENADORES
-        // ============================================================
+        lista.forEach(e => {
 
-        async function cargarEntrenadores() {
+            const nombre = e.nombre || '';
 
-            const grid = document.getElementById('entrenadoresGrid');
+            const apellido = e.apellido || '';
 
-            const token = getJwt();
+            const edad = e.edad ?? 'N/D';
 
 
-            if (!token) {
+            const inicialNombre =
+                nombre.charAt(0).toUpperCase();
 
-                grid.innerHTML = `
-                    <div class="col-span-full py-20 text-center
-                                border-2 border-dashed border-slate-800
-                                rounded-[2rem]">
+            const inicialApellido =
+                apellido.charAt(0).toUpperCase();
 
-                        <p class="text-red-500 font-bold">
-                            Sesión expirada.
-                        </p>
+
+            const imagenEntrenador =
+                e.imagenEntrenador || null;
+
+
+            /* CATEGORÍAS DEL ENTRENADOR */
+
+            const categorias =
+                Array.isArray(e.categorias)
+                    ? e.categorias
+                    : [];
+
+
+            const categoriasHtml =
+                categorias.length > 0
+
+                    ? categorias.map(c => `
+
+                        <span class="px-2.5 py-1
+                                     rounded-lg
+                                     bg-emerald-500/10
+                                     border border-emerald-500/20
+                                     text-emerald-400
+                                     text-[10px]
+                                     font-black
+                                     uppercase
+                                     tracking-wide">
+
+                            ${escapeHtml(c.nombre || 'Sin nombre')}
+
+                        </span>
+
+                      `).join('')
+
+                    : `
+
+                        <span class="text-xs
+                                     text-slate-600
+                                     font-bold">
+
+                            Sin categoría asignada
+
+                        </span>
+
+                      `;
+
+
+            const acciones = puedeEditarRol()
+
+                ? `
+
+                    <a href="/entrenadores/nuevo?id=${e.id}"
+
+                       class="w-10 h-10
+                              flex items-center
+                              justify-center
+                              rounded-xl
+                              bg-slate-800
+                              text-slate-400
+                              hover:text-white
+                              transition-all">
+
+                        <i class="fa-solid fa-pen-to-square"></i>
+
+                    </a>
+
+
+                    <button type="button"
+
+                            class="btn-eliminar
+                                   w-10 h-10
+                                   rounded-xl
+                                   bg-slate-800
+                                   text-slate-400
+                                   hover:text-red-500
+                                   transition-all"
+
+                            data-id="${e.id}"
+
+                            data-nombre="${escapeHtml(nombre + ' ' + apellido)}">
+
+                        <i class="fa-solid fa-trash"></i>
+
+                    </button>
+
+                  `
+
+                : '';
+
+
+            const card =
+                document.createElement('div');
+
+
+            card.className =
+                `w-full
+                 max-w-[310px]
+                 bg-[#0f172a]
+                 border border-slate-800
+                 p-4
+                 rounded-[1.5rem]
+                 flex flex-col
+                 items-center
+                 text-center
+                 hover:border-emerald-500/40
+                 hover:-translate-y-1
+                 transition-all
+                 duration-300
+                 group`;
+
+
+            card.innerHTML = `
+
+                ${
+                    imagenEntrenador
+
+                    ? `
+
+                        <div class="w-[170px] h-[170px]
+                                    rounded-[1.25rem]
+                                    overflow-hidden
+                                    bg-[#0a0f1d]
+                                    border-2 border-slate-700
+                                    shadow-xl
+                                    group-hover:border-emerald-500/50
+                                    group-hover:shadow-emerald-500/10
+                                    transition-all
+                                    duration-300">
+
+                            <img
+
+                                src="${escapeHtml(imagenEntrenador)}"
+
+                                alt="Foto de ${escapeHtml(nombre + ' ' + apellido)}"
+
+                                class="w-full h-full object-cover">
+
+                        </div>
+
+                      `
+
+                    : `
+
+                        <div class="w-[170px] h-[170px]
+                                    bg-emerald-500/10
+                                    rounded-[1.25rem]
+                                    border-2 border-emerald-500/20
+                                    flex items-center
+                                    justify-center
+                                    text-5xl
+                                    font-black
+                                    text-emerald-500
+                                    shadow-xl
+                                    group-hover:border-emerald-500/50
+                                    transition-all">
+
+                            ${escapeHtml(inicialNombre)}
+                            ${escapeHtml(inicialApellido)}
+
+                        </div>
+
+                      `
+                }
+
+
+                <div class="w-full mt-4">
+
+                    <h3 class="text-xl
+                               font-black
+                               text-white
+                               leading-tight">
+
+                        ${escapeHtml(nombre)}
+                        ${escapeHtml(apellido)}
+
+                    </h3>
+
+
+                    <div class="mt-2
+                                inline-flex
+                                items-center
+                                px-3
+                                py-1.5
+                                rounded-lg
+                                bg-[#0a0f1d]
+                                border border-slate-800">
+
+                        <span class="text-[9px]
+                                     text-slate-500
+                                     font-black
+                                     uppercase
+                                     tracking-widest">
+
+                            Edad
+
+                        </span>
+
+
+                        <span class="text-sm
+                                     text-emerald-500
+                                     font-black
+                                     ml-2">
+
+                            ${escapeHtml(String(edad))}
+
+                        </span>
+
+
+                        <span class="text-[9px]
+                                     text-slate-500
+                                     font-bold
+                                     ml-1">
+
+                            años
+
+                        </span>
 
                     </div>
-                `;
-
-                return;
-            }
 
 
-            try {
+                    <!-- CATEGORÍAS -->
 
-                const res = await fetch('/api/entrenadores', {
+                    <div class="mt-3 w-full">
+
+                        <p class="text-[9px]
+                                  text-slate-500
+                                  font-black
+                                  uppercase
+                                  tracking-widest
+                                  mb-2">
+
+                            Categorías
+
+                        </p>
+
+
+                        <div class="flex flex-wrap
+                                    justify-center
+                                    gap-1.5">
+
+                            ${categoriasHtml}
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                ${
+                    puedeEditarRol()
+
+                    ? `
+
+                        <div class="flex
+                                    gap-2
+                                    mt-4
+                                    pt-3
+                                    border-t
+                                    border-slate-800
+                                    w-full
+                                    justify-center">
+
+                            ${acciones}
+
+                        </div>
+
+                      `
+
+                    : ''
+
+                }
+
+            `;
+
+
+            grid.appendChild(card);
+
+        });
+
+
+        grid.querySelectorAll('.btn-eliminar')
+            .forEach(btn => {
+
+                btn.addEventListener('click', () => {
+
+                    eliminarEntrenador(
+
+                        btn.dataset.id,
+
+                        btn.dataset.nombre
+
+                    );
+
+                });
+
+            });
+
+
+        mostrarPaginacion(
+            totalResultados
+        );
+
+    }
+
+
+    function aplicarFiltros() {
+
+        paginaActual = 1;
+
+        mostrarEntrenadoresPagina();
+
+    }
+
+
+    async function cargarEntrenadores() {
+
+        const grid =
+            document.getElementById(
+                'entrenadoresGrid'
+            );
+
+
+        const token = getJwt();
+
+
+        if (!token) {
+
+            grid.innerHTML = `
+
+                <div class="col-span-full py-20 text-center
+                            border-2 border-dashed border-slate-800
+                            rounded-[2rem]">
+
+                    <p class="text-red-500 font-bold">
+                        Sesión expirada.
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
+
+        }
+
+
+        try {
+
+            const res = await fetch(
+                '/api/entrenadores',
+                {
 
                     method: 'GET',
 
                     headers: {
-                        'Authorization': 'Bearer ' + token,
-                        'Accept': 'application/json'
+
+                        'Authorization':
+                            'Bearer ' + token,
+
+                        'Accept':
+                            'application/json'
+
                     }
 
-                });
-
-
-                // ----------------------------------------------------
-                // ERROR HTTP
-                // ----------------------------------------------------
-
-                if (!res.ok) {
-
-                    if (res.status === 401 || res.status === 403) {
-
-                        grid.innerHTML = `
-                            <div class="col-span-full py-20 text-center">
-
-                                <p class="text-red-500 font-bold">
-                                    No tenés permisos para ver los entrenadores.
-                                </p>
-
-                            </div>
-                        `;
-
-                        return;
-                    }
-
-                    const errText = await res.text();
-                    console.error('Respuesta con error:', res.status, errText);
-
-                    throw new Error(
-                        'Error HTTP ' + res.status
-                    );
                 }
+            );
 
 
-                // ----------------------------------------------------
-                // RESPUESTA
-                // ----------------------------------------------------
+            if (!res.ok) {
 
-                const data = await res.json();
-                console.log('Respuesta cruda de /api/entrenadores:', data);
-
-                // Soporta tanto array directo como respuesta paginada { content: [...] }
-                let entrenadores = [];
-                if (Array.isArray(data)) {
-                    entrenadores = data;
-                } else if (data && Array.isArray(data.content)) {
-                    entrenadores = data.content;
-                } else if (data && typeof data === 'object') {
-                    entrenadores = [data];
-                }
-
-
-                grid.innerHTML = '';
-
-
-                // ----------------------------------------------------
-                // SIN ENTRENADORES
-                // ----------------------------------------------------
-
-                if (entrenadores.length === 0) {
+                if (
+                    res.status === 401 ||
+                    res.status === 403
+                ) {
 
                     grid.innerHTML = `
-                        <div class="col-span-full py-20 text-center
-                                    border-2 border-dashed border-slate-800
-                                    rounded-[2rem]
-                                    text-slate-500 font-bold">
 
-                            No hay entrenadores registrados.
+                        <div class="col-span-full py-20 text-center">
 
-                        </div>
-                    `;
+                            <p class="text-red-500 font-bold">
 
-                    return;
-                }
-
-
-                // ----------------------------------------------------
-                // MOSTRAR ENTRENADORES
-                // ----------------------------------------------------
-
-                entrenadores.forEach(e => {
-
-                    const nombre = e.nombre || '';
-                    const apellido = e.apellido || '';
-                    const edad = e.edad ?? 'N/D';
-
-                    const inicialNombre =
-                        nombre.charAt(0).toUpperCase();
-
-                    const inicialApellido =
-                        apellido.charAt(0).toUpperCase();
-
-                    const card = document.createElement('div');
-                    card.className = `bg-[#0f172a]
-                                       border border-slate-800
-                                       p-6 rounded-[2rem]
-                                       flex items-center gap-6
-                                       hover:border-emerald-500/30
-                                       transition-all group`;
-
-                    card.innerHTML = `
-
-                        <!-- AVATAR -->
-
-                        <div class="w-20 h-20
-                                    bg-emerald-500/10
-                                    rounded-full
-                                    border-2 border-emerald-500/20
-                                    flex items-center justify-center
-                                    text-2xl font-black
-                                    text-emerald-500
-                                    shadow-lg
-                                    shadow-emerald-500/5">
-
-                            ${escapeHtml(inicialNombre)}${escapeHtml(inicialApellido)}
-
-                        </div>
-
-
-                        <!-- INFORMACIÓN -->
-
-                        <div class="flex-1">
-
-                            <h3 class="text-xl font-black
-                                       text-white leading-tight">
-
-                                ${escapeHtml(nombre)} ${escapeHtml(apellido)}
-
-                            </h3>
-
-
-                            <p class="text-xs text-slate-500
-                                      font-bold uppercase
-                                      tracking-widest mt-1">
-
-                                Edad: ${escapeHtml(String(edad))} años
+                                No tenés permisos para ver
+                                los entrenadores.
 
                             </p>
 
                         </div>
 
-
-                        <!-- ACCIONES -->
-
-                        <div class="flex flex-col gap-2">
-
-
-                            <!-- EDITAR -->
-
-                            <a href="/entrenadores/nuevo?id=${e.id}"
-                               class="w-10 h-10
-                                      flex items-center justify-center
-                                      rounded-xl bg-slate-800
-                                      text-slate-400
-                                      hover:text-white
-                                      transition-all">
-
-                                <i class="fa-solid fa-pen-to-square"></i>
-
-                            </a>
-
-
-                            <!-- ELIMINAR -->
-
-                            <button type="button"
-                                    class="btn-eliminar w-10 h-10
-                                           rounded-xl bg-slate-800
-                                           text-slate-400
-                                           hover:text-red-500
-                                           transition-all"
-                                    data-id="${e.id}"
-                                    data-nombre="${escapeHtml(nombre + ' ' + apellido)}">
-
-                                <i class="fa-solid fa-trash"></i>
-
-                            </button>
-
-                        </div>
-
                     `;
 
-                    grid.appendChild(card);
-
-                });
-
-                // Delegación de eventos para los botones "eliminar"
-                // (evita romper el onclick si el nombre tiene comillas, ej: O'Connor)
-                grid.querySelectorAll('.btn-eliminar').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        eliminarEntrenador(btn.dataset.id, btn.dataset.nombre);
-                    });
-                });
-
-            } catch (error) {
-
-                console.error(
-                    'Error al cargar entrenadores:',
-                    error
-                );
-
-                grid.innerHTML = `
-                    <div class="col-span-full py-20 text-center">
-
-                        <p class="text-red-500 font-bold">
-                            Error al cargar los entrenadores.
-                        </p>
-
-                    </div>
-                `;
-            }
-        }
-
-
-        // ============================================================
-        // ELIMINAR ENTRENADOR
-        // ============================================================
-
-        async function eliminarEntrenador(id, nombre) {
-
-            if (!confirm(`¿Eliminar a ${nombre}?`)) {
-                return;
-            }
-
-
-            const token = getJwt();
-
-
-            if (!token) {
-
-                alert("Sesión expirada.");
-
-                window.location.href = "/login";
-
-                return;
-            }
-
-
-            try {
-
-                const res = await fetch(
-                    `/api/entrenadores/${id}`,
-                    {
-                        method: 'DELETE',
-
-                        headers: {
-                            'Authorization': 'Bearer ' + token
-                        }
-                    }
-                );
-
-
-                if (res.ok) {
-
-                    // Volvemos a cargar la lista
-                    cargarEntrenadores();
-
-                } else {
-
-                    alert("No se pudo eliminar el entrenador.");
+                    return;
 
                 }
 
-            } catch (error) {
+
+                const errText =
+                    await res.text();
+
 
                 console.error(
-                    "Error eliminando entrenador:",
-                    error
+                    'Respuesta con error:',
+                    res.status,
+                    errText
                 );
 
-                alert("Error de conexión.");
+
+                throw new Error(
+                    'Error HTTP ' + res.status
+                );
 
             }
+
+
+            const data =
+                await res.json();
+
+
+            console.log(
+                'Respuesta cruda de /api/entrenadores:',
+                data
+            );
+
+
+            let entrenadores = [];
+
+
+            if (Array.isArray(data)) {
+
+                entrenadores = data;
+
+            } else if (
+                data &&
+                Array.isArray(data.content)
+            ) {
+
+                entrenadores = data.content;
+
+            } else if (
+                data &&
+                typeof data === 'object'
+            ) {
+
+                entrenadores = [data];
+
+            }
+
+
+            todosLosEntrenadores =
+                entrenadores;
+
+
+            if (todosLosEntrenadores.length === 0) {
+
+                grid.innerHTML = `
+
+                    <div class="col-span-full w-full min-h-[320px]
+                                flex items-center justify-center
+                                py-20 text-center
+                                border-2 border-dashed border-slate-800
+                                rounded-[2rem]
+                                text-slate-500 font-bold">
+
+                        No hay entrenadores registrados.
+
+                    </div>
+
+                `;
+
+                return;
+
+            }
+
+
+            cargarOpcionesCategorias();
+
+            paginaActual = 1;
+
+            mostrarEntrenadoresPagina();
+
+
+        } catch (error) {
+
+            console.error(
+                'Error al cargar entrenadores:',
+                error
+            );
+
+
+            grid.innerHTML = `
+
+                <div class="col-span-full py-20 text-center">
+
+                    <p class="text-red-500 font-bold">
+
+                        Error al cargar los entrenadores.
+
+                    </p>
+
+                </div>
+
+            `;
+
+        }
+
+    }
+
+
+    async function eliminarEntrenador(
+        id,
+        nombre
+    ) {
+
+        if (
+            !confirm(
+                `¿Eliminar a ${nombre}?`
+            )
+        ) {
+
+            return;
 
         }
 
 
-        // ============================================================
-        // INICIAR
-        // ============================================================
+        const token = getJwt();
 
-        document.addEventListener(
-            'DOMContentLoaded',
-            function () {
-                cargarEntrenadores();
+
+        if (!token) {
+
+            alert("Sesión expirada.");
+
+            window.location.href = "/login";
+
+            return;
+
+        }
+
+
+        try {
+
+            const res = await fetch(
+                `/api/entrenadores/${id}`,
+                {
+
+                    method: 'DELETE',
+
+                    headers: {
+
+                        'Authorization':
+                            'Bearer ' + token
+
+                    }
+
+                }
+            );
+
+
+            if (
+                res.status === 401 ||
+                res.status === 403
+            ) {
+
+                alert(
+                    "No tenés permisos para eliminar entrenadores."
+                );
+
+                return;
+
             }
-        );
 
-    </script>
+
+            if (res.ok) {
+
+                cargarEntrenadores();
+
+            } else {
+
+                alert(
+                    "No se pudo eliminar el entrenador."
+                );
+
+            }
+
+
+        } catch (error) {
+
+            console.error(
+                "Error eliminando entrenador:",
+                error
+            );
+
+            alert(
+                "Error de conexión."
+            );
+
+        }
+
+    }
+
+
+    document.addEventListener(
+        'DOMContentLoaded',
+        function () {
+
+            document
+                .getElementById(
+                    'buscadorEntrenador'
+                )
+                .addEventListener(
+                    'input',
+                    aplicarFiltros
+                );
+
+
+            document
+                .getElementById(
+                    'filtroCategoria'
+                )
+                .addEventListener(
+                    'change',
+                    aplicarFiltros
+                );
+
+
+            cargarEntrenadores();
+
+        }
+    );
+
+</script>
 
 </div>
 

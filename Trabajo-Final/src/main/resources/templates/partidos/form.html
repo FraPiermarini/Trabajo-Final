@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org"
@@ -323,6 +324,116 @@
                 </select>
 
             </div>
+
+
+
+            <!-- ESCUDO DEL RIVAL -->
+            <div class="md:col-span-2">
+                <div class="bg-[#0a0f1d]
+                border border-slate-800
+                rounded-2xl p-6">
+
+            <div class="flex items-center gap-3 mb-5">
+
+            <div class="w-10 h-10 rounded-xl
+                        bg-emerald-500/10
+                        flex items-center justify-center
+                        text-emerald-500">
+
+                <i class="fa-solid fa-shield-halved"></i>
+
+            </div>
+
+            <div>
+
+                <h3 class="text-sm font-black text-white
+                           uppercase italic">
+                    Escudo del rival
+                </h3>
+
+                <p class="text-[10px] text-slate-600
+                          font-bold uppercase tracking-widest mt-1">
+                    Imagen del equipo rival
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="flex flex-col sm:flex-row
+                    items-center gap-6">
+
+            <!-- PREVIEW -->
+            <div id="imagePreviewContainer"
+                 class="relative w-32 h-32
+                        border-2 border-dashed
+                        border-slate-700
+                        rounded-2xl
+                        flex items-center justify-center
+                        overflow-hidden
+                        bg-[#0f172a]
+                        shrink-0">
+
+                <img id="imagePreview"
+                     src=""
+                     class="hidden w-full h-full object-contain p-3">
+
+                <div id="imagePlaceholder"
+                     class="text-center">
+
+                    <i class="fa-solid fa-shield-halved
+                              text-3xl text-slate-700"></i>
+
+                    <p class="text-[9px] text-slate-600
+                              font-black uppercase
+                              tracking-widest mt-2">
+                        Sin escudo
+                    </p>
+
+                </div>
+
+            </div>
+
+            <div class="flex-1 w-full">
+
+                <!-- SELECTOR DE IMAGEN -->
+                <input type="file"
+                       id="imagenRivalInput"
+                       accept="image/*"
+                       class="hidden">
+
+                <!-- BOTÓN PARA AGREGAR IMAGEN -->
+                <button type="button"
+                        onclick="document.getElementById('imagenRivalInput').click()"
+                        class="w-full sm:w-auto
+                               bg-emerald-500/10
+                               hover:bg-emerald-500
+                               text-emerald-500
+                               hover:text-slate-900
+                               border border-emerald-500/20
+                               px-6 py-3 rounded-xl
+                               font-black text-xs
+                               uppercase tracking-widest
+                               transition-all">
+
+                    <i class="fa-solid fa-upload mr-2"></i>
+
+                    Seleccionar escudo
+
+                </button>
+
+                <p class="text-[10px] text-slate-600 mt-3">
+                    JPG, PNG o WEBP
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
 
         </div>
 
@@ -888,6 +999,19 @@
             }
 
 
+            // =================================================
+            // IMAGEN DEL RIVAL
+            // =================================================
+
+            if (partido.imagenRival) {
+
+                mostrarPreview(
+                    partido.imagenRival
+                );
+
+            }
+
+
             document.getElementById('formTitle').innerText =
                 "Editar Partido";
 
@@ -909,6 +1033,79 @@
             );
 
         }
+
+    }
+
+
+    // =========================================================
+    // PREVIEW IMAGEN RIVAL
+    // =========================================================
+
+    document.getElementById(
+        'imagenRivalInput'
+    ).addEventListener(
+        'change',
+        function (e) {
+
+            const file =
+                e.target.files[0];
+
+
+            if (!file) {
+                return;
+            }
+
+
+            if (!file.type.startsWith('image/')) {
+
+                alert(
+                    "Seleccioná una imagen válida."
+                );
+
+                this.value = '';
+
+                return;
+            }
+
+
+            mostrarPreview(
+                URL.createObjectURL(file)
+            );
+
+        }
+    );
+
+
+    // =========================================================
+    // MOSTRAR PREVIEW
+    // =========================================================
+
+    function mostrarPreview(url) {
+
+        const image =
+            document.getElementById(
+                'imagePreview'
+            );
+
+
+        const placeholder =
+            document.getElementById(
+                'imagePlaceholder'
+            );
+
+
+        image.src =
+            url;
+
+
+        image.classList.remove(
+            'hidden'
+        );
+
+
+        placeholder.classList.add(
+            'hidden'
+        );
 
     }
 
@@ -1261,6 +1458,110 @@
                     }
 
 
+                    // =================================================
+                    // PARTIDO GUARDADO
+                    // =================================================
+
+                    const savedPartido =
+                        await res.json();
+
+
+                    console.log(
+                        "Partido guardado:",
+                        savedPartido
+                    );
+
+
+                    // =================================================
+                    // SUBIR ESCUDO DEL RIVAL
+                    // =================================================
+
+                    const imagenFile =
+                        document.getElementById(
+                            'imagenRivalInput'
+                        ).files[0];
+
+
+                    if (imagenFile) {
+
+                        const formData =
+                            new FormData();
+
+
+                        formData.append(
+                            'imagen',
+                            imagenFile
+                        );
+
+
+                        const imagenRes =
+                            await fetch(
+                                `/api/partidos/${savedPartido.id}/imagenRival`,
+                                {
+
+                                    method: 'POST',
+
+                                    headers: {
+
+                                        'Authorization':
+                                            'Bearer ' + token
+
+                                    },
+
+                                    body:
+                                        formData
+
+                                }
+                            );
+
+
+                        if (!imagenRes.ok) {
+
+                            let mensajeImagen =
+                                "El partido se guardó, pero no se pudo subir el escudo del rival.";
+
+
+                            try {
+
+                                const errorImagen =
+                                    await imagenRes.json();
+
+
+                                if (
+                                    errorImagen.mensaje
+                                ) {
+
+                                    mensajeImagen =
+                                        errorImagen.mensaje;
+
+                                } else if (
+                                    errorImagen.message
+                                ) {
+
+                                    mensajeImagen =
+                                        errorImagen.message;
+
+                                }
+
+                            } catch (_) {
+
+                                // No hacemos nada.
+                            }
+
+
+                            throw new Error(
+                                mensajeImagen
+                            );
+
+                        }
+
+                    }
+
+
+                    // =================================================
+                    // ÉXITO
+                    // =================================================
+
                     alert(
                         id
                             ? "Partido actualizado correctamente."
@@ -1308,3 +1609,4 @@
 
 </body>
 </html>
+```

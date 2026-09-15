@@ -1,3 +1,4 @@
+```html
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: mainLayout(~{::#content})}"
@@ -17,9 +18,9 @@
 
     <!-- HEADER -->
     <div class="flex items-center gap-4 mb-10">
-        <a th:href="@{/entrenadores}" class="w-11 h-11 flex items-center justify-center
-                  bg-[#0f172a] border border-slate-800 rounded-xl
-                  text-slate-400 hover:text-emerald-500
+        <a th:href="@{/entrenadores}" class="w-11 h-11 flex items-center justify-center 
+                  bg-[#0f172a] border border-slate-800 rounded-xl 
+                  text-slate-400 hover:text-emerald-500 
                   hover:border-emerald-500/30 transition-all">
             <i class="fa-solid fa-arrow-left"></i>
         </a>
@@ -38,129 +39,406 @@
         <input type="hidden" id="entrenadorId">
 
         <div class="bg-[#0f172a] border border-slate-800 rounded-[2.5rem] p-8">
+
             <!-- CAMPOS -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
                 <div class="space-y-2">
-                    <label for="nombre" class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Nombre</label>
+                    <label for="nombre" class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
+                        Nombre
+                    </label>
                     <input type="text" id="nombre" required
                            class="w-full bg-[#0a0f1d] border border-slate-800 text-slate-200 px-5 py-4 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
                            placeholder="Ej: Juan">
                 </div>
+
                 <div class="space-y-2">
-                    <label for="apellido" class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Apellido</label>
+                    <label for="apellido" class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
+                        Apellido
+                    </label>
                     <input type="text" id="apellido" required
                            class="w-full bg-[#0a0f1d] border border-slate-800 text-slate-200 px-5 py-4 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
                            placeholder="Ej: Pérez">
                 </div>
+
                 <div class="space-y-2 md:col-span-2">
-                    <label for="edad" class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">Edad</label>
+                    <label for="edad" class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
+                        Edad
+                    </label>
                     <input type="number" id="edad" required min="18"
                            class="w-full bg-[#0a0f1d] border border-slate-800 text-slate-200 px-5 py-4 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
                            placeholder="Ej: 35">
                 </div>
+
+                <!-- IMAGEN ENTRENADOR -->
+                <div class="space-y-3 md:col-span-2">
+
+                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
+                        Foto del entrenador
+                    </label>
+
+                    <div class="flex flex-col items-center justify-center
+                                bg-[#0a0f1d]
+                                border border-slate-800
+                                rounded-2xl
+                                p-6">
+
+                        <!-- PREVIEW -->
+                        <div id="imagenPreviewContainer"
+                             class="w-32 h-32 mb-4
+                                    bg-slate-800
+                                    rounded-full
+                                    flex items-center justify-center
+                                    overflow-hidden
+                                    border border-slate-700">
+
+                            <div id="imagenPlaceholder"
+                                 class="text-slate-600 text-4xl">
+                                <i class="fa-solid fa-user"></i>
+                            </div>
+
+                            <img id="imagenPreview"
+                                 src=""
+                                 alt="Vista previa"
+                                 class="hidden w-full h-full object-cover">
+                        </div>
+
+                        <input type="file"
+                               id="imagenEntrenadorInput"
+                               accept="image/*"
+                               class="hidden">
+
+                        <button type="button"
+                                onclick="document.getElementById('imagenEntrenadorInput').click()"
+                                class="px-5 py-3
+                                       rounded-xl
+                                       bg-slate-800
+                                       hover:bg-slate-700
+                                       text-slate-200
+                                       font-bold
+                                       text-sm
+                                       transition-all">
+
+                            <i class="fa-solid fa-camera mr-2"></i>
+                            Seleccionar imagen
+                        </button>
+
+                        <p class="text-[10px] text-slate-600 font-bold uppercase tracking-wider mt-3">
+                            JPG, PNG o WEBP
+                        </p>
+
+                    </div>
+                </div>
+
             </div>
 
             <!-- BOTONES -->
             <div class="flex justify-end gap-3 mt-8 pt-8 border-t border-slate-800">
-                <a th:href="@{/entrenadores}" class="px-6 py-3 rounded-xl border border-slate-800 bg-[#0a0f1d] text-slate-400 hover:text-white font-bold transition-all">
+
+                <a th:href="@{/entrenadores}"
+                   class="px-6 py-3 rounded-xl border border-slate-800 bg-[#0a0f1d] text-slate-400 hover:text-white font-bold transition-all">
                     Cancelar
                 </a>
-                <button type="submit" id="submitButton"
+
+                <button type="submit"
+                        id="submitButton"
                         class="px-8 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-black uppercase text-xs tracking-widest shadow-lg shadow-emerald-500/20 transition-all">
-                    <i class="fa-solid fa-floppy-disk mr-2"></i> Guardar entrenador
+
+                    <i class="fa-solid fa-floppy-disk mr-2"></i>
+                    Guardar entrenador
+
                 </button>
+
             </div>
+
         </div>
     </form>
 
 <script>
+
     function getJwt() {
         const cookie = document.cookie.split('; ').find(row => row.startsWith('token='));
         return cookie ? cookie.split('=')[1] : null;
     }
 
+    /* ============================================================
+       IMAGEN - VISTA PREVIA
+       ============================================================ */
+
+    let imagenEntrenadorSeleccionada = null;
+
+    document.getElementById('imagenEntrenadorInput').addEventListener('change', function(e) {
+
+        const archivo = e.target.files[0];
+
+        if (!archivo) {
+            return;
+        }
+
+        if (!archivo.type.startsWith('image/')) {
+            alert("Seleccioná una imagen válida.");
+            this.value = "";
+            return;
+        }
+
+        imagenEntrenadorSeleccionada = archivo;
+
+        const reader = new FileReader();
+
+        reader.onload = function(event) {
+
+            const preview = document.getElementById('imagenPreview');
+            const placeholder = document.getElementById('imagenPlaceholder');
+
+            preview.src = event.target.result;
+            preview.classList.remove('hidden');
+
+            placeholder.classList.add('hidden');
+        };
+
+        reader.readAsDataURL(archivo);
+    });
+
+
+    /* ============================================================
+       CARGAR ENTRENADOR PARA EDITAR
+       ============================================================ */
+
     async function cargarEntrenador(id) {
+
         const token = getJwt();
+
         try {
+
             const res = await fetch(`/api/entrenadores/${id}`, {
-                headers: { 'Authorization': `Bearer ${token}` }
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
             });
-            if (!res.ok) throw new Error("No se pudo obtener el entrenador.");
+
+            if (!res.ok) {
+                throw new Error("No se pudo obtener el entrenador.");
+            }
+
             const e = await res.json();
+
             document.getElementById('entrenadorId').value = e.id;
             document.getElementById('nombre').value = e.nombre;
             document.getElementById('apellido').value = e.apellido;
             document.getElementById('edad').value = e.edad;
+
+            /* CARGAR IMAGEN EXISTENTE */
+            if (e.imagen) {
+
+                const preview = document.getElementById('imagenPreview');
+                const placeholder = document.getElementById('imagenPlaceholder');
+
+                preview.src = e.imagen;
+                preview.classList.remove('hidden');
+
+                placeholder.classList.add('hidden');
+            }
+
             document.getElementById('formTitle').innerText = "Editar Entrenador";
-            document.getElementById('submitButton').innerHTML = '<i class="fa-solid fa-pen mr-2"></i> Actualizar entrenador';
+
+            document.getElementById('submitButton').innerHTML =
+                '<i class="fa-solid fa-pen mr-2"></i> Actualizar entrenador';
+
         } catch (error) {
+
             console.error("Error cargando:", error);
+
         }
     }
 
+
     document.addEventListener('DOMContentLoaded', () => {
+
         const params = new URLSearchParams(window.location.search);
         const id = params.get('id');
-        if (id) cargarEntrenador(id);
+
+        if (id) {
+            cargarEntrenador(id);
+        }
+
     });
 
+
+    /* ============================================================
+       GUARDAR / ACTUALIZAR ENTRENADOR
+       ============================================================ */
+
     document.getElementById('entrenadorForm').onsubmit = async function(e) {
+
         e.preventDefault();
 
         const token = getJwt();
+
         if (!token) {
+
             alert("Sesión expirada.");
             window.location.href = "/login";
+
             return;
         }
 
         const id = document.getElementById('entrenadorId').value;
+
         const edad = parseInt(document.getElementById('edad').value);
+
         if (isNaN(edad)) {
+
             alert("Edad inválida");
+
             return;
         }
 
         const entrenadorData = {
+
             nombre: document.getElementById('nombre').value.trim(),
+
             apellido: document.getElementById('apellido').value.trim(),
+
             edad: edad
+
         };
 
         console.log("Enviando JSON:", entrenadorData);
 
         const boton = document.getElementById('submitButton');
+
         boton.disabled = true;
-        boton.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Guardando...';
+
+        boton.innerHTML =
+            '<i class="fa-solid fa-spinner fa-spin mr-2"></i> Guardando...';
+
 
         try {
-            const url = id ? `/api/entrenadores/${id}` : '/api/entrenadores';
-            const method = id ? 'PUT' : 'POST';
+
+            const url = id
+                ? `/api/entrenadores/${id}`
+                : '/api/entrenadores';
+
+            const method = id
+                ? 'PUT'
+                : 'POST';
+
 
             const res = await fetch(url, {
+
                 method: method,
+
                 headers: {
+
                     'Content-Type': 'application/json',
+
                     'Authorization': `Bearer ${token}`
+
                 },
+
                 body: JSON.stringify(entrenadorData)
+
             });
 
+
             if (res.ok) {
+
+                /* OBTENER ENTRENADOR GUARDADO */
+                const entrenadorGuardado = await res.json();
+
+                /*
+                 * SUBIR IMAGEN SOLO SI SELECCIONÓ UNA.
+                 * Se hace después de crear/actualizar porque
+                 * necesitamos el ID del entrenador.
+                 */
+
+                if (imagenEntrenadorSeleccionada) {
+
+                    const entrenadorId = entrenadorGuardado.id;
+
+                    const formData = new FormData();
+
+                    formData.append(
+                        'imagen',
+                        imagenEntrenadorSeleccionada
+                    );
+
+
+                    const imagenRes = await fetch(
+                        `/api/entrenadores/${entrenadorId}/imagenEntrenador`,
+                        {
+
+                            method: 'POST',
+
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            },
+
+                            body: formData
+
+                        }
+                    );
+
+
+                    if (!imagenRes.ok) {
+
+                        console.error(
+                            "El entrenador se guardó, pero la imagen no pudo subirse."
+                        );
+
+                        alert(
+                            "Entrenador guardado, pero hubo un error al subir la imagen."
+                        );
+
+                        window.location.href = "/entrenadores";
+
+                        return;
+                    }
+                }
+
+
                 alert("Guardado correctamente");
+
                 window.location.href = "/entrenadores";
+
+
             } else {
+
                 const errorText = await res.text();
-                console.error("Error del servidor:", errorText);
-                throw new Error("Error al guardar (status " + res.status + ")");
+
+                console.error(
+                    "Error del servidor:",
+                    errorText
+                );
+
+                throw new Error(
+                    "Error al guardar (status " +
+                    res.status +
+                    ")"
+                );
+
             }
+
         } catch (error) {
+
             console.error("Error:", error);
-            alert("Error al guardar: " + error.message);
+
+            alert(
+                "Error al guardar: " +
+                error.message
+            );
+
             boton.disabled = false;
-            boton.innerHTML = '<i class="fa-solid fa-floppy-disk mr-2"></i> Guardar entrenador';
+
+            boton.innerHTML =
+                '<i class="fa-solid fa-floppy-disk mr-2"></i> Guardar entrenador';
+
         }
+
     };
+
 </script>
+
 </body>
 </html>
+

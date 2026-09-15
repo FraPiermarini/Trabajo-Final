@@ -1,44 +1,660 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" lang="es">
+
 <head>
+
     <meta charset="UTF-8">
-    <title>Login | Club Manager</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Iniciar sesión | Complejo Deportivo</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+    <link
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+        rel="stylesheet">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* =====================================================
+           AUTOCOMPLETADO CHROME
+           Evita que los datos guardados aparezcan con fondo blanco
+           ===================================================== */
+
+        input:-webkit-autofill,
+        input:-webkit-autofill:hover,
+        input:-webkit-autofill:focus,
+        input:-webkit-autofill:active {
+
+            -webkit-box-shadow:
+                0 0 0 1000px #0a0f1d inset !important;
+
+            -webkit-text-fill-color:
+                #ffffff !important;
+
+            caret-color:
+                #ffffff !important;
+
+            transition:
+                background-color 9999s ease-in-out 0s;
+
+        }
+
+        input {
+            color: #ffffff !important;
+        }
+
+        input::placeholder {
+            color: #64748b;
+        }
+
+        /* =====================================================
+           ANIMACIONES
+           ===================================================== */
+
+        .contenedor {
+            animation: aparecer 0.6s ease-out;
+        }
+
+        .imagen {
+            animation: aparecerImagen 0.8s ease-out;
+        }
+
+        @keyframes aparecer {
+
+            from {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        }
+
+        @keyframes aparecerImagen {
+
+            from {
+                opacity: 0;
+                transform: scale(1.02);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+        }
+
+        /* =====================================================
+           CAMPOS
+           ===================================================== */
+
+        .campo {
+            transition: all 0.2s ease;
+        }
+
+        .campo:focus-within {
+
+            border-color: #10b981;
+
+            box-shadow:
+                0 0 0 3px rgba(16, 185, 129, 0.10);
+
+        }
+
+        /* =====================================================
+           BOTÓN
+           ===================================================== */
+
+        .boton {
+            transition: all 0.2s ease;
+        }
+
+        .boton:hover {
+
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 8px 22px rgba(16, 185, 129, 0.20);
+
+        }
+
+        /* =====================================================
+           DETALLE DE IDENTIDAD
+           ===================================================== */
+
+        .detalle-verde {
+
+            width: 42px;
+            height: 3px;
+
+            background: #10b981;
+
+            border-radius: 999px;
+
+        }
+
+        /* =====================================================
+           IMAGEN DEL CLUB
+           ===================================================== */
+
+        .imagen-club {
+
+            width: 100%;
+            height: 100%;
+
+            object-fit: contain;
+
+            /*
+             * La imagen original posee franjas negras arriba
+             * y abajo. El zoom permite eliminarlas visualmente
+             * manteniendo el contenido principal del club.
+             */
+
+            transform: scale(1.24);
+
+            transition:
+                transform 0.5s ease;
+
+        }
+
+        .imagen:hover .imagen-club {
+
+            transform: scale(1.27);
+
+        }
+
+    </style>
+
 </head>
-<body class="bg-slate-900 flex items-center justify-center min-h-screen">
-    <div class="bg-white rounded-2xl shadow-2xl flex max-w-4xl w-full m-4 overflow-hidden">
-        <div class="hidden md:block w-1/2 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=600&q=80');"></div>
-        <div class="w-full md:w-1/2 p-10">
-            <h1 class="text-2xl font-bold mb-6 text-slate-800 text-center">Acceso al Sistema</h1>
-            <div id="error" class="hidden p-3 mb-4 bg-red-100 text-red-700 rounded-lg text-sm"></div>
-            <form id="loginForm" class="space-y-4">
-                <input type="email" id="email" placeholder="Email" required class="w-full p-3 border rounded-lg outline-blue-500">
-                <input type="password" id="password" placeholder="Contraseña" required class="w-full p-3 border rounded-lg outline-blue-500">
-                <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-lg font-bold hover:bg-blue-700 transition">Entrar</button>
-            </form>
-            <p class="mt-6 text-center text-sm text-slate-500">¿No tienes cuenta? <a th:href="@{/register}" class="text-blue-600 font-bold hover:underline">Regístrate</a></p>
+
+
+<body
+    class="bg-[#0a0f1d] min-h-screen flex items-center justify-center p-3 sm:p-5">
+
+
+<div
+    class="contenedor w-full max-w-4xl bg-[#0f172a] rounded-3xl overflow-hidden shadow-2xl border border-slate-800 flex"
+    style="min-height: 540px; max-height: 650px;">
+
+
+    <!-- =====================================================
+         IMAGEN DEL CLUB
+         ===================================================== -->
+
+    <div
+        class="imagen hidden md:flex md:w-[43%] bg-[#effff7] items-center justify-center overflow-hidden relative">
+
+        <div
+            class="absolute inset-0 bg-gradient-to-br from-emerald-50 via-[#effff7] to-emerald-100">
         </div>
+
+
+        <div
+            class="relative w-full h-full flex items-center justify-center overflow-hidden">
+
+            <img
+                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWlXlOYWG8jM0pMt6jn0bCGBWfYlZ046oiXjbbBoW66XHIggUw9DWIuAwV&s=10"
+                alt="Complejo Deportivo Justiniano Posse"
+                class="imagen-club">
+
+        </div>
+
+
+        <!-- Detalle inferior -->
+
+        <div
+            class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-600 via-emerald-400 to-transparent">
+        </div>
+
     </div>
 
-    <script>
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const res = await fetch('/api/auth/login', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({email: document.getElementById('email').value, password: document.getElementById('password').value})
-            });
-            if(res.ok) {
-                const data = await res.json();
-                document.cookie = `token=${data.token}; path=/; max-age=86400; SameSite=Strict`;
-                window.location.replace('/dashboard');
+
+    <!-- =====================================================
+         FORMULARIO LOGIN
+         ===================================================== -->
+
+    <div
+        class="w-full md:w-[57%] flex items-center justify-center px-7 py-7 sm:px-10 sm:py-8">
+
+        <div class="w-full max-w-sm">
+
+
+            <!-- =================================================
+                 IDENTIDAD
+                 ================================================= -->
+
+            <div class="text-center mb-6">
+
+                <div
+                    class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 mb-3">
+
+                    <i
+                        class="fa-solid fa-chart-line text-emerald-400 text-lg">
+                    </i>
+
+                </div>
+
+
+                <h1
+                    class="text-xl sm:text-2xl font-extrabold text-white">
+
+                    Sistema de Estadísticas
+
+                </h1>
+
+
+                <p
+                    class="text-emerald-400 text-sm font-semibold mt-1">
+
+                    Complejo Deportivo Justiniano Posse
+
+                </p>
+
+
+                <div class="flex justify-center mt-3">
+
+                    <div class="detalle-verde"></div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 BIENVENIDA
+                 ================================================= -->
+
+            <div class="mb-5">
+
+                <h2
+                    class="text-lg font-bold text-white">
+
+                    Bienvenido nuevamente
+
+                </h2>
+
+
+                <p
+                    class="text-xs sm:text-sm text-slate-400 mt-1">
+
+                    Accedé para consultar y gestionar las estadísticas deportivas.
+
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 ERROR
+                 ================================================= -->
+
+            <div
+                id="error"
+                class="hidden mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs sm:text-sm">
+
+                <i
+                    class="fa-solid fa-circle-exclamation mr-2">
+                </i>
+
+                <span id="errorText"></span>
+
+            </div>
+
+
+            <!-- =================================================
+                 FORMULARIO
+                 ================================================= -->
+
+            <form
+                id="loginForm"
+                class="space-y-4">
+
+
+                <!-- EMAIL -->
+
+                <div>
+
+                    <label
+                        for="email"
+                        class="block text-xs sm:text-sm font-semibold text-slate-300 mb-1.5">
+
+                        Correo electrónico
+
+                    </label>
+
+
+                    <div
+                        class="campo flex items-center bg-[#0a0f1d] border border-slate-700 rounded-xl px-3.5">
+
+                        <i
+                            class="fa-solid fa-envelope text-slate-500 mr-3 text-sm">
+                        </i>
+
+
+                        <input
+                            type="email"
+                            id="email"
+                            placeholder="ejemplo@correo.com"
+                            required
+                            autocomplete="email"
+                            class="w-full py-3 bg-transparent outline-none text-sm">
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONTRASEÑA -->
+
+                <div>
+
+                    <label
+                        for="password"
+                        class="block text-xs sm:text-sm font-semibold text-slate-300 mb-1.5">
+
+                        Contraseña
+
+                    </label>
+
+
+                    <div
+                        class="campo flex items-center bg-[#0a0f1d] border border-slate-700 rounded-xl px-3.5">
+
+                        <i
+                            class="fa-solid fa-lock text-slate-500 mr-3 text-sm">
+                        </i>
+
+
+                        <input
+                            type="password"
+                            id="password"
+                            placeholder="Ingresá tu contraseña"
+                            required
+                            autocomplete="current-password"
+                            class="w-full py-3 bg-transparent outline-none text-sm">
+
+
+                        <button
+                            type="button"
+                            id="togglePassword"
+                            class="text-slate-500 hover:text-emerald-400 transition ml-2">
+
+                            <i
+                                id="eyeIcon"
+                                class="fa-solid fa-eye text-sm">
+                            </i>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- BOTÓN -->
+
+                <button
+                    type="submit"
+                    class="boton w-full bg-emerald-500 hover:bg-emerald-600 text-white py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+
+                    <i
+                        class="fa-solid fa-right-to-bracket">
+                    </i>
+
+                    Iniciar sesión
+
+                </button>
+
+
+            </form>
+
+
+            <!-- =================================================
+                 FRASE
+                 ================================================= -->
+
+            <div
+                class="text-center mt-5">
+
+                <p
+                    class="text-xs text-slate-500 italic">
+
+                    "Datos que ayudan a tomar mejores decisiones."
+
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 REGISTRO
+                 ================================================= -->
+
+            <div
+                class="mt-5 text-center">
+
+                <p
+                    class="text-xs sm:text-sm text-slate-500">
+
+                    ¿Todavía no tenés una cuenta?
+
+                    <a
+                        th:href="@{/register}"
+                        class="text-emerald-400 font-bold hover:text-emerald-300 transition">
+
+                        Registrate
+
+                    </a>
+
+                </p>
+
+            </div>
+
+
+            <!-- =================================================
+                 FOOTER
+                 ================================================= -->
+
+            <div
+                class="mt-5 pt-4 border-t border-slate-800 text-center">
+
+                <p
+                    class="text-[10px] text-slate-600">
+
+                    © 2026 Complejo Deportivo Justiniano Posse · Sistema de Gestión Deportiva
+
+                </p>
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+    // =====================================================
+    // MOSTRAR / OCULTAR CONTRASEÑA
+    // =====================================================
+
+    document
+        .getElementById('togglePassword')
+        .addEventListener('click', () => {
+
+            const password =
+                document.getElementById('password');
+
+            const eyeIcon =
+                document.getElementById('eyeIcon');
+
+
+            if (password.type === 'password') {
+
+                password.type = 'text';
+
+                eyeIcon.classList.remove('fa-eye');
+
+                eyeIcon.classList.add('fa-eye-slash');
+
             } else {
-                const errDiv = document.getElementById('error');
-                errDiv.innerText = "Credenciales incorrectas";
-                errDiv.classList.remove('hidden');
+
+                password.type = 'password';
+
+                eyeIcon.classList.remove('fa-eye-slash');
+
+                eyeIcon.classList.add('fa-eye');
+
             }
+
         });
-    </script>
+
+
+    // =====================================================
+    // LOGIN
+    // =====================================================
+
+    document
+        .getElementById('loginForm')
+        .addEventListener('submit', async (e) => {
+
+            e.preventDefault();
+
+
+            const errorDiv =
+                document.getElementById('error');
+
+            const errorText =
+                document.getElementById('errorText');
+
+            const button =
+                e.target.querySelector(
+                    'button[type="submit"]'
+                );
+
+
+            errorDiv.classList.add('hidden');
+
+
+            const email =
+                document.getElementById('email').value;
+
+            const password =
+                document.getElementById('password').value;
+
+
+            button.disabled = true;
+
+
+            button.innerHTML = `
+                <i class="fa-solid fa-spinner fa-spin"></i>
+                Ingresando...
+            `;
+
+
+            try {
+
+                const res =
+                    await fetch(
+                        '/api/auth/login',
+                        {
+                            method: 'POST',
+
+                            headers: {
+                                'Content-Type':
+                                    'application/json'
+                            },
+
+                            body:
+                                JSON.stringify({
+                                    email: email,
+                                    password: password
+                                })
+                        }
+                    );
+
+
+                if (res.ok) {
+
+                    const data =
+                        await res.json();
+
+
+                    document.cookie =
+                        `token=${data.token}; path=/; max-age=86400; SameSite=Strict`;
+
+
+                    window.location.replace(
+                        '/dashboard'
+                    );
+
+
+                } else {
+
+                    errorText.innerText =
+                        "Credenciales incorrectas. Verificá tu email y contraseña.";
+
+
+                    errorDiv.classList.remove(
+                        'hidden'
+                    );
+
+
+                    button.disabled = false;
+
+
+                    button.innerHTML = `
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        Iniciar sesión
+                    `;
+
+                }
+
+
+            } catch (e) {
+
+                errorText.innerText =
+                    "No se pudo conectar con el servidor.";
+
+
+                errorDiv.classList.remove(
+                    'hidden'
+                );
+
+
+                button.disabled = false;
+
+
+                button.innerHTML = `
+                    <i class="fa-solid fa-right-to-bracket"></i>
+                    Iniciar sesión
+                `;
+
+            }
+
+        });
+
+</script>
+
+
 </body>
 </html>

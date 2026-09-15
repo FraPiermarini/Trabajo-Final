@@ -1,15 +1,20 @@
+```html
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:fragment="mainLayout(content)"
       lang="es">
 
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Complejo Deportivo Justiniano Posse</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+
     <script src="https://cdn.jsdelivr.net/npm/echarts@5/dist/echarts.min.js"></script>
 
     <link rel="stylesheet"
@@ -44,8 +49,8 @@
             border-radius: 10px;
         }
 
-        /* Evita que el contenido quede debajo del sidebar */
         @media (max-width: 768px) {
+
             .sidebar {
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
@@ -58,9 +63,11 @@
             .main-content {
                 margin-left: 0 !important;
             }
+
         }
 
     </style>
+
 </head>
 
 
@@ -74,7 +81,11 @@
 <aside id="sidebar"
        class="sidebar fixed inset-y-0 left-0 w-72 bg-[#0f172a] border-r border-slate-800 flex flex-col z-50">
 
+
+    <!-- ===================================================== -->
     <!-- LOGO -->
+    <!-- ===================================================== -->
+
     <div class="p-8">
 
         <div class="flex items-center gap-4">
@@ -87,7 +98,6 @@
             <div>
 
                 <h2 class="text-xl font-extrabold tracking-tighter">
-                    
                 </h2>
 
                 <p class="text-[10px] text-slate-500 font-bold uppercase tracking-widest leading-tight">
@@ -109,7 +119,9 @@
     <nav class="flex-1 px-4 space-y-1 overflow-y-auto">
 
 
-        <!-- DASHBOARD -->
+        <!-- ================================================= -->
+        <!-- INICIO -->
+        <!-- ================================================= -->
 
         <a th:href="@{/dashboard}"
            data-page="dashboard"
@@ -124,10 +136,14 @@
         </a>
 
 
+        <!-- ================================================= -->
         <!-- JUGADORES -->
+        <!-- ADMIN / ENTRENADOR / USUARIO -->
+        <!-- ================================================= -->
 
         <a th:href="@{/jugadores}"
            data-page="jugadores"
+           data-roles="ADMIN,ENTRENADOR,USUARIO"
            class="menu-item flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-xl transition-all">
 
             <i class="fa-solid fa-users w-5"></i>
@@ -139,10 +155,14 @@
         </a>
 
 
+        <!-- ================================================= -->
         <!-- CATEGORÍAS -->
+        <!-- ADMIN / ENTRENADOR / USUARIO -->
+        <!-- ================================================= -->
 
         <a th:href="@{/categorias}"
            data-page="categorias"
+           data-roles="ADMIN,ENTRENADOR,USUARIO"
            class="menu-item flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-xl transition-all">
 
             <i class="fa-solid fa-tags w-5"></i>
@@ -154,10 +174,14 @@
         </a>
 
 
+        <!-- ================================================= -->
         <!-- ENTRENADORES -->
+        <!-- ADMIN / ENTRENADOR / USUARIO -->
+        <!-- ================================================= -->
 
         <a th:href="@{/entrenadores}"
            data-page="entrenadores"
+           data-roles="ADMIN,ENTRENADOR,USUARIO"
            class="menu-item flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-xl transition-all">
 
             <i class="fa-solid fa-user-tie w-5"></i>
@@ -169,10 +193,14 @@
         </a>
 
 
+        <!-- ================================================= -->
         <!-- PARTIDOS -->
+        <!-- ADMIN / ENTRENADOR / USUARIO -->
+        <!-- ================================================= -->
 
         <a th:href="@{/partidos}"
            data-page="partidos"
+           data-roles="ADMIN,ENTRENADOR,USUARIO"
            class="menu-item flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-xl transition-all">
 
             <i class="fa-solid fa-calendar-days w-5"></i>
@@ -184,10 +212,14 @@
         </a>
 
 
+        <!-- ================================================= -->
         <!-- CAMPEONATOS -->
+        <!-- ADMIN / ENTRENADOR / USUARIO -->
+        <!-- ================================================= -->
 
         <a th:href="@{/campeonatos}"
            data-page="campeonatos"
+           data-roles="ADMIN,ENTRENADOR,USUARIO"
            class="menu-item flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-xl transition-all">
 
             <i class="fa-solid fa-trophy w-5"></i>
@@ -199,10 +231,14 @@
         </a>
 
 
+        <!-- ================================================= -->
         <!-- ESTADÍSTICAS -->
+        <!-- ADMIN / ENTRENADOR / USUARIO -->
+        <!-- ================================================= -->
 
         <a th:href="@{/estadisticas}"
            data-page="estadisticas"
+           data-roles="ADMIN,ENTRENADOR,USUARIO"
            class="menu-item flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-xl transition-all">
 
             <i class="fa-solid fa-chart-line w-5"></i>
@@ -214,10 +250,14 @@
         </a>
 
 
+        <!-- ================================================= -->
         <!-- INCIDENCIAS -->
+        <!-- ADMIN / ENTRENADOR / USUARIO -->
+        <!-- ================================================= -->
 
         <a th:href="@{/incidencias}"
            data-page="incidencias"
+           data-roles="ADMIN,ENTRENADOR,USUARIO"
            class="menu-item flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-xl transition-all">
 
             <i class="fa-solid fa-notes-medical w-5"></i>
@@ -229,10 +269,14 @@
         </a>
 
 
+        <!-- ================================================= -->
         <!-- REPORTES -->
+        <!-- ADMIN / ENTRENADOR / USUARIO -->
+        <!-- ================================================= -->
 
         <a th:href="@{/reportes}"
            data-page="reportes"
+           data-roles="ADMIN,ENTRENADOR,USUARIO"
            class="menu-item flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-xl transition-all border-t border-slate-800 pt-4">
 
             <i class="fa-solid fa-file-contract w-5"></i>
@@ -244,10 +288,14 @@
         </a>
 
 
+        <!-- ================================================= -->
         <!-- CONFIGURACIÓN -->
+        <!-- SOLO ADMIN -->
+        <!-- ================================================= -->
 
         <a th:href="@{/configuracion}"
            data-page="configuracion"
+           data-roles="ADMIN"
            id="menuConfiguracion"
            class="menu-item flex items-center gap-4 px-4 py-3 text-slate-400 hover:text-white rounded-xl transition-all">
 
@@ -258,6 +306,7 @@
             </span>
 
         </a>
+
 
     </nav>
 
@@ -287,7 +336,9 @@
         </div>
 
 
+        <!-- ================================================= -->
         <!-- LOGOUT -->
+        <!-- ================================================= -->
 
         <button
             onclick="logout()"
@@ -325,8 +376,6 @@
         <!-- IZQUIERDA -->
 
         <div class="flex items-center gap-3">
-
-            <!-- BOTÓN MOBILE -->
 
             <button
                 onclick="toggleSidebar()"
@@ -373,10 +422,7 @@
             <div
                 class="flex items-center gap-3 pl-6 border-l border-slate-800">
 
-
                 <div class="text-right">
-
-                    <!-- EMAIL -->
 
                     <p
                         id="usuarioEmail"
@@ -386,8 +432,6 @@
 
                     </p>
 
-
-                    <!-- ROL -->
 
                     <p
                         id="usuarioRol"
@@ -419,7 +463,7 @@
 
 
     <!-- ===================================================== -->
-    <!-- CONTENIDO DE CADA PÁGINA -->
+    <!-- CONTENIDO -->
     <!-- ===================================================== -->
 
     <section class="p-10 max-w-[1600px] mx-auto w-full">
@@ -452,6 +496,98 @@
         return cookie
             ? cookie.split('=')[1]
             : null;
+
+    }
+
+
+
+    /* =========================================================
+       OBTENER ROL REAL DEL JWT
+    ========================================================= */
+
+    function obtenerRolUsuario(payload) {
+
+        let rol =
+            payload.rol ||
+            payload.role ||
+            payload.authorities ||
+            null;
+
+
+        if (Array.isArray(rol)) {
+
+            rol = rol[0];
+
+        }
+
+
+        if (!rol) {
+
+            return null;
+
+        }
+
+
+        rol = String(rol)
+            .replace("ROLE_", "")
+            .replace("Role_", "")
+            .replace("ROLE", "")
+            .trim()
+            .toUpperCase();
+
+
+        return rol;
+
+    }
+
+
+
+    /* =========================================================
+       APLICAR PERMISOS AL MENÚ
+    ========================================================= */
+
+    function aplicarPermisosMenu(rol) {
+
+        const menuItems =
+            document.querySelectorAll("[data-roles]");
+
+
+        menuItems.forEach(item => {
+
+            const rolesPermitidos =
+                item.dataset.roles
+                    .split(",")
+                    .map(r => r.trim().toUpperCase());
+
+
+            if (!rolesPermitidos.includes(rol)) {
+
+                item.style.display = "none";
+
+            } else {
+
+                item.style.display = "flex";
+
+            }
+
+        });
+
+
+        /*
+         * Inicio está disponible para todos
+         * los usuarios autenticados.
+         */
+
+        const dashboard =
+            document.querySelector('[data-page="dashboard"]');
+
+
+        if (dashboard) {
+
+            dashboard.style.display = "flex";
+
+        }
+
     }
 
 
@@ -464,32 +600,42 @@
 
         const token = getJwt();
 
+
         if (!token) {
 
             window.location.href = "/login";
 
             return;
+
         }
-
-
-        /*
-         * El login devuelve:
-         *
-         * token
-         * rol
-         * id
-         * nombre
-         *
-         * Pero el JWT también contiene el email/rol.
-         */
 
 
         try {
 
-            const payload = JSON.parse(
-                atob(token.split('.')[1])
-            );
+            const partes =
+                token.split('.');
 
+
+            if (partes.length !== 3) {
+
+                throw new Error("JWT inválido");
+
+            }
+
+
+            const payload =
+                JSON.parse(
+                    atob(
+                        partes[1]
+                            .replace(/-/g, '+')
+                            .replace(/_/g, '/')
+                    )
+                );
+
+
+            /*
+             * EMAIL
+             */
 
             const email =
                 payload.sub ||
@@ -497,84 +643,109 @@
                 "Usuario";
 
 
+            document.getElementById(
+                "usuarioEmail"
+            ).innerText = email;
+
+
+            /*
+             * ROL
+             */
+
             const rol =
-                payload.rol ||
-                payload.role ||
-                payload.authorities ||
-                "Usuario";
+                obtenerRolUsuario(payload);
 
 
-            document.getElementById("usuarioEmail").innerText =
-                email;
+            if (!rol) {
 
+                console.error(
+                    "No se encontró el rol dentro del JWT"
+                );
 
-            /*
-             * Si authorities viene como array
-             */
-
-            let rolTexto = rol;
-
-            if (Array.isArray(rol)) {
-
-                rolTexto = rol[0];
+                return;
 
             }
 
 
-            rolTexto = String(rolTexto)
-                .replace("ROLE_", "")
-                .replace("Role_", "")
-                .replace("ROLE", "")
-                .toLowerCase();
+            /*
+             * Guardamos el rol REAL.
+             *
+             * ADMIN
+             * ENTRENADOR
+             * USUARIO
+             */
+
+            window.usuarioRol = rol;
+
+
+            localStorage.setItem(
+                "rol",
+                rol
+            );
 
 
             /*
-             * Mostrar nombre amigable
+             * Texto amigable
              */
 
-            if (rolTexto === "admin") {
+            let rolTexto;
 
-                rolTexto = "Administrador";
 
-            } else if (rolTexto === "entrenador") {
+            switch (rol) {
 
-                rolTexto = "Entrenador";
+                case "ADMIN":
 
-            } else if (rolTexto === "consulta") {
+                    rolTexto = "Administrador";
 
-                rolTexto = "Consulta";
+                    break;
 
-            } else {
 
-                rolTexto =
-                    rolTexto.charAt(0).toUpperCase() +
-                    rolTexto.slice(1);
+                case "ENTRENADOR":
+
+                    rolTexto = "Entrenador";
+
+                    break;
+
+
+                case "USUARIO":
+
+                    rolTexto = "Usuario";
+
+                    break;
+
+
+                default:
+
+                    rolTexto = rol;
 
             }
 
 
-            document.getElementById("usuarioRol").innerText =
-                rolTexto;
+            document.getElementById(
+                "usuarioRol"
+            ).innerText = rolTexto;
 
 
             /*
-             * Iniciales
+             * AVATAR
              */
 
             const iniciales =
-                email.substring(0, 2).toUpperCase();
+                email
+                    .substring(0, 2)
+                    .toUpperCase();
 
 
-            document.getElementById("usuarioAvatar").innerText =
-                iniciales;
+            document.getElementById(
+                "usuarioAvatar"
+            ).innerText = iniciales;
 
 
             /*
-             * Guardamos el rol para usarlo
-             * en otras funciones.
+             * Aplicamos permisos al menú
              */
 
-            window.usuarioRol = rolTexto.toLowerCase();
+            aplicarPermisosMenu(rol);
 
 
         } catch (error) {
@@ -618,6 +789,7 @@
                     "sidebar-active"
                 );
 
+
                 item.classList.remove(
                     "text-slate-400"
                 );
@@ -628,7 +800,7 @@
 
 
         /*
-         * Título del header
+         * TÍTULOS
          */
 
         const titulos = {
@@ -656,9 +828,11 @@
         };
 
 
-        let paginaEncontrada =
+        const paginaEncontrada =
             Object.keys(titulos)
-                .find(p => path.includes("/" + p));
+                .find(
+                    p => path.includes("/" + p)
+                );
 
 
         if (paginaEncontrada) {
@@ -680,21 +854,14 @@
 
     function logout() {
 
-        /*
-         * Eliminamos JWT
-         */
-
         document.cookie =
             "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 
 
-        /*
-         * También limpiamos posibles datos
-         * guardados en localStorage.
-         */
-
         localStorage.removeItem("token");
+
         localStorage.removeItem("rol");
+
         localStorage.removeItem("usuario");
 
 
@@ -740,4 +907,6 @@
 
 
 </body>
+
 </html>
+```

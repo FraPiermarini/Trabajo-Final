@@ -1,8 +1,11 @@
 package com.example.Trabajo.Final.feature.Partido.Services;
 
+import java.io.IOException;
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.Trabajo.Final.feature.Campeonato.Models.Campeonato;
 import com.example.Trabajo.Final.feature.Campeonato.Repositories.CampeonatoRepository;
@@ -108,12 +111,29 @@ public class PartidoServiceImpl implements PartidoService{
     return respuesta;
   }
 
+  public PartidoResponseDto importarImagen(Long id, MultipartFile imagen){
+    Partido partido = partidoRepository.findById(id)
+        .orElseThrow(() -> new RecursoNoEncontradoException("Partido con id " + id + " no encontrado"));
+    if(partido.getImagenRival() != null && !partido.getImagenRival().isBlank()){
+        throw new RuntimeException("El rival ya tiene una imagen asignada");
+    }
+    try{
+        String base64 = Base64.getEncoder().encodeToString(imagen.getBytes());
+        String mediaType = imagen.getContentType(); 
+        partido.setImagenRival("data:" + mediaType + ";base64," + base64);
+    }catch(IOException e){
+        throw new RuntimeException("Error al procesar la imagen");
+    }
+    return convertirDto(partidoRepository.save(partido));
+  }
+
   private PartidoResponseDto convertirDto(Partido p){
     PartidoResponseDto dto = new PartidoResponseDto();
     dto.setId(p.getId());
     dto.setJornada(p.getJornada());
     dto.setFecha(p.getFecha());
     dto.setRival(p.getRival());
+    dto.setImagenRival(p.getImagenRival());
     dto.setResultado(p.getResultado());
     dto.setLocal(p.getLocal());
     if(p.getCategoria() != null){
@@ -122,7 +142,7 @@ public class PartidoServiceImpl implements PartidoService{
     if(p.getCampeonato() != null){
         dto.setCampeonatoId(p.getCampeonato().getId());
     }
-    if(p.getCampeonato() != null){
+    if(p.getEntrenador() != null){
         dto.setEntrenadorId(p.getEntrenador().getId());
     }
     return dto;

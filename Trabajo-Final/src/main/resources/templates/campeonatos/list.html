@@ -1,294 +1,757 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:replace="~{layout :: mainLayout(~{::#content})}"
       lang="es">
 
 <head>
 
-```
-<meta charset="UTF-8">
+    <meta charset="UTF-8">
 
-<title>Campeonatos</title>
+    <title>Campeonatos</title>
 
-<link rel="icon" href="data:,">
-```
+    <link rel="icon" href="data:,">
 
 </head>
 
 <body>
 
-<div id="content" class="max-w-[1200px] mx-auto">
-
-```
-<!-- HEADER -->
-
-<div class="flex flex-col md:flex-row
-            md:items-center justify-between
-            gap-6 mb-10">
-
-    <div>
-
-        <h1 class="text-4xl font-black text-white
-                   tracking-tight italic uppercase">
-
-            Campeonatos
-
-        </h1>
-
-        <p class="text-emerald-500 font-bold mt-1">
-
-            Competencias y torneos en los que participa el club.
-
-        </p>
-
-    </div>
+<div id="content"
+     class="max-w-[1200px] mx-auto"
+     th:attr="data-puede-editar=${#authorization.expression('hasAnyRole(''ENTRENADOR'',''ADMIN'')')}">
 
 
-    <!-- AGREGAR -->
+    <!-- HEADER -->
 
-    <a th:href="@{/campeonatos/nuevo}"
-       class="bg-[#10b981]
-              hover:bg-[#059669]
-              text-slate-900
-              px-6 py-3
-              rounded-xl
-              font-bold
-              flex items-center gap-2
-              shadow-lg
-              shadow-emerald-500/20
-              transition-all
-              transform active:scale-95">
+    <div class="flex flex-col md:flex-row
+                md:items-center justify-between
+                gap-6 mb-10">
 
-        <i class="fa-solid fa-plus"></i>
+        <div>
 
-        <span>
-            Agregar campeonato
-        </span>
+            <h1 class="text-4xl font-black text-white
+                       tracking-tight italic uppercase">
 
-    </a>
+                Campeonatos
 
-</div>
+            </h1>
 
+            <p class="text-emerald-500 font-bold mt-1">
 
-<!-- LISTADO -->
+                Competencias y torneos en los que participa el club.
 
-<div id="campeonatosGrid"
-     class="grid grid-cols-1 md:grid-cols-2
-            lg:grid-cols-3 gap-6">
+            </p>
 
-    <!-- LOADING -->
-
-    <div id="loading"
-         class="col-span-full py-20 text-center">
-
-        <div class="inline-block
-                    animate-spin
-                    w-10 h-10
-                    border-4
-                    border-emerald-500
-                    border-t-transparent
-                    rounded-full">
         </div>
 
-        <p class="text-slate-500 mt-4
-                  font-bold uppercase
-                  tracking-widest text-xs">
 
-            Cargando campeonatos...
+        <!-- AGREGAR -->
 
-        </p>
+        <a th:href="@{/campeonatos/nuevo}"
+           sec:authorize="hasAnyRole('ENTRENADOR','ADMIN')"
+           class="bg-[#10b981]
+                  hover:bg-[#059669]
+                  text-slate-900
+                  px-6 py-3
+                  rounded-xl
+                  font-bold
+                  flex items-center gap-2
+                  shadow-lg
+                  shadow-emerald-500/20
+                  transition-all
+                  transform active:scale-95">
+
+            <i class="fa-solid fa-plus"></i>
+
+            <span>
+                Agregar campeonato
+            </span>
+
+        </a>
 
     </div>
 
-</div>
+
+    <!-- FILTRO DE BÚSQUEDA -->
+
+    <div class="bg-[#0f172a]
+                border border-slate-800
+                rounded-2xl
+                p-4
+                mb-6">
+
+        <div class="relative">
+
+            <i class="fa-solid fa-magnifying-glass
+                      absolute left-4 top-1/2
+                      -translate-y-1/2
+                      text-slate-500"></i>
+
+            <input
+                type="text"
+                id="buscadorCampeonato"
+                placeholder="Buscar por nombre de campeonato..."
+                class="w-full
+                       bg-[#0a0f1d]
+                       border border-slate-800
+                       rounded-xl
+                       py-3
+                       pl-11
+                       pr-4
+                       text-white
+                       placeholder-slate-600
+                       outline-none
+                       focus:border-emerald-500
+                       transition-all">
+
+        </div>
+
+    </div>
 
 
-<!-- ========================================================= -->
-<!-- JAVASCRIPT -->
-<!-- ========================================================= -->
+    <!-- LISTADO -->
 
-<script>
+    <div id="campeonatosGrid"
+         class="grid grid-cols-1 md:grid-cols-2
+                lg:grid-cols-3 gap-6">
 
-    // =========================================================
-    // OBTENER JWT
-    // =========================================================
+        <!-- LOADING -->
 
-    function getJwt() {
+        <div id="loading"
+             class="col-span-full py-20 text-center">
 
-        const cookie =
-            document.cookie
-                .split('; ')
-                .find(row =>
-                    row.startsWith('token=')
-                );
+            <div class="inline-block
+                        animate-spin
+                        w-10 h-10
+                        border-4
+                        border-emerald-500
+                        border-t-transparent
+                        rounded-full">
+            </div>
 
-        return cookie
-            ? cookie.substring(6)
-            : null;
-    }
+            <p class="text-slate-500 mt-4
+                      font-bold uppercase
+                      tracking-widest text-xs">
 
+                Cargando campeonatos...
 
-    // =========================================================
-    // ESCAPAR HTML
-    // =========================================================
+            </p>
 
-    function escapeHtml(str) {
+        </div>
 
-        const div =
-            document.createElement('div');
-
-        div.textContent =
-            str ?? '';
-
-        return div.innerHTML;
-    }
+    </div>
 
 
-    // =========================================================
-    // CARGAR CAMPEONATOS
-    // =========================================================
+    <!-- PAGINACIÓN -->
 
-    async function cargarCampeonatos() {
-
-        const grid =
-            document.getElementById(
-                'campeonatosGrid'
-            );
-
-        const token = getJwt();
+    <div id="paginacion"
+         class="flex items-center justify-center gap-2 mt-8">
+    </div>
 
 
-        // =====================================================
-        // SESIÓN
-        // =====================================================
+    <!-- ========================================================= -->
+    <!-- JAVASCRIPT -->
+    <!-- ========================================================= -->
 
-        if (!token) {
+    <script>
 
-            grid.innerHTML = `
+        // =========================================================
+        // DATOS Y PAGINACIÓN
+        // =========================================================
 
-                <div class="col-span-full py-20
-                            text-center
-                            border-2 border-dashed
-                            border-slate-800
-                            rounded-[2rem]">
+        let todosLosCampeonatos = [];
 
-                    <p class="text-red-500 font-bold">
+        let paginaActual = 1;
 
-                        Sesión expirada.
+        const CAMPEONATOS_POR_PAGINA = 6;
 
-                    </p>
 
-                </div>
+        // =========================================================
+        // VERIFICAR ROL
+        // =========================================================
 
-            `;
+        function puedeEditarRol() {
 
-            return;
+            const content =
+                document.getElementById('content');
+
+            return content?.dataset?.puedeEditar === 'true';
+
         }
 
 
-        try {
+        // =========================================================
+        // OBTENER JWT
+        // =========================================================
 
-            // =================================================
-            // REQUEST
-            // =================================================
+        function getJwt() {
 
-            const res =
-                await fetch(
-                    '/api/campeonatos',
-                    {
+            const cookie =
+                document.cookie
+                    .split('; ')
+                    .find(row =>
+                        row.startsWith('token=')
+                    );
 
-                        method: 'GET',
+            return cookie
+                ? cookie.substring(6)
+                : null;
+        }
 
-                        headers: {
 
-                            'Authorization':
-                                'Bearer ' + token,
+        // =========================================================
+        // ESCAPAR HTML
+        // =========================================================
 
-                            'Accept':
-                                'application/json'
+        function escapeHtml(str) {
 
-                        }
+            const div =
+                document.createElement('div');
+
+            div.textContent =
+                str ?? '';
+
+            return div.innerHTML;
+        }
+
+
+        // =========================================================
+        // NORMALIZAR TEXTO
+        // =========================================================
+
+        function normalizarTexto(texto) {
+
+            return String(texto || '')
+                .toLowerCase()
+                .normalize('NFD')
+                .replace(/[\u0300-\u036f]/g, '');
+
+        }
+
+
+        // =========================================================
+        // PAGINACIÓN
+        // =========================================================
+
+        function mostrarPaginacion(totalResultados) {
+
+            const paginacion =
+                document.getElementById('paginacion');
+
+
+            paginacion.innerHTML = '';
+
+
+            const totalPaginas =
+                Math.ceil(
+                    totalResultados /
+                    CAMPEONATOS_POR_PAGINA
+                );
+
+
+            if (totalPaginas <= 1) {
+
+                return;
+
+            }
+
+
+            // =====================================================
+            // ANTERIOR
+            // =====================================================
+
+            const botonAnterior =
+                document.createElement('button');
+
+
+            botonAnterior.innerHTML =
+                `<i class="fa-solid fa-chevron-left"></i>`;
+
+
+            botonAnterior.className =
+                `w-10 h-10
+                 rounded-xl
+                 border border-slate-800
+                 bg-[#0f172a]
+                 text-slate-400
+                 hover:text-white
+                 hover:border-emerald-500
+                 transition-all
+                 disabled:opacity-30
+                 disabled:cursor-not-allowed`;
+
+
+            botonAnterior.disabled =
+                paginaActual === 1;
+
+
+            botonAnterior.addEventListener(
+                'click',
+                () => {
+
+                    if (paginaActual > 1) {
+
+                        paginaActual--;
+
+                        mostrarCampeonatosPagina();
+
+                    }
+
+                }
+            );
+
+
+            paginacion.appendChild(
+                botonAnterior
+            );
+
+
+            // =====================================================
+            // NÚMEROS
+            // =====================================================
+
+            for (
+                let i = 1;
+                i <= totalPaginas;
+                i++
+            ) {
+
+                const boton =
+                    document.createElement('button');
+
+
+                boton.textContent = i;
+
+
+                boton.className =
+                    `w-10 h-10
+                     rounded-xl
+                     border
+                     font-bold
+                     transition-all
+                     ${
+                         i === paginaActual
+
+                         ? 'bg-emerald-500 border-emerald-500 text-slate-900'
+
+                         : 'bg-[#0f172a] border-slate-800 text-slate-400 hover:text-white hover:border-emerald-500'
+                     }`;
+
+
+                boton.addEventListener(
+                    'click',
+                    () => {
+
+                        paginaActual = i;
+
+                        mostrarCampeonatosPagina();
 
                     }
                 );
 
 
-            // =================================================
-            // ERROR HTTP
-            // =================================================
-
-            if (!res.ok) {
-
-                if (
-                    res.status === 401 ||
-                    res.status === 403
-                ) {
-
-                    throw new Error(
-                        "No tenés permisos para consultar los campeonatos."
-                    );
-
-                }
-
-                throw new Error(
-                    "Error al obtener los campeonatos."
+                paginacion.appendChild(
+                    boton
                 );
 
             }
 
 
-            // =================================================
-            // RESPUESTA
-            // =================================================
+            // =====================================================
+            // SIGUIENTE
+            // =====================================================
 
-            const data =
-                await res.json();
+            const botonSiguiente =
+                document.createElement('button');
 
 
-            console.log(
-                "Respuesta /api/campeonatos:",
-                data
+            botonSiguiente.innerHTML =
+                `<i class="fa-solid fa-chevron-right"></i>`;
+
+
+            botonSiguiente.className =
+                `w-10 h-10
+                 rounded-xl
+                 border border-slate-800
+                 bg-[#0f172a]
+                 text-slate-400
+                 hover:text-white
+                 hover:border-emerald-500
+                 transition-all
+                 disabled:opacity-30
+                 disabled:cursor-not-allowed`;
+
+
+            botonSiguiente.disabled =
+                paginaActual === totalPaginas;
+
+
+            botonSiguiente.addEventListener(
+                'click',
+                () => {
+
+                    if (
+                        paginaActual <
+                        totalPaginas
+                    ) {
+
+                        paginaActual++;
+
+                        mostrarCampeonatosPagina();
+
+                    }
+
+                }
             );
 
 
-            // =================================================
-            // SOPORTAR ARRAY
-            // =================================================
+            paginacion.appendChild(
+                botonSiguiente
+            );
 
-            let campeonatos = [];
+        }
 
 
-            if (Array.isArray(data)) {
+        // =========================================================
+        // MOSTRAR PÁGINA ACTUAL
+        // =========================================================
 
-                campeonatos = data;
+        function mostrarCampeonatosPagina() {
 
-            } else if (
-                data &&
-                Array.isArray(data.content)
-            ) {
+            const buscador =
+                normalizarTexto(
+                    document.getElementById(
+                        'buscadorCampeonato'
+                    ).value
+                );
 
-                campeonatos =
-                    data.content;
 
-            } else if (
-                data &&
-                typeof data === 'object'
-            ) {
+            const filtrados =
+                todosLosCampeonatos.filter(campeonato => {
 
-                campeonatos = [data];
+                    const nombre =
+                        normalizarTexto(
+                            campeonato.nombre || ''
+                        );
+
+
+                    return !buscador ||
+                           nombre.includes(buscador);
+
+                });
+
+
+            const inicio =
+                (paginaActual - 1) *
+                CAMPEONATOS_POR_PAGINA;
+
+
+            const fin =
+                inicio +
+                CAMPEONATOS_POR_PAGINA;
+
+
+            const pagina =
+                filtrados.slice(
+                    inicio,
+                    fin
+                );
+
+
+            mostrarCampeonatos(
+                pagina,
+                filtrados.length
+            );
+
+        }
+
+
+        // =========================================================
+        // CARGAR CAMPEONATOS
+        // =========================================================
+
+        async function cargarCampeonatos() {
+
+            const grid =
+                document.getElementById(
+                    'campeonatosGrid'
+                );
+
+            const token = getJwt();
+
+
+            // =====================================================
+            // SESIÓN
+            // =====================================================
+
+            if (!token) {
+
+                grid.innerHTML = `
+
+                    <div class="col-span-full py-20
+                                text-center
+                                border-2 border-dashed
+                                border-slate-800
+                                rounded-[2rem]">
+
+                        <p class="text-red-500 font-bold">
+
+                            Sesión expirada.
+
+                        </p>
+
+                    </div>
+
+                `;
+
+                return;
+            }
+
+
+            try {
+
+                // =================================================
+                // REQUEST
+                // =================================================
+
+                const res =
+                    await fetch(
+                        '/api/campeonatos',
+                        {
+
+                            method: 'GET',
+
+                            headers: {
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            }
+
+                        }
+                    );
+
+
+                // =================================================
+                // ERROR HTTP
+                // =================================================
+
+                if (!res.ok) {
+
+                    if (
+                        res.status === 401 ||
+                        res.status === 403
+                    ) {
+
+                        throw new Error(
+                            "No tenés permisos para consultar los campeonatos."
+                        );
+
+                    }
+
+                    throw new Error(
+                        "Error al obtener los campeonatos."
+                    );
+
+                }
+
+
+                // =================================================
+                // RESPUESTA
+                // =================================================
+
+                const data =
+                    await res.json();
+
+
+                console.log(
+                    "Respuesta /api/campeonatos:",
+                    data
+                );
+
+
+                // =================================================
+                // SOPORTAR ARRAY
+                // =================================================
+
+                let campeonatos = [];
+
+
+                if (Array.isArray(data)) {
+
+                    campeonatos = data;
+
+                } else if (
+                    data &&
+                    Array.isArray(data.content)
+                ) {
+
+                    campeonatos =
+                        data.content;
+
+                } else if (
+                    data &&
+                    typeof data === 'object'
+                ) {
+
+                    campeonatos = [data];
+
+                }
+
+
+                grid.innerHTML = '';
+
+
+                // =================================================
+                // SIN CAMPEONATOS
+                // =================================================
+
+                if (campeonatos.length === 0) {
+
+                    grid.innerHTML = `
+
+                        <div class="col-span-full py-20
+                                    text-center
+                                    border-2 border-dashed
+                                    border-slate-800
+                                    rounded-[2rem]">
+
+                            <div class="w-16 h-16
+                                        mx-auto mb-5
+                                        rounded-2xl
+                                        bg-slate-800
+                                        flex items-center
+                                        justify-center">
+
+                                <i class="fa-solid
+                                          fa-trophy
+                                          text-2xl
+                                          text-slate-600">
+                                </i>
+
+                            </div>
+
+
+                            <p class="text-slate-500
+                                      font-bold">
+
+                                No hay campeonatos registrados.
+
+                            </p>
+
+
+                            <p class="text-slate-700
+                                      text-xs mt-2">
+
+                                Creá el primer campeonato
+                                para comenzar.
+
+                            </p>
+
+                        </div>
+
+                    `;
+
+                    return;
+
+                }
+
+
+                // =================================================
+                // GUARDAR TODOS
+                // =================================================
+
+                todosLosCampeonatos =
+                    campeonatos;
+
+
+                paginaActual = 1;
+
+
+                // =================================================
+                // MOSTRAR PRIMERA PÁGINA
+                // =================================================
+
+                mostrarCampeonatosPagina();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error al cargar campeonatos:",
+                    error
+                );
+
+
+                grid.innerHTML = `
+
+                    <div class="col-span-full
+                                p-10
+                                bg-red-500/10
+                                border border-red-500/20
+                                rounded-[2rem]
+                                text-red-500
+                                text-center">
+
+                        <i class="fa-solid
+                                  fa-circle-exclamation
+                                  text-xl mb-3">
+                        </i>
+
+
+                        <p class="font-black">
+
+                            ERROR AL CARGAR LOS CAMPEONATOS
+
+                        </p>
+
+
+                        <p class="text-xs
+                                  mt-2
+                                  text-red-400">
+
+                            ${escapeHtml(
+                                error.message
+                            )}
+
+                        </p>
+
+                    </div>
+
+                `;
 
             }
+
+        }
+
+
+        // =========================================================
+        // MOSTRAR CAMPEONATOS
+        // =========================================================
+
+        function mostrarCampeonatos(
+            campeonatos,
+            totalResultados = campeonatos.length
+        ) {
+
+            const grid =
+                document.getElementById(
+                    'campeonatosGrid'
+                );
 
 
             grid.innerHTML = '';
 
 
-            // =================================================
-            // SIN CAMPEONATOS
-            // =================================================
+            // =====================================================
+            // SIN RESULTADOS
+            // =====================================================
 
-            if (campeonatos.length === 0) {
+            if (totalResultados === 0) {
 
                 grid.innerHTML = `
 
@@ -317,16 +780,7 @@
                         <p class="text-slate-500
                                   font-bold">
 
-                            No hay campeonatos registrados.
-
-                        </p>
-
-
-                        <p class="text-slate-700
-                                  text-xs mt-2">
-
-                            Creá el primer campeonato
-                            para comenzar.
+                            No se encontraron campeonatos.
 
                         </p>
 
@@ -334,14 +788,17 @@
 
                 `;
 
+
+                mostrarPaginacion(0);
+
                 return;
 
             }
 
 
-            // =================================================
+            // =====================================================
             // MOSTRAR CAMPEONATOS
-            // =================================================
+            // =====================================================
 
             campeonatos.forEach(campeonato => {
 
@@ -371,6 +828,70 @@
                      hover:border-emerald-500/50
                      transition-all
                      group relative`;
+
+
+                const acciones =
+                    puedeEditarRol()
+                        ? `
+
+                            <!-- ACCIONES -->
+
+                            <div class="mt-6 flex gap-2">
+
+
+                                <!-- EDITAR -->
+
+                                <a href="/campeonatos/nuevo?id=${campeonato.id}"
+                                   class="flex-1
+                                          bg-emerald-500/10
+                                          hover:bg-emerald-500
+                                          text-emerald-500
+                                          hover:text-slate-900
+                                          py-3
+                                          rounded-xl
+                                          font-bold
+                                          transition-all
+                                          text-xs
+                                          uppercase
+                                          tracking-widest
+                                          text-center">
+
+                                    <i class="fa-solid
+                                              fa-pen-to-square
+                                              mr-1">
+                                    </i>
+
+                                    Editar
+
+                                </a>
+
+
+                                <!-- ELIMINAR -->
+
+                                <button type="button"
+                                        class="btn-eliminar
+                                               w-12
+                                               bg-slate-800
+                                               hover:bg-red-500/20
+                                               text-slate-400
+                                               hover:text-red-500
+                                               rounded-xl
+                                               transition-all"
+                                        data-id="${campeonato.id}"
+                                        data-nombre="${escapeHtml(
+                                            campeonato.nombre || ''
+                                        )}">
+
+                                    <i class="fa-solid
+                                              fa-trash-can">
+                                    </i>
+
+                                </button>
+
+                            </div>
+
+                        `
+                        : '';
 
 
                 card.innerHTML = `
@@ -460,61 +981,7 @@
                     </div>
 
 
-                    <!-- ACCIONES -->
-
-                    <div class="mt-6 flex gap-2">
-
-
-                        <!-- EDITAR -->
-
-                        <a href="/campeonatos/nuevo?id=${campeonato.id}"
-                           class="flex-1
-                                  bg-emerald-500/10
-                                  hover:bg-emerald-500
-                                  text-emerald-500
-                                  hover:text-slate-900
-                                  py-3
-                                  rounded-xl
-                                  font-bold
-                                  transition-all
-                                  text-xs
-                                  uppercase
-                                  tracking-widest
-                                  text-center">
-
-                            <i class="fa-solid
-                                      fa-pen-to-square
-                                      mr-1">
-                            </i>
-
-                            Editar
-
-                        </a>
-
-
-                        <!-- ELIMINAR -->
-
-                        <button type="button"
-                                class="btn-eliminar
-                                       w-12
-                                       bg-slate-800
-                                       hover:bg-red-500/20
-                                       text-slate-400
-                                       hover:text-red-500
-                                       rounded-xl
-                                       transition-all"
-                                data-id="${campeonato.id}"
-                                data-nombre="${escapeHtml(
-                                    campeonato.nombre || ''
-                                )}">
-
-                            <i class="fa-solid
-                                      fa-trash-can">
-                            </i>
-
-                        </button>
-
-                    </div>
+                    ${acciones}
 
                 `;
 
@@ -524,9 +991,9 @@
             });
 
 
-            // =================================================
+            // =====================================================
             // EVENTOS ELIMINAR
-            // =================================================
+            // =====================================================
 
             grid
                 .querySelectorAll('.btn-eliminar')
@@ -547,192 +1014,164 @@
                 });
 
 
-        } catch (error) {
-
-            console.error(
-                "Error al cargar campeonatos:",
-                error
+            mostrarPaginacion(
+                totalResultados
             );
 
-
-            grid.innerHTML = `
-
-                <div class="col-span-full
-                            p-10
-                            bg-red-500/10
-                            border border-red-500/20
-                            rounded-[2rem]
-                            text-red-500
-                            text-center">
-
-                    <i class="fa-solid
-                              fa-circle-exclamation
-                              text-xl mb-3">
-                    </i>
-
-
-                    <p class="font-black">
-
-                        ERROR AL CARGAR LOS CAMPEONATOS
-
-                    </p>
-
-
-                    <p class="text-xs
-                              mt-2
-                              text-red-400">
-
-                        ${escapeHtml(
-                            error.message
-                        )}
-
-                    </p>
-
-                </div>
-
-            `;
-
         }
 
-    }
 
+        // =========================================================
+        // ELIMINAR CAMPEONATO
+        // =========================================================
 
-    // =========================================================
-    // ELIMINAR CAMPEONATO
-    // =========================================================
-
-    async function eliminarCampeonato(
-        id,
-        nombre
-    ) {
-
-        if (
-            !confirm(
-                `¿Seguro que querés eliminar el campeonato "${nombre}"?`
-            )
+        async function eliminarCampeonato(
+            id,
+            nombre
         ) {
 
-            return;
+            if (
+                !confirm(
+                    `¿Seguro que querés eliminar el campeonato "${nombre}"?`
+                )
+            ) {
 
-        }
-
-
-        const token = getJwt();
-
-
-        if (!token) {
-
-            alert("Sesión expirada.");
-
-            window.location.href =
-                "/login";
-
-            return;
-
-        }
-
-
-        try {
-
-            const res =
-                await fetch(
-                    `/api/campeonatos/${id}`,
-                    {
-
-                        method: 'DELETE',
-
-                        headers: {
-
-                            'Authorization':
-                                'Bearer ' + token,
-
-                            'Accept':
-                                'application/json'
-
-                        }
-
-                    }
-                );
-
-
-            // =================================================
-            // ERROR
-            // =================================================
-
-            if (!res.ok) {
-
-                let mensaje =
-                    "No se pudo eliminar el campeonato.";
-
-
-                try {
-
-                    const errorData =
-                        await res.json();
-
-
-                    if (errorData.mensaje) {
-
-                        mensaje =
-                            errorData.mensaje;
-
-                    } else if (
-                        errorData.message
-                    ) {
-
-                        mensaje =
-                            errorData.message;
-
-                    }
-
-                } catch (_) {}
-
-
-                throw new Error(mensaje);
+                return;
 
             }
 
 
-            // =================================================
-            // ÉXITO
-            // =================================================
-
-            await cargarCampeonatos();
+            const token = getJwt();
 
 
-        } catch (error) {
+            if (!token) {
 
-            console.error(
-                "Error eliminando campeonato:",
-                error
-            );
+                alert("Sesión expirada.");
+
+                window.location.href =
+                    "/login";
+
+                return;
+
+            }
 
 
-            alert(
-                error.message ||
-                "Error al eliminar el campeonato."
-            );
+            try {
+
+                const res =
+                    await fetch(
+                        `/api/campeonatos/${id}`,
+                        {
+
+                            method: 'DELETE',
+
+                            headers: {
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            }
+
+                        }
+                    );
+
+
+                // =================================================
+                // ERROR
+                // =================================================
+
+                if (!res.ok) {
+
+                    let mensaje =
+                        "No se pudo eliminar el campeonato.";
+
+
+                    try {
+
+                        const errorData =
+                            await res.json();
+
+
+                        if (errorData.mensaje) {
+
+                            mensaje =
+                                errorData.mensaje;
+
+                        } else if (
+                            errorData.message
+                        ) {
+
+                            mensaje =
+                                errorData.message;
+
+                        }
+
+                    } catch (_) {}
+
+
+                    throw new Error(mensaje);
+
+                }
+
+
+                // =================================================
+                // ÉXITO
+                // =================================================
+
+                await cargarCampeonatos();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error eliminando campeonato:",
+                    error
+                );
+
+
+                alert(
+                    error.message ||
+                    "Error al eliminar el campeonato."
+                );
+
+            }
 
         }
 
-    }
+
+        // =========================================================
+        // INICIAR
+        // =========================================================
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            function () {
+
+                document
+                    .getElementById(
+                        'buscadorCampeonato'
+                    )
+                    .addEventListener(
+                        'input',
+                        function () {
+
+                            paginaActual = 1;
+
+                            mostrarCampeonatosPagina();
+
+                        }
+                    );
 
 
-    // =========================================================
-    // INICIAR
-    // =========================================================
+                cargarCampeonatos();
 
-    document.addEventListener(
-        'DOMContentLoaded',
-        function () {
+            }
+        );
 
-            cargarCampeonatos();
-
-        }
-    );
-
-</script>
-```
+    </script>
 
 </div>
 

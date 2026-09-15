@@ -19,6 +19,7 @@ public class CategoriaResponseDto {
     private String descripcion;
     private Long entrenadorId;
     private String nombreEntrenador;
+    private String apellidoEntrenador;
     private List<JugadorDto> jugadores;
 
 }

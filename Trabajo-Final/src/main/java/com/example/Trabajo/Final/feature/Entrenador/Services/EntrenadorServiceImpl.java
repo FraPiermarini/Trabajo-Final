@@ -1,9 +1,12 @@
 package com.example.Trabajo.Final.feature.Entrenador.Services;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.Trabajo.Final.feature.Categoria.Dtos.CategoriaDto;
 import com.example.Trabajo.Final.feature.Categoria.Models.Categoria;
@@ -14,6 +17,8 @@ import com.example.Trabajo.Final.feature.Entrenador.Models.Entrenador;
 import com.example.Trabajo.Final.feature.Entrenador.Repositories.EntrenadorRepository;
 import com.example.Trabajo.Final.feature.Entrenador.Services.Interface.EntrenadorService;
 import com.example.Trabajo.Final.feature.Exceptions.RecursoNoEncontradoException;
+import com.example.Trabajo.Final.feature.Jugador.Dtos.Response.JugadorResponseDto;
+import com.example.Trabajo.Final.feature.Jugador.Models.Jugador;
 
 import lombok.RequiredArgsConstructor;
 
@@ -59,6 +64,22 @@ public class EntrenadorServiceImpl implements EntrenadorService{
         return convertirDto(entrenadorRepository.save(entrenador));
     }
 
+     public EntrenadorResponseDto importarImagen(Long id, MultipartFile imagen){
+        Entrenador entrenador = entrenadorRepository.findById(id)
+            .orElseThrow(() -> new RecursoNoEncontradoException("Entrenador con id " + id + " no encontrado"));
+        if(entrenador.getImagenEntrenador() != null && !entrenador.getImagenEntrenador().isBlank()){
+            throw new RuntimeException("El entrenador ya tiene una imagen asignada");
+        }
+        try{
+            String base64 = Base64.getEncoder().encodeToString(imagen.getBytes());
+            String mediaType = imagen.getContentType();
+            entrenador.setImagenEntrenador("data:" + mediaType + ";base64," + base64);
+        }catch(IOException e){
+            throw new RuntimeException("Error al procesar la imagen");
+        }
+        return convertirDto(entrenadorRepository.save(entrenador));
+    }
+
     private EntrenadorResponseDto convertirDto(Entrenador e){
         EntrenadorResponseDto dto = new EntrenadorResponseDto();
         dto.setId(e.getId());
@@ -73,6 +94,7 @@ public class EntrenadorServiceImpl implements EntrenadorService{
             categoriadto.setNombre(categoria.getNombre());
             categorias.add(categoriadto);
         }
+        dto.setImagenEntrenador(e.getImagenEntrenador());
     }
         dto.setCategorias(categorias);
         return dto;

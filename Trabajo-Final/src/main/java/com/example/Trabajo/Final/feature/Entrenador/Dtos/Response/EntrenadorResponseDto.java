@@ -17,4 +17,5 @@ public class EntrenadorResponseDto {
     private String apellido;
     private Integer edad;
     private List<CategoriaDto> categorias;
+    private String imagenEntrenador;
 }

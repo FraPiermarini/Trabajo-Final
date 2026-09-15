@@ -6,6 +6,7 @@ import java.util.List;
 import com.example.Trabajo.Final.feature.Categoria.Models.Categoria;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -28,16 +29,19 @@ public class Entrenador {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "El nombre es obligatorio")
+    @Column 
     private String nombre;
 
-    @NotBlank(message = "El apellido es obligatorio")
+    @Column 
     private String apellido;
 
-    @NotNull(message = "La edad es obligatoria")
+    @Column 
     private Integer edad;
 
     @OneToMany(mappedBy = "entrenador")
     @JsonBackReference
     private List<Categoria> categorias = new ArrayList<>();
+
+    @Column(columnDefinition = "TEXT")
+    private String imagenEntrenador;
 }

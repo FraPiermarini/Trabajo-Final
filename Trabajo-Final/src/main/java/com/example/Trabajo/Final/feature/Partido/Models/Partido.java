@@ -43,6 +43,9 @@ public class Partido {
     @Column
     private String rival;
 
+    @Column(columnDefinition = "TEXT")
+    private String imagenRival;
+
     @ManyToOne
     @JoinColumn(name = "campeonatoId")
     @JsonManagedReference

@@ -1,6 +1,8 @@
+```html
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:replace="~{layout :: mainLayout(~{::#content})}"
       lang="es">
 
@@ -16,7 +18,8 @@
 
 <body>
 
-<div id="content" class="max-w-[1200px] mx-auto">
+<div id="content" class="max-w-[1200px] mx-auto"
+     th:attr="data-puede-editar=${#authorization.expression('hasAnyRole(''ENTRENADOR'',''ADMIN'')')}">
 
 
     <!-- ========================================================= -->
@@ -48,6 +51,7 @@
         <div>
 
             <a th:href="@{/incidencias/nuevo}"
+               sec:authorize="hasAnyRole('ENTRENADOR','ADMIN')"
                class="px-6 py-3
                       rounded-xl
                       bg-emerald-500
@@ -405,6 +409,7 @@
 
 
             <a th:href="@{/incidencias/nuevo}"
+               sec:authorize="hasAnyRole('ENTRENADOR','ADMIN')"
                class="inline-block
                       mt-5
                       px-5 py-3
@@ -422,9 +427,9 @@
         </div>
 
 
-        <!-- ===================================================== -->
+        <!-- ========================================================= -->
         <!-- ERROR -->
-        <!-- ===================================================== -->
+        <!-- ========================================================= -->
 
         <div id="estadoError"
              class="hidden
@@ -947,6 +952,23 @@
         let partidos = [];
 
         let incidencias = [];
+
+
+        // =========================================================
+        // ROLES
+        // =========================================================
+
+        function puedeEditarRol() {
+
+            const content =
+                document.getElementById(
+                    "content"
+                );
+
+
+            return content?.dataset?.puedeEditar === "true";
+
+        }
 
 
         // =========================================================
@@ -1832,6 +1854,70 @@
                         "hover:bg-slate-800/40 transition";
 
 
+                    const acciones =
+                        puedeEditarRol()
+                            ? `
+
+                                <!-- EDITAR PUT -->
+
+                                <button
+                                    type="button"
+                                    onclick="abrirModalEditar(${incidencia.id})"
+                                    title="Editar incidencia"
+                                    class="w-10 h-10
+                                           rounded-xl
+                                           bg-slate-800
+                                           text-slate-400
+                                           hover:bg-emerald-500/10
+                                           hover:text-emerald-500
+                                           transition-all">
+
+                                    <i class="fa-solid fa-pen"></i>
+
+                                </button>
+
+
+                                <!-- PATCH DÍAS -->
+
+                                <button
+                                    type="button"
+                                    onclick="abrirModalDias(${incidencia.id})"
+                                    title="Modificar días"
+                                    class="w-10 h-10
+                                           rounded-xl
+                                           bg-slate-800
+                                           text-slate-400
+                                           hover:bg-blue-500/10
+                                           hover:text-blue-400
+                                           transition-all">
+
+                                    <i class="fa-solid fa-calendar-days"></i>
+
+                                </button>
+
+
+                                <!-- ELIMINAR -->
+
+                                <button
+                                    type="button"
+                                    onclick="eliminarIncidencia(${incidencia.id ?? 0})"
+                                    title="Eliminar incidencia"
+                                    class="w-10 h-10
+                                           rounded-xl
+                                           bg-slate-800
+                                           text-slate-400
+                                           hover:bg-red-500/10
+                                           hover:text-red-500
+                                           transition-all">
+
+                                    <i class="fa-solid fa-trash-can"></i>
+
+                                </button>
+
+                            `
+                            : '';
+
+
                     fila.innerHTML = `
 
                         <!-- JUGADOR -->
@@ -1973,62 +2059,7 @@
                                         justify-end
                                         gap-2">
 
-
-                                <!-- EDITAR PUT -->
-
-                                <button
-                                    type="button"
-                                    onclick="abrirModalEditar(${incidencia.id})"
-                                    title="Editar incidencia"
-                                    class="w-10 h-10
-                                           rounded-xl
-                                           bg-slate-800
-                                           text-slate-400
-                                           hover:bg-emerald-500/10
-                                           hover:text-emerald-500
-                                           transition-all">
-
-                                    <i class="fa-solid fa-pen"></i>
-
-                                </button>
-
-
-                                <!-- PATCH DÍAS -->
-
-                                <button
-                                    type="button"
-                                    onclick="abrirModalDias(${incidencia.id})"
-                                    title="Modificar días"
-                                    class="w-10 h-10
-                                           rounded-xl
-                                           bg-slate-800
-                                           text-slate-400
-                                           hover:bg-blue-500/10
-                                           hover:text-blue-400
-                                           transition-all">
-
-                                    <i class="fa-solid fa-calendar-days"></i>
-
-                                </button>
-
-
-                                <!-- ELIMINAR -->
-
-                                <button
-                                    type="button"
-                                    onclick="eliminarIncidencia(${incidencia.id ?? 0})"
-                                    title="Eliminar incidencia"
-                                    class="w-10 h-10
-                                           rounded-xl
-                                           bg-slate-800
-                                           text-slate-400
-                                           hover:bg-red-500/10
-                                           hover:text-red-500
-                                           transition-all">
-
-                                    <i class="fa-solid fa-trash-can"></i>
-
-                                </button>
+                                ${acciones}
 
                             </div>
 
@@ -3079,3 +3110,4 @@
 </body>
 
 </html>
+

@@ -93,7 +93,7 @@ public class EstadisticaGetController {
         return ResponseEntity.ok(estadisticaServiceImpl.obtenerReporteEntrenadoresPorPartido(partidoId));
     }
 
-    @GetMapping("/entrenador/{entrenadorId}/acumulado/")
+    @GetMapping("/entrenador/{entrenadorId}/acumulado")
     public ResponseEntity<ReporteEntrenadorResponseDto> obtenerReporteEntrenadoresAcumulado(@PathVariable Long entrenadorId){
         return ResponseEntity.ok(estadisticaServiceImpl.obtenerReporteEntrenadorAcumulado(entrenadorId));
     } 

@@ -18,6 +18,8 @@ public class PartidoResponseDto {
 
     private String rival;
 
+    private String imagenRival;
+
     private Long campeonatoId;
 
     private String resultado;
