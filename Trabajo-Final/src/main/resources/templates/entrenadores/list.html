@@ -13,135 +13,190 @@
 <body>
 
 <div id="content"
-     class="max-w-[1200px] mx-auto"
+     class="max-w-[1200px] mx-auto w-full"
      th:attr="data-puede-editar=${#authorization.expression('hasAnyRole(''ENTRENADOR'',''ADMIN'')')}">
 
-    <!-- HEADER -->
 
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
+<div class="flex flex-col md:flex-row
+            md:items-center
+            justify-between
+            gap-4 sm:gap-6
+            mb-6 sm:mb-10">
 
-        <div>
+    <div class="min-w-0">
 
-            <h1 class="text-4xl font-black text-white tracking-tight italic uppercase">
-                Entrenadores
-            </h1>
+        <h1 class="text-2xl sm:text-3xl md:text-4xl
+                   font-black
+                   text-white
+                   tracking-tight
+                   italic
+                   uppercase
+                   break-words">
 
-            <p class="text-emerald-500 font-bold mt-1">
-                El cuerpo técnico del Complejo Deportivo Justiniano Posse.
-            </p>
+            Entrenadores
+
+        </h1>
+
+        <p class="text-emerald-500
+                  font-bold
+                  mt-1
+                  text-sm sm:text-base
+                  break-words">
+
+            El cuerpo técnico del Complejo Deportivo Justiniano Posse.
+
+        </p>
+
+    </div>
+
+    <a th:href="@{/entrenadores/nuevo}"
+       sec:authorize="hasAnyRole('ENTRENADOR','ADMIN')"
+       class="bg-[#10b981]
+              hover:bg-[#059669]
+              text-slate-900
+              px-5 sm:px-6
+              py-3
+              rounded-xl
+              font-bold
+              flex items-center
+              justify-center
+              gap-2
+              shadow-lg
+              shadow-emerald-500/20
+              transition-all
+              transform active:scale-95
+              w-full md:w-auto
+              shrink-0">
+
+        <i class="fa-solid fa-plus"></i>
+
+        <span>
+            Agregar entrenador
+        </span>
+
+    </a>
+
+</div>
+
+
+
+<div class="bg-[#0f172a]
+            border border-slate-800
+            rounded-2xl
+            p-3 sm:p-4
+            mb-5 sm:mb-6">
+
+    <div class="grid grid-cols-1 md:grid-cols-2
+                gap-3 sm:gap-4">
+
+
+        <div class="relative min-w-0">
+
+            <i class="fa-solid fa-magnifying-glass
+                      absolute left-4 top-1/2
+                      -translate-y-1/2
+                      text-slate-500"></i>
+
+            <input
+                type="text"
+                id="buscadorEntrenador"
+                placeholder="Buscar por nombre o apellido..."
+                class="w-full
+                       min-w-0
+                       bg-[#0a0f1d]
+                       border border-slate-800
+                       rounded-xl
+                       py-3
+                       pl-11
+                       pr-4
+                       text-sm sm:text-base
+                       text-white
+                       placeholder-slate-600
+                       outline-none
+                       focus:border-emerald-500
+                       transition-all">
 
         </div>
 
-        <a th:href="@{/entrenadores/nuevo}"
-           sec:authorize="hasAnyRole('ENTRENADOR','ADMIN')"
-           class="bg-[#10b981] hover:bg-[#059669] text-slate-900 px-6 py-3 rounded-xl font-bold flex items-center gap-2 shadow-lg shadow-emerald-500/20 transition-all transform active:scale-95">
-            <i class="fa-solid fa-plus"></i>
-            <span>Agregar entrenador</span>
-        </a>
 
-    </div>
+        <div class="relative min-w-0">
 
+            <i class="fa-solid fa-layer-group
+                      absolute left-4 top-1/2
+                      -translate-y-1/2
+                      text-slate-500
+                      pointer-events-none"></i>
 
-    <!-- FILTROS -->
+            <select
+                id="filtroCategoria"
+                class="w-full
+                       min-w-0
+                       bg-[#0a0f1d]
+                       border border-slate-800
+                       rounded-xl
+                       py-3
+                       pl-11
+                       pr-10
+                       text-sm sm:text-base
+                       text-white
+                       outline-none
+                       focus:border-emerald-500
+                       transition-all
+                       appearance-none">
 
-    <div class="bg-[#0f172a]
-                border border-slate-800
-                rounded-2xl
-                p-4
-                mb-6">
+                <option value="">Todas las categorías</option>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            </select>
 
-            <!-- BUSCADOR -->
-
-            <div class="relative">
-
-                <i class="fa-solid fa-magnifying-glass
-                          absolute left-4 top-1/2
-                          -translate-y-1/2
-                          text-slate-500"></i>
-
-                <input
-                    type="text"
-                    id="buscadorEntrenador"
-                    placeholder="Buscar por nombre o apellido..."
-                    class="w-full
-                           bg-[#0a0f1d]
-                           border border-slate-800
-                           rounded-xl
-                           py-3
-                           pl-11
-                           pr-4
-                           text-white
-                           placeholder-slate-600
-                           outline-none
-                           focus:border-emerald-500
-                           transition-all">
-
-            </div>
-
-
-            <!-- FILTRO CATEGORÍA -->
-
-            <div class="relative">
-
-                <i class="fa-solid fa-layer-group
-                          absolute left-4 top-1/2
-                          -translate-y-1/2
-                          text-slate-500
-                          pointer-events-none"></i>
-
-                <select
-                    id="filtroCategoria"
-                    class="w-full
-                           bg-[#0a0f1d]
-                           border border-slate-800
-                           rounded-xl
-                           py-3
-                           pl-11
-                           pr-10
-                           text-white
-                           outline-none
-                           focus:border-emerald-500
-                           transition-all
-                           appearance-none">
-
-                    <option value="">Todas las categorías</option>
-
-                </select>
-
-                <i class="fa-solid fa-chevron-down
-                          absolute right-4 top-1/2
-                          -translate-y-1/2
-                          text-slate-500
-                          pointer-events-none"></i>
-
-            </div>
+            <i class="fa-solid fa-chevron-down
+                      absolute right-4 top-1/2
+                      -translate-y-1/2
+                      text-slate-500
+                      pointer-events-none"></i>
 
         </div>
 
     </div>
 
+</div>
 
-    <div id="entrenadoresGrid"
-         class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 justify-items-center">
 
-        <div id="loading"
-             class="col-span-full py-20 text-center">
+<div id="entrenadoresGrid"
+     class="grid grid-cols-1
+            sm:grid-cols-2
+            lg:grid-cols-3
+            gap-4 sm:gap-5
+            justify-items-center
+            w-full">
 
-            <div class="inline-block animate-spin w-10 h-10 border-4 border-emerald-500 border-t-transparent rounded-full"></div>
+    <div id="loading"
+         class="col-span-full
+                py-14 sm:py-20
+                text-center">
 
+        <div class="inline-block
+                    animate-spin
+                    w-10 h-10
+                    border-4
+                    border-emerald-500
+                    border-t-transparent
+                    rounded-full">
         </div>
 
     </div>
 
+</div>
 
-    <!-- PAGINACIÓN -->
 
-    <div id="paginacion"
-         class="flex items-center justify-center gap-2 mt-8">
-    </div>
 
+<div id="paginacion"
+     class="flex flex-wrap
+            items-center
+            justify-center
+            gap-2
+            mt-6 sm:mt-8
+            px-2">
+</div>
 
 <script>
 
@@ -518,9 +573,11 @@
 
             grid.innerHTML = `
 
-                <div class="col-span-full w-full min-h-[320px]
+                <div class="col-span-full w-full min-h-[260px] sm:min-h-[320px]
                             flex items-center justify-center
-                            py-20 text-center
+                            py-14 sm:py-20
+                            px-4
+                            text-center
                             border-2 border-dashed border-slate-800
                             rounded-[2rem]
                             text-slate-500 font-bold">
@@ -580,7 +637,9 @@
                                      text-[10px]
                                      font-black
                                      uppercase
-                                     tracking-wide">
+                                     tracking-wide
+                                     max-w-full
+                                     break-words">
 
                             ${escapeHtml(c.nombre || 'Sin nombre')}
 
@@ -614,7 +673,8 @@
                               bg-slate-800
                               text-slate-400
                               hover:text-white
-                              transition-all">
+                              transition-all
+                              shrink-0">
 
                         <i class="fa-solid fa-pen-to-square"></i>
 
@@ -629,7 +689,8 @@
                                    bg-slate-800
                                    text-slate-400
                                    hover:text-red-500
-                                   transition-all"
+                                   transition-all
+                                   shrink-0"
 
                             data-id="${e.id}"
 
@@ -653,7 +714,7 @@
                  max-w-[310px]
                  bg-[#0f172a]
                  border border-slate-800
-                 p-4
+                 p-4 sm:p-5
                  rounded-[1.5rem]
                  flex flex-col
                  items-center
@@ -662,7 +723,9 @@
                  hover:-translate-y-1
                  transition-all
                  duration-300
-                 group`;
+                 group
+                 min-w-0
+                 overflow-hidden`;
 
 
             card.innerHTML = `
@@ -672,7 +735,8 @@
 
                     ? `
 
-                        <div class="w-[170px] h-[170px]
+                        <div class="w-36 h-36
+                                    sm:w-[170px] sm:h-[170px]
                                     rounded-[1.25rem]
                                     overflow-hidden
                                     bg-[#0a0f1d]
@@ -681,7 +745,8 @@
                                     group-hover:border-emerald-500/50
                                     group-hover:shadow-emerald-500/10
                                     transition-all
-                                    duration-300">
+                                    duration-300
+                                    shrink-0">
 
                             <img
 
@@ -697,18 +762,20 @@
 
                     : `
 
-                        <div class="w-[170px] h-[170px]
+                        <div class="w-36 h-36
+                                    sm:w-[170px] sm:h-[170px]
                                     bg-emerald-500/10
                                     rounded-[1.25rem]
                                     border-2 border-emerald-500/20
                                     flex items-center
                                     justify-center
-                                    text-5xl
+                                    text-4xl sm:text-5xl
                                     font-black
                                     text-emerald-500
                                     shadow-xl
                                     group-hover:border-emerald-500/50
-                                    transition-all">
+                                    transition-all
+                                    shrink-0">
 
                             ${escapeHtml(inicialNombre)}
                             ${escapeHtml(inicialApellido)}
@@ -719,12 +786,13 @@
                 }
 
 
-                <div class="w-full mt-4">
+                <div class="w-full mt-4 min-w-0">
 
-                    <h3 class="text-xl
+                    <h3 class="text-lg sm:text-xl
                                font-black
                                text-white
-                               leading-tight">
+                               leading-tight
+                               break-words">
 
                         ${escapeHtml(nombre)}
                         ${escapeHtml(apellido)}
@@ -735,6 +803,7 @@
                     <div class="mt-2
                                 inline-flex
                                 items-center
+                                max-w-full
                                 px-3
                                 py-1.5
                                 rounded-lg
@@ -745,7 +814,8 @@
                                      text-slate-500
                                      font-black
                                      uppercase
-                                     tracking-widest">
+                                     tracking-widest
+                                     shrink-0">
 
                             Edad
 
@@ -755,7 +825,8 @@
                         <span class="text-sm
                                      text-emerald-500
                                      font-black
-                                     ml-2">
+                                     ml-2
+                                     shrink-0">
 
                             ${escapeHtml(String(edad))}
 
@@ -765,7 +836,8 @@
                         <span class="text-[9px]
                                      text-slate-500
                                      font-bold
-                                     ml-1">
+                                     ml-1
+                                     shrink-0">
 
                             años
 
@@ -776,7 +848,7 @@
 
                     <!-- CATEGORÍAS -->
 
-                    <div class="mt-3 w-full">
+                    <div class="mt-3 w-full min-w-0">
 
                         <p class="text-[9px]
                                   text-slate-500
@@ -792,7 +864,8 @@
 
                         <div class="flex flex-wrap
                                     justify-center
-                                    gap-1.5">
+                                    gap-1.5
+                                    max-w-full">
 
                             ${categoriasHtml}
 
@@ -1010,9 +1083,11 @@
 
                 grid.innerHTML = `
 
-                    <div class="col-span-full w-full min-h-[320px]
+                    <div class="col-span-full w-full min-h-[260px] sm:min-h-[320px]
                                 flex items-center justify-center
-                                py-20 text-center
+                                py-14 sm:py-20
+                                px-4
+                                text-center
                                 border-2 border-dashed border-slate-800
                                 rounded-[2rem]
                                 text-slate-500 font-bold">

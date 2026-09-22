@@ -1,1227 +1,1239 @@
-    <!DOCTYPE html>
-    <html xmlns:th="http://www.thymeleaf.org"
-        xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-        th:replace="~{layout :: mainLayout(~{::#content})}"
-        lang="es">
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout :: mainLayout(~{::#content})}"
+      lang="es">
 
-    <head>
-        <meta charset="UTF-8">
-        <title>Partidos</title>
-        <link rel="icon" href="data:,">
-    </head>
+<head>
+    <meta charset="UTF-8">
+    <title>Partidos</title>
+    <link rel="icon" href="data:,">
+</head>
 
-    <body>
+<body>
 
-    <div id="content"
-        class="max-w-[1200px] mx-auto"
-        th:attr="data-puede-editar=${#authorization.expression('hasAnyRole(''ENTRENADOR'',''ADMIN'')')}">
-
-        <!-- ========================================================= -->
-        <!-- HEADER -->
-        <!-- ========================================================= -->
-
-        <div class="flex flex-col md:flex-row
-                    md:items-center justify-between
-                    gap-6 mb-8">
-
-            <div>
-
-                <h1 class="text-4xl font-black text-white
-                        tracking-tight italic uppercase">
-
-                    Partidos
-
-                </h1>
-
-                <p class="text-emerald-500 font-bold mt-1">
-
-                    Calendario y resultados de la temporada.
-
-                </p>
-
-            </div>
+<div id="content"
+     class="max-w-[1200px] mx-auto w-full min-w-0"
+     th:attr="data-puede-editar=${#authorization.expression('hasAnyRole(''ENTRENADOR'',''ADMIN'')')}">
 
 
-            <!-- AGREGAR -->
+    <div class="flex flex-col md:flex-row
+                md:items-center justify-between
+                gap-4 sm:gap-6
+                mb-6 sm:mb-8">
 
-            <a th:href="@{/partidos/nuevo}"
-            sec:authorize="hasAnyRole('ENTRENADOR','ADMIN')"
-            class="bg-[#10b981]
-                    hover:bg-[#059669]
-                    text-slate-900
-                    px-6 py-3
-                    rounded-xl
-                    font-bold
-                    flex items-center justify-center
-                    gap-2
-                    shadow-lg
-                    shadow-emerald-500/20
-                    transition-all
-                    transform active:scale-95">
+        <div class="min-w-0">
 
-                <i class="fa-solid fa-plus"></i>
+            <h1 class="text-2xl sm:text-3xl md:text-4xl
+                       font-black text-white
+                       tracking-tight italic uppercase
+                       break-words">
 
-                <span>
-                    Agregar partido
-                </span>
+                Partidos
 
-            </a>
+            </h1>
+
+            <p class="text-emerald-500
+                      font-bold mt-1
+                      text-sm sm:text-base">
+
+                Calendario y resultados de la temporada.
+
+            </p>
 
         </div>
 
 
-        <!-- ========================================================= -->
-        <!-- FILTROS -->
-        <!-- ========================================================= -->
+        <a th:href="@{/partidos/nuevo}"
+           sec:authorize="hasAnyRole('ENTRENADOR','ADMIN')"
+           class="w-full md:w-auto
+                  bg-[#10b981]
+                  hover:bg-[#059669]
+                  text-slate-900
+                  px-5 sm:px-6 py-3
+                  rounded-xl
+                  font-bold
+                  flex items-center justify-center
+                  gap-2
+                  shadow-lg
+                  shadow-emerald-500/20
+                  transition-all
+                  transform active:scale-95
+                  shrink-0">
 
-        <div class="bg-[#0f172a]
-                    border border-slate-800
-                    rounded-2xl
-                    p-4
-                    mb-8">
+            <i class="fa-solid fa-plus"></i>
 
-            <div class="flex flex-col lg:flex-row gap-3">
+            <span>
+                Agregar partido
+            </span>
 
+        </a>
 
-                <!-- BUSCAR -->
-
-                <div class="relative flex-1">
-
-                    <i class="fa-solid fa-magnifying-glass
-                            absolute left-4 top-1/2
-                            -translate-y-1/2
-                            text-slate-500">
-                    </i>
-
-                    <input
-                        id="inputBusqueda"
-                        type="text"
-                        placeholder="Buscar por rival o jornada..."
-                        class="w-full
-                            bg-slate-900
-                            border border-slate-800
-                            text-white
-                            placeholder-slate-600
-                            rounded-xl
-                            pl-11 pr-4
-                            py-3
-                            text-sm
-                            font-medium
-                            outline-none
-                            focus:border-emerald-500
-                            transition-all">
-
-                </div>
+    </div>
 
 
-                <!-- CAMPEONATO -->
+    <div class="bg-[#0f172a]
+                border border-slate-800
+                rounded-2xl
+                p-3 sm:p-4
+                mb-6 sm:mb-8">
 
-                <div class="relative lg:w-72">
-
-                    <i class="fa-solid fa-trophy
-                            absolute left-4 top-1/2
-                            -translate-y-1/2
-                            text-emerald-500
-                            text-xs
-                            pointer-events-none">
-                    </i>
-
-                    <select
-                        id="filtroCampeonato"
-                        class="w-full
-                            bg-slate-900
-                            border border-slate-800
-                            text-slate-300
-                            rounded-xl
-                            pl-10 pr-4
-                            py-3
-                            text-sm
-                            font-bold
-                            outline-none
-                            focus:border-emerald-500
-                            transition-all
-                            appearance-none">
-
-                        <option value="">
-                            Todos los campeonatos
-                        </option>
-
-                    </select>
-
-                </div>
+        <div class="flex flex-col lg:flex-row
+                    gap-3">
 
 
-                <!-- TODOS -->
 
-                <button
-                    id="btnTodos"
-                    type="button"
-                    class="bg-emerald-500
-                        hover:bg-emerald-400
-                        text-slate-900
-                        px-6 py-3
-                        rounded-xl
-                        font-black
+            <div class="relative flex-1 min-w-0">
+
+                <i class="fa-solid fa-magnifying-glass
+                        absolute left-4 top-1/2
+                        -translate-y-1/2
+                        text-slate-500">
+                </i>
+
+                <input
+                    id="inputBusqueda"
+                    type="text"
+                    placeholder="Buscar por rival o jornada..."
+                    class="w-full min-w-0
+                           bg-slate-900
+                           border border-slate-800
+                           text-white
+                           placeholder-slate-600
+                           rounded-xl
+                           pl-11 pr-4
+                           py-3
+                           text-sm
+                           font-medium
+                           outline-none
+                           focus:border-emerald-500
+                           transition-all">
+
+            </div>
+
+
+            <div class="relative
+                        w-full lg:w-72
+                        shrink-0">
+
+                <i class="fa-solid fa-trophy
+                        absolute left-4 top-1/2
+                        -translate-y-1/2
+                        text-emerald-500
                         text-xs
-                        uppercase
-                        tracking-widest
-                        transition-all
-                        whitespace-nowrap">
-
-                    Todos
-
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <!-- ========================================================= -->
-        <!-- TITULO LISTADO -->
-        <!-- ========================================================= -->
-
-        <div class="flex items-center justify-between mb-5">
-
-            <div>
-
-                <h2 id="tituloListado"
-                    class="text-lg font-black
-                        text-white
-                        uppercase
-                        tracking-tight">
-
-                    Últimos partidos
-
-                </h2>
-
-                <p id="subtituloListado"
-                class="text-slate-600 text-xs font-bold mt-1">
-
-                    Mostrando los últimos 3 partidos registrados.
-
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <!-- ========================================================= -->
-        <!-- LISTADO -->
-        <!-- ========================================================= -->
-
-        <div id="partidosList"
-            class="flex flex-col gap-6">
-
-
-            <!-- LOADING -->
-
-            <div id="loading"
-                class="py-20 text-center">
-
-                <div class="inline-block
-                            animate-spin
-                            w-10 h-10
-                            border-4
-                            border-emerald-500
-                            border-t-transparent
-                            rounded-full">
-                </div>
-
-                <p class="text-slate-500 mt-4
-                        font-bold uppercase
-                        tracking-widest text-xs">
-
-                    Cargando partidos...
-
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <!-- ========================================================= -->
-        <!-- JAVASCRIPT -->
-        <!-- ========================================================= -->
-
-        <script>
-
-            // =========================================================
-            // PERMISOS DE ROL
-            // =========================================================
-
-            function puedeEditarRol() {
-
-                const content =
-                    document.getElementById('content');
-
-                return content?.dataset?.puedeEditar === 'true';
-
-            }
-
-
-            // =========================================================
-            // VARIABLES
-            // =========================================================
-
-            let partidos = [];
-
-            let campeonatos = [];
-
-            let modoBusqueda = false;
-
-
-            // =========================================================
-            // JWT
-            // =========================================================
-
-            function getJwt() {
-
-                const cookie =
-                    document.cookie
-                        .split('; ')
-                        .find(row =>
-                            row.startsWith('token=')
-                        );
-
-                return cookie
-                    ? cookie.substring(6)
-                    : null;
-            }
-
-
-            // =========================================================
-            // ESCAPAR HTML
-            // =========================================================
-
-            function escapeHtml(str) {
-
-                const div =
-                    document.createElement('div');
-
-                div.textContent =
-                    str ?? '';
-
-                return div.innerHTML;
-            }
-
-
-            // =========================================================
-            // FORMATEAR FECHA
-            // =========================================================
-
-            function formatearFecha(fecha) {
-
-                if (!fecha) {
-                    return '';
-                }
-
-                const partes =
-                    fecha.split('-');
-
-                if (partes.length !== 3) {
-                    return fecha;
-                }
-
-                return `${partes[2]}/${partes[1]}/${partes[0]}`;
-
-            }
-
-
-            // =========================================================
-            // OBTENER NOMBRE CAMPEONATO
-            // =========================================================
-
-            function obtenerNombreCampeonato(id) {
-
-                if (id === null || id === undefined) {
-                    return '-';
-                }
-
-                const campeonato =
-                    campeonatos.find(
-                        c => String(c.id) === String(id)
-                    );
-
-                if (campeonato) {
-
-                    return campeonato.nombre ||
-                        `Campeonato ${id}`;
-
-                }
-
-                return `Campeonato ${id}`;
-
-            }
-
-
-            // =========================================================
-            // CARGAR CAMPEONATOS
-            // =========================================================
-
-            async function cargarCampeonatos() {
-
-                const token = getJwt();
-
-                if (!token) {
-                    return;
-                }
-
-                try {
-
-                    const res =
-                        await fetch(
-                            '/api/campeonatos',
-                            {
-
-                                method: 'GET',
-
-                                headers: {
-
-                                    'Authorization':
-                                        'Bearer ' + token,
-
-                                    'Accept':
-                                        'application/json'
-
-                                }
-
-                            }
-                        );
-
-
-                    if (!res.ok) {
-                        return;
-                    }
-
-
-                    const data =
-                        await res.json();
-
-
-                    if (Array.isArray(data)) {
-
-                        campeonatos = data;
-
-                    } else if (
-                        data &&
-                        Array.isArray(data.content)
-                    ) {
-
-                        campeonatos =
-                            data.content;
-
-                    } else {
-
-                        campeonatos = [];
-
-                    }
-
-
-                    cargarSelectCampeonatos();
-
-
-                } catch (error) {
-
-                    console.error(
-                        "Error al cargar campeonatos:",
-                        error
-                    );
-
-                }
-
-            }
-
-
-            // =========================================================
-            // CARGAR SELECT DE CAMPEONATOS
-            // =========================================================
-
-            function cargarSelectCampeonatos() {
-
-                const select =
-                    document.getElementById(
-                        'filtroCampeonato'
-                    );
-
-
-                select.innerHTML = `
+                        pointer-events-none">
+                </i>
+
+                <select
+                    id="filtroCampeonato"
+                    class="w-full
+                           bg-slate-900
+                           border border-slate-800
+                           text-slate-300
+                           rounded-xl
+                           pl-10 pr-4
+                           py-3
+                           text-sm
+                           font-bold
+                           outline-none
+                           focus:border-emerald-500
+                           transition-all
+                           appearance-none">
 
                     <option value="">
                         Todos los campeonatos
                     </option>
 
-                `;
+                </select>
+
+            </div>
 
 
-                campeonatos.forEach(
-                    campeonato => {
+            <button
+                id="btnTodos"
+                type="button"
+                class="w-full lg:w-auto
+                       bg-emerald-500
+                       hover:bg-emerald-400
+                       text-slate-900
+                       px-6 py-3
+                       rounded-xl
+                       font-black
+                       text-xs
+                       uppercase
+                       tracking-widest
+                       transition-all
+                       whitespace-nowrap">
 
-                        const option =
-                            document.createElement(
-                                'option'
-                            );
+                Todos
 
-                        option.value =
-                            campeonato.id;
+            </button>
 
-                        option.textContent =
-                            `${campeonato.nombre || 'Campeonato'}${campeonato.año ? ' - ' + campeonato.año : ''}`;
+        </div>
 
-                        select.appendChild(
-                            option
-                        );
+    </div>
 
-                    }
+
+    <div class="flex items-start
+                justify-between
+                mb-4 sm:mb-5
+                px-1">
+
+        <div class="min-w-0">
+
+            <h2 id="tituloListado"
+                class="text-base sm:text-lg
+                       font-black
+                       text-white
+                       uppercase
+                       tracking-tight
+                       break-words">
+
+                Últimos partidos
+
+            </h2>
+
+            <p id="subtituloListado"
+               class="text-slate-600
+                      text-[11px] sm:text-xs
+                      font-bold mt-1">
+
+                Mostrando los últimos 3 partidos registrados.
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div id="partidosList"
+         class="flex flex-col gap-4 sm:gap-6">
+
+
+        <div id="loading"
+             class="py-16 sm:py-20
+                    text-center">
+
+            <div class="inline-block
+                        animate-spin
+                        w-9 h-9 sm:w-10 sm:h-10
+                        border-4
+                        border-emerald-500
+                        border-t-transparent
+                        rounded-full">
+            </div>
+
+            <p class="text-slate-500 mt-4
+                      font-bold uppercase
+                      tracking-widest text-[10px] sm:text-xs">
+
+                Cargando partidos...
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <script>
+
+        function puedeEditarRol() {
+
+            const content =
+                document.getElementById('content');
+
+            return content?.dataset?.puedeEditar === 'true';
+
+        }
+
+
+        let partidos = [];
+
+        let campeonatos = [];
+
+        let categorias = [];
+
+        let modoBusqueda = false;
+
+        let paginaPartidos = 1;
+        const PARTIDOS_POR_PAGINA = 3;
+
+
+        function getJwt() {
+
+            const cookie =
+                document.cookie
+                    .split('; ')
+                    .find(row =>
+                        row.startsWith('token=')
+                    );
+
+            return cookie
+                ? cookie.substring(6)
+                : null;
+        }
+
+
+        function escapeHtml(str) {
+
+            const div =
+                document.createElement('div');
+
+            div.textContent =
+                str ?? '';
+
+            return div.innerHTML;
+
+        }
+
+
+        function formatearFecha(fecha) {
+
+            if (!fecha) {
+                return '';
+            }
+
+            const partes =
+                fecha.split('-');
+
+            if (partes.length !== 3) {
+                return fecha;
+            }
+
+            return `${partes[2]}/${partes[1]}/${partes[0]}`;
+
+        }
+
+        function obtenerNombreCampeonato(id) {
+
+            if (id === null || id === undefined) {
+                return '-';
+            }
+
+            const campeonato =
+                campeonatos.find(
+                    c => String(c.id) === String(id)
+                );
+
+            if (campeonato) {
+
+                return campeonato.nombre ||
+                    `Campeonato ${id}`;
+
+            }
+
+            return `Campeonato ${id}`;
+
+        }
+
+
+        function obtenerNombreCategoria(id) {
+
+            if (id === null || id === undefined) {
+                return '-';
+            }
+
+            const categoria =
+                categorias.find(
+                    c => String(c.id) === String(id)
+                );
+
+            if (categoria) {
+
+                return categoria.nombre ||
+                    `Categoría ${id}`;
+
+            }
+
+            return `Categoría ${id}`;
+
+        }
+
+
+        async function cargarCategorias() {
+
+            const token = getJwt();
+
+            if (!token) {
+                return;
+            }
+
+            try {
+
+                const res =
+                    await fetch(
+                        '/api/categorias',
+                        {
+
+                            method: 'GET',
+
+                            headers: {
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            }
+
+                        }
+                    );
+
+                if (!res.ok) {
+                    return;
+                }
+
+                const data =
+                    await res.json();
+
+                if (Array.isArray(data)) {
+
+                    categorias = data;
+
+                } else if (
+                    data &&
+                    Array.isArray(data.content)
+                ) {
+
+                    categorias = data.content;
+
+                } else {
+
+                    categorias = [];
+
+                }
+
+                mostrarPartidos();
+
+            } catch (error) {
+
+                console.error(
+                    "Error al cargar categorías:",
+                    error
                 );
 
             }
 
-
-            // =========================================================
-            // CARGAR PARTIDOS
-            // =========================================================
-
-            async function cargarPartidos() {
-
-                const lista =
-                    document.getElementById(
-                        'partidosList'
-                    );
+        }
 
 
-                const token =
-                    getJwt();
+        async function cargarCampeonatos() {
 
+            const token = getJwt();
 
-                if (!token) {
+            if (!token) {
+                return;
+            }
 
-                    lista.innerHTML = `
+            try {
 
-                        <div class="py-20
-                                    text-center
-                                    border-2
-                                    border-dashed
-                                    border-slate-800
-                                    rounded-[2rem]">
+                const res =
+                    await fetch(
+                        '/api/campeonatos',
+                        {
 
-                            <p class="text-red-500 font-bold">
+                            method: 'GET',
 
-                                Sesión expirada.
+                            headers: {
 
-                            </p>
+                                'Authorization':
+                                    'Bearer ' + token,
 
-                        </div>
-
-                    `;
-
-                    return;
-
-                }
-
-
-                try {
-
-                    const res =
-                        await fetch(
-                            '/api/partidos',
-                            {
-
-                                method: 'GET',
-
-                                headers: {
-
-                                    'Authorization':
-                                        'Bearer ' + token,
-
-                                    'Accept':
-                                        'application/json'
-
-                                }
+                                'Accept':
+                                    'application/json'
 
                             }
-                        );
-
-
-                    if (!res.ok) {
-
-                        if (
-                            res.status === 401 ||
-                            res.status === 403
-                        ) {
-
-                            throw new Error(
-                                "No tenés permisos para consultar los partidos."
-                            );
 
                         }
-
-                        throw new Error(
-                            "Error al obtener los partidos."
-                        );
-
-                    }
-
-
-                    const data =
-                        await res.json();
-
-
-                    console.log(
-                        "Respuesta /api/partidos:",
-                        data
                     );
 
 
-                    // =================================================
-                    // ARRAY O PAGINACIÓN
-                    // =================================================
-
-                    if (Array.isArray(data)) {
-
-                        partidos = data;
-
-                    } else if (
-                        data &&
-                        Array.isArray(data.content)
-                    ) {
-
-                        partidos =
-                            data.content;
-
-                    } else if (
-                        data &&
-                        typeof data === 'object'
-                    ) {
-
-                        partidos = [data];
-
-                    } else {
-
-                        partidos = [];
-
-                    }
+                if (!res.ok) {
+                    return;
+                }
 
 
-                    mostrarPartidos();
+                const data =
+                    await res.json();
 
 
-                } catch (error) {
+                if (Array.isArray(data)) {
 
-                    console.error(
-                        "Error al cargar partidos:",
-                        error
-                    );
+                    campeonatos = data;
 
+                } else if (
+                    data &&
+                    Array.isArray(data.content)
+                ) {
 
-                    lista.innerHTML = `
+                    campeonatos =
+                        data.content;
 
-                        <div class="p-10
-                                    bg-red-500/10
-                                    border
-                                    border-red-500/20
-                                    rounded-[2rem]
-                                    text-red-500
-                                    text-center">
+                } else {
 
-                            <i class="fa-solid
-                                    fa-circle-exclamation
-                                    text-xl mb-3">
-                            </i>
-
-                            <p class="font-black">
-
-                                ERROR AL CARGAR LOS PARTIDOS
-
-                            </p>
-
-                            <p class="text-xs
-                                    mt-2
-                                    text-red-400">
-
-                                ${escapeHtml(
-                                    error.message
-                                )}
-
-                            </p>
-
-                        </div>
-
-                    `;
+                    campeonatos = [];
 
                 }
+
+
+                cargarSelectCampeonatos();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error al cargar campeonatos:",
+                    error
+                );
+
+            }
+
+        }
+
+
+        function cargarSelectCampeonatos() {
+
+            const select =
+                document.getElementById(
+                    'filtroCampeonato'
+                );
+
+
+            select.innerHTML = `
+
+                <option value="">
+                    Todos los campeonatos
+                </option>
+
+            `;
+
+
+            campeonatos.forEach(
+                campeonato => {
+
+                    const option =
+                        document.createElement(
+                            'option'
+                        );
+
+                    option.value =
+                        campeonato.id;
+
+                    option.textContent =
+                        `${campeonato.nombre || 'Campeonato'}${campeonato.año ? ' - ' + campeonato.año : ''}`;
+
+                    select.appendChild(
+                        option
+                    );
+
+                }
+            );
+
+        }
+
+
+        async function cargarPartidos() {
+
+            const lista =
+                document.getElementById(
+                    'partidosList'
+                );
+
+
+            const token =
+                getJwt();
+
+
+            if (!token) {
+
+                lista.innerHTML = `
+
+                    <div class="py-16 sm:py-20
+                                text-center
+                                border-2
+                                border-dashed
+                                border-slate-800
+                                rounded-2xl sm:rounded-[2rem]
+                                px-4">
+
+                        <p class="text-red-500 font-bold">
+
+                            Sesión expirada.
+
+                        </p>
+
+                    </div>
+
+                `;
+
+                return;
 
             }
 
 
-            // =========================================================
-            // MOSTRAR PARTIDOS
-            // =========================================================
+            try {
 
-            function mostrarPartidos() {
+                const res =
+                    await fetch(
+                        '/api/partidos',
+                        {
 
-                const lista =
-                    document.getElementById(
-                        'partidosList'
+                            method: 'GET',
+
+                            headers: {
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            }
+
+                        }
                     );
 
 
-                lista.innerHTML = '';
+                if (!res.ok) {
 
+                    if (
+                        res.status === 401 ||
+                        res.status === 403
+                    ) {
 
-                const texto =
-                    document.getElementById(
-                        'inputBusqueda'
-                    ).value
-                    .trim()
-                    .toLowerCase();
-
-
-                const campeonatoId =
-                    document.getElementById(
-                        'filtroCampeonato'
-                    ).value;
-
-
-                // =====================================================
-                // DETERMINAR SI HAY BÚSQUEDA
-                // =====================================================
-
-                modoBusqueda =
-                    texto !== '' ||
-                    campeonatoId !== '';
-
-
-                // =====================================================
-                // FILTRAR
-                // =====================================================
-
-                let partidosFiltrados =
-                    [...partidos];
-
-
-                if (texto !== '') {
-
-                    partidosFiltrados =
-                        partidosFiltrados.filter(
-                            partido => {
-
-                                const rival =
-                                    String(
-                                        partido.rival || ''
-                                    ).toLowerCase();
-
-
-                                const jornada =
-                                    String(
-                                        partido.jornada || ''
-                                    ).toLowerCase();
-
-
-                                return rival.includes(texto) ||
-                                    jornada.includes(texto);
-
-                            }
+                        throw new Error(
+                            "No tenés permisos para consultar los partidos."
                         );
+
+                    }
+
+                    throw new Error(
+                        "Error al obtener los partidos."
+                    );
 
                 }
 
 
-                // =====================================================
-                // FILTRO CAMPEONATO
-                // =====================================================
+                const data =
+                    await res.json();
+
+
+                console.log(
+                    "Respuesta /api/partidos:",
+                    data
+                );
+
+
+                if (Array.isArray(data)) {
+
+                    partidos = data;
+
+                } else if (
+                    data &&
+                    Array.isArray(data.content)
+                ) {
+
+                    partidos =
+                        data.content;
+
+                } else if (
+                    data &&
+                    typeof data === 'object'
+                ) {
+
+                    partidos = [data];
+
+                } else {
+
+                    partidos = [];
+
+                }
+
+
+                mostrarPartidos();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error al cargar partidos:",
+                    error
+                );
+
+
+                lista.innerHTML = `
+
+                    <div class="p-6 sm:p-10
+                                bg-red-500/10
+                                border
+                                border-red-500/20
+                                rounded-2xl sm:rounded-[2rem]
+                                text-red-500
+                                text-center">
+
+                        <i class="fa-solid
+                                fa-circle-exclamation
+                                text-xl mb-3">
+                        </i>
+
+                        <p class="font-black">
+
+                            ERROR AL CARGAR LOS PARTIDOS
+
+                        </p>
+
+                        <p class="text-xs
+                                mt-2
+                                text-red-400
+                                break-words">
+
+                            ${escapeHtml(
+                                error.message
+                            )}
+
+                        </p>
+
+                    </div>
+
+                `;
+
+            }
+
+        }
+
+
+        function mostrarPartidos(resetPagina = true) {
+
+            if (resetPagina) {
+                paginaPartidos = 1;
+            }
+
+            const lista =
+                document.getElementById(
+                    'partidosList'
+                );
+
+
+            lista.innerHTML = '';
+
+
+            const texto =
+                document.getElementById(
+                    'inputBusqueda'
+                ).value
+                .trim()
+                .toLowerCase();
+
+
+            const campeonatoId =
+                document.getElementById(
+                    'filtroCampeonato'
+                ).value;
+
+            modoBusqueda =
+                texto !== '' ||
+                campeonatoId !== '';
+
+
+            let partidosFiltrados =
+                [...partidos];
+
+
+            if (texto !== '') {
+
+                partidosFiltrados =
+                    partidosFiltrados.filter(
+                        partido => {
+
+                            const rival =
+                                String(
+                                    partido.rival || ''
+                                ).toLowerCase();
+
+
+                            const jornada =
+                                String(
+                                    partido.jornada || ''
+                                ).toLowerCase();
+
+
+                            return rival.includes(texto) ||
+                                jornada.includes(texto);
+
+                        }
+                    );
+
+            }
+
+
+            if (campeonatoId !== '') {
+
+                partidosFiltrados =
+                    partidosFiltrados.filter(
+                        partido =>
+
+                            String(
+                                partido.campeonatoId
+                            ) === String(
+                                campeonatoId
+                            )
+
+                    );
+
+            }
+
+
+            partidosFiltrados.sort(
+                (a, b) => {
+
+                    const fechaA =
+                        a.fecha
+                            ? new Date(
+                                a.fecha + 'T00:00:00'
+                            ).getTime()
+                            : 0;
+
+
+                    const fechaB =
+                        b.fecha
+                            ? new Date(
+                                b.fecha + 'T00:00:00'
+                            ).getTime()
+                            : 0;
+
+
+                    return fechaB - fechaA;
+
+                }
+            );
+
+
+            if (!modoBusqueda) {
+
+                partidosFiltrados =
+                    partidosFiltrados.slice(
+                        0,
+                        3
+                    );
+
+
+                document.getElementById(
+                    'tituloListado'
+                ).textContent =
+                    'Últimos partidos';
+
+
+                document.getElementById(
+                    'subtituloListado'
+                ).textContent =
+                    'Mostrando los últimos 3 partidos registrados.';
+
+            }
+
+
+            else {
+
+                let textoTitulo =
+                    'Resultados de búsqueda';
+
 
                 if (campeonatoId !== '') {
 
-                    partidosFiltrados =
-                        partidosFiltrados.filter(
-                            partido =>
-
-                                String(
-                                    partido.campeonatoId
-                                ) === String(
-                                    campeonatoId
-                                )
-
-                        );
-
-                }
-
-
-                // =====================================================
-                // ORDENAR POR FECHA
-                // MÁS RECIENTE PRIMERO
-                // =====================================================
-
-                partidosFiltrados.sort(
-                    (a, b) => {
-
-                        const fechaA =
-                            a.fecha
-                                ? new Date(
-                                    a.fecha + 'T00:00:00'
-                                ).getTime()
-                                : 0;
-
-
-                        const fechaB =
-                            b.fecha
-                                ? new Date(
-                                    b.fecha + 'T00:00:00'
-                                ).getTime()
-                                : 0;
-
-
-                        return fechaB - fechaA;
-
-                    }
-                );
-
-
-                // =====================================================
-                // SI NO HAY BÚSQUEDA
-                // MOSTRAR SOLO LOS ÚLTIMOS 3
-                // =====================================================
-
-                if (!modoBusqueda) {
-
-                    partidosFiltrados =
-                        partidosFiltrados.slice(
-                            0,
-                            3
+                    const campeonato =
+                        campeonatos.find(
+                            c =>
+                                String(c.id) ===
+                                String(campeonatoId)
                         );
 
 
-                    document.getElementById(
-                        'tituloListado'
-                    ).textContent =
-                        'Últimos partidos';
+                    if (campeonato) {
 
-
-                    document.getElementById(
-                        'subtituloListado'
-                    ).textContent =
-                        'Mostrando los últimos 3 partidos registrados.';
-
-                }
-
-
-                // =====================================================
-                // SI HAY BÚSQUEDA
-                // MOSTRAR TODOS
-                // =====================================================
-
-                else {
-
-                    let textoTitulo =
-                        'Resultados de búsqueda';
-
-
-                    if (campeonatoId !== '') {
-
-                        const campeonato =
-                            campeonatos.find(
-                                c =>
-                                    String(c.id) ===
-                                    String(campeonatoId)
-                            );
-
-
-                        if (campeonato) {
-
-                            textoTitulo =
-                                campeonato.nombre ||
-                                'Partidos del campeonato';
-
-                        }
+                        textoTitulo =
+                            campeonato.nombre ||
+                            'Partidos del campeonato';
 
                     }
 
-
-                    document.getElementById(
-                        'tituloListado'
-                    ).textContent =
-                        textoTitulo;
-
-
-                    document.getElementById(
-                        'subtituloListado'
-                    ).textContent =
-                        `${partidosFiltrados.length} partido${partidosFiltrados.length === 1 ? '' : 's'} encontrado${partidosFiltrados.length === 1 ? '' : 's'}.`;
-
                 }
 
 
-                // =====================================================
-                // SIN PARTIDOS
-                // =====================================================
-
-                if (partidosFiltrados.length === 0) {
-
-                    let mensaje =
-                        modoBusqueda
-                            ? 'No se encontraron partidos.'
-                            : 'No hay partidos registrados.';
+                document.getElementById(
+                    'tituloListado'
+                ).textContent =
+                    textoTitulo;
 
 
-                    let detalle =
-                        modoBusqueda
-                            ? 'Probá con otro rival, jornada o campeonato.'
-                            : 'Creá un partido para comenzar.';
+                document.getElementById(
+                    'subtituloListado'
+                ).textContent =
+                    `${partidosFiltrados.length} partido${partidosFiltrados.length === 1 ? '' : 's'} encontrado${partidosFiltrados.length === 1 ? '' : 's'}.`;
+
+            }
 
 
-                    lista.innerHTML = `
+            if (partidosFiltrados.length === 0) {
 
-                        <div class="py-20
-                                    text-center
-                                    border-2
-                                    border-dashed
-                                    border-slate-800
-                                    rounded-[2rem]">
-
-                            <div class="w-16 h-16
-                                        mx-auto mb-5
-                                        rounded-2xl
-                                        bg-slate-800
-                                        flex items-center
-                                        justify-center">
-
-                                <i class="fa-solid
-                                        fa-futbol
-                                        text-2xl
-                                        text-slate-600">
-                                </i>
-
-                            </div>
+                let mensaje =
+                    modoBusqueda
+                        ? 'No se encontraron partidos.'
+                        : 'No hay partidos registrados.';
 
 
-                            <p class="text-slate-500
-                                    font-bold">
-
-                                ${mensaje}
-
-                            </p>
+                let detalle =
+                    modoBusqueda
+                        ? 'Probá con otro rival, jornada o campeonato.'
+                        : 'Creá un partido para comenzar.';
 
 
-                            <p class="text-slate-700
-                                    text-xs mt-2">
+                lista.innerHTML = `
 
-                                ${detalle}
+                    <div class="py-16 sm:py-20
+                                px-4
+                                text-center
+                                border-2
+                                border-dashed
+                                border-slate-800
+                                rounded-2xl sm:rounded-[2rem]">
 
-                            </p>
+                        <div class="w-14 h-14 sm:w-16 sm:h-16
+                                    mx-auto mb-5
+                                    rounded-2xl
+                                    bg-slate-800
+                                    flex items-center
+                                    justify-center">
+
+                            <i class="fa-solid
+                                    fa-futbol
+                                    text-xl sm:text-2xl
+                                    text-slate-600">
+                            </i>
 
                         </div>
 
-                    `;
 
-                    return;
+                        <p class="text-slate-500
+                                  font-bold">
 
-                }
+                            ${mensaje}
 
-
-                // =====================================================
-                // CREAR CARDS
-                // =====================================================
-
-                partidosFiltrados.forEach(
-                    partido => {
+                        </p>
 
 
-                        // =================================================
-                        // FECHA
-                        // =================================================
+                        <p class="text-slate-700
+                                  text-xs mt-2">
 
-                        const fecha =
-                            formatearFecha(
-                                partido.fecha
-                            );
+                            ${detalle}
 
+                        </p>
 
-                        // =================================================
-                        // LOCAL / VISITANTE
-                        // =================================================
+                    </div>
 
-                        /*
-                        * true  = LOCAL
-                        * false = VISITANTE
-                        *
-                        * También aceptamos "true"/"false"
-                        * por si el JSON llega como String.
-                        */
+                `;
 
-                        const esLocal =
-                            partido.local === true ||
-                            partido.local === "true";
+                return;
+
+            }
 
 
-                        const condicion =
-                            esLocal
-                                ? 'Local'
-                                : 'Visitante';
+            const usarPaginacion =
+                modoBusqueda &&
+                partidosFiltrados.length > PARTIDOS_POR_PAGINA;
+
+            const totalPaginas =
+                usarPaginacion
+                    ? Math.ceil(
+                        partidosFiltrados.length /
+                        PARTIDOS_POR_PAGINA
+                    )
+                    : 1;
+
+            if (paginaPartidos > totalPaginas) {
+                paginaPartidos = totalPaginas;
+            }
+
+            const partidosAMostrar =
+                usarPaginacion
+                    ? partidosFiltrados.slice(
+                        (paginaPartidos - 1) * PARTIDOS_POR_PAGINA,
+                        paginaPartidos * PARTIDOS_POR_PAGINA
+                    )
+                    : partidosFiltrados;
 
 
-                        const condicionClase =
-                            esLocal
-                                ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
-                                : 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+            partidosAMostrar.forEach(
+                partido => {
 
 
-                        // =================================================
-                        // RESULTADO
-                        // =================================================
-
-                        const resultado =
-                            partido.resultado || '';
+                    const fecha =
+                        formatearFecha(
+                            partido.fecha
+                        );
 
 
-                        const tieneResultado =
-                            resultado.trim() !== '';
+                    const esLocal =
+                        partido.local === true ||
+                        partido.local === "true";
 
 
-                        // =================================================
-                        // NOMBRE CAMPEONATO
-                        // =================================================
-
-                        const nombreCampeonato =
-                            obtenerNombreCampeonato(
-                                partido.campeonatoId
-                            );
+                    const condicion =
+                        esLocal
+                            ? 'Local'
+                            : 'Visitante';
 
 
-                        // =================================================
-                        // ACCIONES SEGÚN ROL
-                        // =================================================
-
-                        const acciones =
-                            puedeEditarRol()
-                                ? `
-
-                                    <!-- RESULTADO -->
-
-                                    <button
-                                        type="button"
-                                        class="btn-resultado
-                                            flex-1
-                                            bg-emerald-500/10
-                                            hover:bg-emerald-500
-                                            text-emerald-500
-                                            hover:text-slate-900
-                                            py-3
-                                            rounded-xl
-                                            font-bold
-                                            transition-all
-                                            text-xs
-                                            uppercase
-                                            tracking-widest"
-                                        data-id="${partido.id}">
-
-                                        <i class="fa-solid
-                                                fa-square-poll-vertical
-                                                mr-1">
-                                        </i>
-
-                                        ${tieneResultado
-                                            ? 'Editar resultado'
-                                            : 'Cargar resultado'}
-
-                                    </button>
+                    const condicionClase =
+                        esLocal
+                            ? 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20'
+                            : 'bg-blue-500/10 text-blue-400 border-blue-500/20';
 
 
-                                    <!-- EDITAR -->
-
-                                    <a
-                                        href="/partidos/nuevo?id=${partido.id}"
-                                        class="w-12
-                                            bg-slate-800
-                                            hover:bg-emerald-500/20
-                                            text-slate-400
-                                            hover:text-emerald-500
-                                            rounded-xl
-                                            flex
-                                            items-center
-                                            justify-center
-                                            transition-all">
-
-                                        <i class="fa-solid
-                                                fa-pen">
-                                        </i>
-
-                                    </a>
+                    const resultado =
+                        partido.resultado || '';
 
 
-                                    <!-- ELIMINAR -->
-
-                                    <button
-                                        type="button"
-                                        class="btn-eliminar
-                                            w-12
-                                            bg-slate-800
-                                            hover:bg-red-500/20
-                                            text-slate-400
-                                            hover:text-red-500
-                                            rounded-xl
-                                            transition-all"
-                                        data-id="${partido.id}"
-                                        data-rival="${escapeHtml(
-                                            partido.rival || ''
-                                        )}">
-
-                                        <i class="fa-solid
-                                                fa-trash-can">
-                                        </i>
-
-                                    </button>
-
-                                `
-                                : '';
+                    const tieneResultado =
+                        resultado.trim() !== '';
 
 
-                        // =================================================
-                        // CARD
-                        // =================================================
 
-                        const card =
-                            document.createElement(
-                                'div'
-                            );
+                    const nombreCategoria =
+                        obtenerNombreCategoria(
+                            partido.categoriaId
+                        );
 
-
-                        card.className =
-                            `bg-[#0f172a]
-                            border border-slate-800
-                            rounded-[2.5rem]
-                            p-8
-                            relative
-                            hover:border-emerald-500/40
-                            transition-all
-                            group`;
+                    const nombreCampeonato =
+                        obtenerNombreCampeonato(
+                            partido.campeonatoId
+                        );
 
 
-                        card.innerHTML = `
+
+                    const acciones =
+                        puedeEditarRol()
+                            ? `
 
 
-                            <!-- ========================================= -->
-                            <!-- CABECERA -->
-                            <!-- ========================================= -->
+                                <button
+                                    type="button"
+                                    class="btn-resultado
+                                        flex-1
+                                        bg-emerald-500/10
+                                        hover:bg-emerald-500
+                                        text-emerald-500
+                                        hover:text-slate-900
+                                        py-3
+                                        rounded-xl
+                                        font-bold
+                                        transition-all
+                                        text-xs
+                                        uppercase
+                                        tracking-widest"
+                                    data-id="${partido.id}">
+
+                                    <i class="fa-solid
+                                            fa-square-poll-vertical
+                                            mr-1">
+                                    </i>
+
+                                    ${tieneResultado
+                                        ? 'Editar resultado'
+                                        : 'Cargar resultado'}
+
+                                </button>
+
+
+                                <a
+                                    href="/partidos/nuevo?id=${partido.id}"
+                                    class="w-12
+                                        bg-slate-800
+                                        hover:bg-emerald-500/20
+                                        text-slate-400
+                                        hover:text-emerald-500
+                                        rounded-xl
+                                        flex
+                                        items-center
+                                        justify-center
+                                        transition-all">
+
+                                    <i class="fa-solid
+                                            fa-pen">
+                                    </i>
+
+                                </a>
+
+
+                                <button
+                                    type="button"
+                                    class="btn-eliminar
+                                        w-12
+                                        bg-slate-800
+                                        hover:bg-red-500/20
+                                        text-slate-400
+                                        hover:text-red-500
+                                        rounded-xl
+                                        transition-all"
+                                    data-id="${partido.id}"
+                                    data-rival="${escapeHtml(
+                                        partido.rival || ''
+                                    )}">
+
+                                    <i class="fa-solid
+                                            fa-trash-can">
+                                    </i>
+
+                                </button>
+
+                            `
+                            : '';
+
+
+
+                    const card =
+                        document.createElement(
+                            'div'
+                        );
+
+
+                    card.className =
+                        `bg-[#0f172a]
+                        border border-slate-800
+                        rounded-2xl sm:rounded-[2.5rem]
+                        p-5 sm:p-8
+                        relative
+                        hover:border-emerald-500/40
+                        transition-all
+                        group
+                        min-w-0`;
+
+
+                    card.innerHTML = `
+
+
+                        <div class="flex flex-col
+                                    sm:flex-row
+                                    sm:justify-between
+                                    sm:items-start
+                                    gap-3
+                                    mb-6 sm:mb-8">
+
 
                             <div class="flex
-                                        justify-between
-                                        items-start
-                                        mb-8">
+                                        items-center
+                                        gap-2
+                                        min-w-0">
 
-
-                                <div class="flex
-                                            items-center
-                                            gap-2">
-
-                                    <span class="w-2 h-2
-                                                bg-emerald-500
-                                                rounded-full">
-                                    </span>
-
-
-                                    <span class="text-[10px]
-                                                font-black
-                                                text-slate-400
-                                                uppercase
-                                                tracking-widest">
-
-                                        ${escapeHtml(fecha)}
-
-                                        ·
-
-                                        Jornada
-                                        ${escapeHtml(
-                                            partido.jornada || ''
-                                        )}
-
-                                    </span>
-
-                                </div>
-
-
-                                <!-- LOCAL / VISITANTE -->
-
-                                <span class="${condicionClase}
-                                            border
-                                            px-4 py-1
+                                <span class="w-2 h-2
+                                            bg-emerald-500
                                             rounded-full
-                                            text-[10px]
-                                            font-black
-                                            uppercase">
+                                            shrink-0">
+                                </span>
 
-                                    ${condicion}
+
+                                <span class="text-[9px] sm:text-[10px]
+                                            font-black
+                                            text-slate-400
+                                            uppercase
+                                            tracking-widest
+                                            break-words">
+
+                                    ${escapeHtml(fecha)}
+
+                                    ·
+
+                                    Jornada
+                                    ${escapeHtml(
+                                        partido.jornada || ''
+                                    )}
 
                                 </span>
 
                             </div>
 
 
-                            <!-- ========================================= -->
-                            <!-- PARTIDO -->
-                            <!-- ========================================= -->
+                            <span class="${condicionClase}
+                                        border
+                                        px-3 sm:px-4 py-1
+                                        rounded-full
+                                        text-[9px] sm:text-[10px]
+                                        font-black
+                                        uppercase
+                                        self-start
+                                        shrink-0">
 
-                            <div class="flex
-                                        items-center
-                                        justify-around
-                                        mb-8">
+                                ${condicion}
+
+                            </span>
+
+                        </div>
 
 
-                                ${
-                                    esLocal
-                                        ? `
-                                            <!-- CLUB LOCAL -->
+                        <div class="flex
+                                    items-center
+                                    justify-between
+                                    gap-2 sm:gap-4
+                                    mb-6 sm:mb-8
+                                    min-w-0">
 
-                                            <div class="text-center
-                                                        w-28">
 
-                                                <img
-                                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFoWW9Qj6yO6eX2UjfyWmJNxQw_9EheO0KJF-zaevWvl1fBtSP_zBFzYk&s=10"
-                                                    class="w-20 h-20
-                                                        object-contain
-                                                        mx-auto mb-2
-                                                        drop-shadow-xl"
-                                                    alt="Complejo Deportivo Justiniano Posse">
+                            ${
+                                esLocal
+                                    ? `
+                                        <div class="text-center
+                                                    w-20 sm:w-28
+                                                    min-w-0">
 
-                                                <p class="font-black
-                                                        italic
-                                                        text-sm
-                                                        tracking-tighter">
+                                            <img
+                                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFoWW9Qj6yO6eX2UjfyWmJNxQw_9EheO0KJF-zaevWvl1fBtSP_zBFzYk&s=10"
+                                                class="w-16 h-16
+                                                       sm:w-20 sm:h-20
+                                                       object-contain
+                                                       mx-auto mb-2
+                                                       drop-shadow-xl"
+                                                alt="Complejo Deportivo Justiniano Posse">
 
-                                                    CDJP
+                                            <p class="font-black
+                                                    italic
+                                                    text-xs sm:text-sm
+                                                    tracking-tighter
+                                                    break-words">
 
-                                                </p>
+                                                CDJP
 
-                                            </div>
-                                        `
-                                        : `
-                                            <!-- RIVAL LOCAL -->
+                                            </p>
 
-                                            <div class="text-center
-                                                        w-28">
+                                        </div>
+                                    `
+                                    : `
+                                        <div class="text-center
+                                                    w-20 sm:w-28
+                                                    min-w-0">
 
-                                                                                       ${
+                                            ${
                                                 partido.imagenRival
                                                     ? `
                                                         <img
                                                            src="${escapeHtml(partido.imagenRival)}"
                                                            alt="Escudo de ${escapeHtml(partido.rival || 'Rival')}"
-                                                           class="w-20 h-20
-                                                           object-contain
-                                                           mx-auto mb-2
-                                                           drop-shadow-xl">
+                                                           class="w-16 h-16
+                                                                  sm:w-20 sm:h-20
+                                                                  object-contain
+                                                                  mx-auto mb-2
+                                                                  drop-shadow-xl">
                                                       `
                                                     : `
-                                                        <div class="w-20 h-20
+                                                        <div class="w-16 h-16
+                                                                    sm:w-20 sm:h-20
                                                                     bg-slate-800
                                                                     rounded-full
                                                                     flex
                                                                     items-center
                                                                     justify-center
                                                                     mx-auto mb-2
-                                                                    text-2xl
+                                                                    text-xl sm:text-2xl
                                                                     font-black
                                                                     text-slate-600">
 
@@ -1235,689 +1247,762 @@
                                                       `
                                             }
 
-                                                <p class="font-black
-                                                        italic
-                                                        text-sm
-                                                        tracking-tighter
-                                                        text-slate-500
-                                                        uppercase">
+                                            <p class="font-black
+                                                    italic
+                                                    text-xs sm:text-sm
+                                                    tracking-tighter
+                                                    text-slate-500
+                                                    uppercase
+                                                    break-words">
 
-                                                    ${escapeHtml(
-                                                        partido.rival || ''
-                                                    )}
+                                                ${escapeHtml(
+                                                    partido.rival || ''
+                                                )}
 
-                                                </p>
-
-                                            </div>
-                                        `
-                                }
-
-
-                                <!-- RESULTADO -->
-
-                                <div class="text-center">
-
-                                    <div class="text-3xl
-                                                font-black
-                                                italic
-                                                text-emerald-500">
-
-                                        ${tieneResultado
-                                            ? escapeHtml(resultado)
-                                            : 'VS'}
-
-                                    </div>
-
-                                </div>
-
-
-                                ${
-                                    esLocal
-                                        ? `
-                                            <!-- RIVAL VISITANTE -->
-
-                                            <div class="text-center
-                                                        w-28">
-
-                                                ${
-                                                    partido.imagenRival
-                                                        ? `
-                                                            <img
-                                                                src="${escapeHtml(partido.imagenRival)}"
-                                                                alt="Escudo de ${escapeHtml(partido.rival || 'Rival')}"
-                                                                class="w-20 h-20
-                                                                    bg-slate-800
-                                                                    rounded-full
-                                                                    object-contain
-                                                                    p-2
-                                                                    mx-auto mb-2
-                                                                    drop-shadow-xl">
-                                                        `
-                                                        : `
-                                                            <div class="w-20 h-20
-                                                                        bg-slate-800
-                                                                        rounded-full
-                                                                        flex
-                                                                        items-center
-                                                                        justify-center
-                                                                        mx-auto mb-2
-                                                                        text-2xl
-                                                                        font-black
-                                                                        text-slate-600">
-
-                                                                ${escapeHtml(
-                                                                    (partido.rival || '?')
-                                                                        .charAt(0)
-                                                                        .toUpperCase()
-                                                                )}
-
-                                                            </div>
-                                                        `
-                                                }
-
-                                                <p class="font-black
-                                                        italic
-                                                        text-sm
-                                                        tracking-tighter
-                                                        text-slate-500
-                                                        uppercase">
-
-                                                    ${escapeHtml(
-                                                        partido.rival || ''
-                                                    )}
-
-                                                </p>
-
-                                            </div>
-                                        `
-                                        : `
-                                            <!-- CLUB VISITANTE -->
-
-                                            <div class="text-center
-                                                        w-28">
-
-                                                <img
-                                                    src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFoWW9Qj6yO6eX2UjfyWmJNxQw_9EheO0KJF-zaevWvl1fBtSP_zBFzYk&s=10"
-                                                    class="w-20 h-20
-                                                        object-contain
-                                                        mx-auto mb-2
-                                                        drop-shadow-xl"
-                                                    alt="Complejo Deportivo Justiniano Posse">
-
-                                                <p class="font-black
-                                                        italic
-                                                        text-sm
-                                                        tracking-tighter">
-
-                                                    CDJP
-
-                                                </p>
-
-                                            </div>
-                                        `
-                                }
-
-                            </div>
-
-
-                            <!-- ========================================= -->
-                            <!-- INFORMACIÓN -->
-                            <!-- ========================================= -->
-
-                            <div class="border-t
-                                        border-slate-800
-                                        pt-6
-                                        space-y-3">
-
-
-                                <!-- CATEGORÍA -->
-
-                                <div class="flex
-                                            items-center
-                                            gap-2">
-
-                                    <i class="fa-solid
-                                            fa-layer-group
-                                            text-emerald-500
-                                            text-xs">
-                                    </i>
-
-
-                                    <span class="text-xs
-                                                font-bold
-                                                text-slate-300">
-
-                                        Categoría:
-                                        ${escapeHtml(
-                                            partido.categoriaId ?? '-'
-                                        )}
-
-                                    </span>
-
-                                </div>
-
-
-                                <!-- CAMPEONATO -->
-
-                                <div class="flex
-                                            items-center
-                                            gap-2">
-
-                                    <i class="fa-solid
-                                            fa-trophy
-                                            text-emerald-500
-                                            text-xs">
-                                    </i>
-
-
-                                    <span class="text-xs
-                                                font-bold
-                                                text-slate-300">
-
-                                        Campeonato:
-                                        ${escapeHtml(
-                                            nombreCampeonato
-                                        )}
-
-                                    </span>
-
-                                </div>
-
-
-                                <!-- ESTADO -->
-
-                                <div class="flex
-                                            items-center
-                                            gap-2">
-
-                                    <i class="fa-solid
-                                            ${tieneResultado
-                                                ? 'fa-circle-check'
-                                                : 'fa-clock'}
-                                            text-emerald-500
-                                            text-xs">
-                                    </i>
-
-
-                                    <span class="text-xs
-                                                font-bold
-                                                ${tieneResultado
-                                                    ? 'text-emerald-500'
-                                                    : 'text-slate-500'}">
-
-                                        ${tieneResultado
-                                            ? 'Partido jugado'
-                                            : 'Pendiente de resultado'}
-
-                                    </span>
-
-                                </div>
-
-                            </div>
-
-
-                            <!-- ========================================= -->
-                            <!-- ACCIONES -->
-                            <!-- ========================================= -->
-
-                            ${
-                                puedeEditarRol()
-                                    ? `
-                                        <div class="mt-6
-                                                    flex
-                                                    gap-2">
-
-                                            ${acciones}
+                                            </p>
 
                                         </div>
                                     `
-                                    : ''
                             }
 
-                        `;
+
+                            <div class="text-center
+                                        shrink-0">
+
+                                <div class="text-2xl sm:text-3xl
+                                            font-black
+                                            italic
+                                            text-emerald-500">
+
+                                    ${tieneResultado
+                                        ? escapeHtml(resultado)
+                                        : 'VS'}
+
+                                </div>
+
+                            </div>
 
 
-                        lista.appendChild(
-                            card
+                            ${
+                                esLocal
+                                    ? `
+                                        <div class="text-center
+                                                    w-20 sm:w-28
+                                                    min-w-0">
+
+                                            ${
+                                                partido.imagenRival
+                                                    ? `
+                                                        <img
+                                                            src="${escapeHtml(partido.imagenRival)}"
+                                                            alt="Escudo de ${escapeHtml(partido.rival || 'Rival')}"
+                                                            class="w-16 h-16
+                                                                   sm:w-20 sm:h-20
+                                                                   bg-slate-800
+                                                                   rounded-full
+                                                                   object-contain
+                                                                   p-2
+                                                                   mx-auto mb-2
+                                                                   drop-shadow-xl">
+                                                        `
+                                                    : `
+                                                        <div class="w-16 h-16
+                                                                    sm:w-20 sm:h-20
+                                                                    bg-slate-800
+                                                                    rounded-full
+                                                                    flex
+                                                                    items-center
+                                                                    justify-center
+                                                                    mx-auto mb-2
+                                                                    text-xl sm:text-2xl
+                                                                    font-black
+                                                                    text-slate-600">
+
+                                                            ${escapeHtml(
+                                                                (partido.rival || '?')
+                                                                    .charAt(0)
+                                                                    .toUpperCase()
+                                                            )}
+
+                                                        </div>
+                                                        `
+                                            }
+
+                                            <p class="font-black
+                                                    italic
+                                                    text-xs sm:text-sm
+                                                    tracking-tighter
+                                                    text-slate-500
+                                                    uppercase
+                                                    break-words">
+
+                                                ${escapeHtml(
+                                                    partido.rival || ''
+                                                )}
+
+                                            </p>
+
+                                        </div>
+                                    `
+                                    : `
+                                        <div class="text-center
+                                                    w-20 sm:w-28
+                                                    min-w-0">
+
+                                            <img
+                                                src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFoWW9Qj6yO6eX2UjfyWmJNxQw_9EheO0KJF-zaevWvl1fBtSP_zBFzYk&s=10"
+                                                class="w-16 h-16
+                                                       sm:w-20 sm:h-20
+                                                       object-contain
+                                                       mx-auto mb-2
+                                                       drop-shadow-xl"
+                                                alt="Complejo Deportivo Justiniano Posse">
+
+                                            <p class="font-black
+                                                    italic
+                                                    text-xs sm:text-sm
+                                                    tracking-tighter
+                                                    break-words">
+
+                                                CDJP
+
+                                            </p>
+
+                                        </div>
+                                    `
+                            }
+
+                        </div>
+
+
+                        <div class="border-t
+                                    border-slate-800
+                                    pt-5 sm:pt-6
+                                    space-y-3">
+
+
+                            <!-- CATEGORÍA -->
+
+                            <div class="flex
+                                        items-start
+                                        gap-2
+                                        min-w-0">
+
+                                <i class="fa-solid
+                                        fa-layer-group
+                                        text-emerald-500
+                                        text-xs
+                                        mt-1
+                                        shrink-0">
+                                </i>
+
+
+                                <span class="text-xs
+                                            font-bold
+                                            text-slate-300
+                                            break-words">
+
+                                    Categoría:
+                                    ${escapeHtml(
+                                        nombreCategoria
+                                    )}
+
+                                </span>
+
+                            </div>
+
+
+                            <div class="flex
+                                        items-start
+                                        gap-2
+                                        min-w-0">
+
+                                <i class="fa-solid
+                                        fa-trophy
+                                        text-emerald-500
+                                        text-xs
+                                        mt-1
+                                        shrink-0">
+                                </i>
+
+
+                                <span class="text-xs
+                                            font-bold
+                                            text-slate-300
+                                            break-words">
+
+                                    Campeonato:
+                                    ${escapeHtml(
+                                        nombreCampeonato
+                                    )}
+
+                                </span>
+
+                            </div>
+
+
+                            <div class="flex
+                                        items-start
+                                        gap-2
+                                        min-w-0">
+
+                                <i class="fa-solid
+                                        ${tieneResultado
+                                            ? 'fa-circle-check'
+                                            : 'fa-clock'}
+                                        text-emerald-500
+                                        text-xs
+                                        mt-1
+                                        shrink-0">
+                                </i>
+
+
+                                <span class="text-xs
+                                            font-bold
+                                            ${tieneResultado
+                                                ? 'text-emerald-500'
+                                                : 'text-slate-500'}
+                                            break-words">
+
+                                    ${tieneResultado
+                                        ? 'Partido jugado'
+                                        : 'Pendiente de resultado'}
+
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        ${
+                            puedeEditarRol()
+                                ? `
+                                    <div class="mt-5 sm:mt-6
+                                                flex
+                                                flex-col sm:flex-row
+                                                gap-2">
+
+                                        ${acciones}
+
+                                    </div>
+                                `
+                                : ''
+                        }
+
+                    `;
+
+
+                    lista.appendChild(
+                        card
+                    );
+
+                }
+            );
+
+
+            if (usarPaginacion) {
+
+                const paginacion =
+                    document.createElement('div');
+
+                paginacion.className =
+                    'flex flex-col sm:flex-row items-center justify-center gap-3 mt-2 mb-2';
+
+                paginacion.innerHTML = `
+
+                    <button
+                        type="button"
+                        id="btnPaginaAnterior"
+                        class="w-11 h-11
+                               bg-slate-800
+                               hover:bg-emerald-500
+                               hover:text-slate-900
+                               text-slate-300
+                               rounded-xl
+                               flex items-center justify-center
+                               transition-all
+                               ${paginaPartidos === 1
+                                   ? 'opacity-40 cursor-not-allowed'
+                                   : ''}"
+                        ${paginaPartidos === 1 ? 'disabled' : ''}>
+
+                        <i class="fa-solid fa-chevron-left"></i>
+
+                    </button>
+
+
+                    <div class="px-5 py-2.5
+                                bg-[#0f172a]
+                                border border-slate-800
+                                rounded-xl
+                                text-xs font-black
+                                text-slate-300
+                                uppercase tracking-widest
+                                whitespace-nowrap">
+
+                        Página ${paginaPartidos} de ${totalPaginas}
+
+                    </div>
+
+
+                    <button
+                        type="button"
+                        id="btnPaginaSiguiente"
+                        class="w-11 h-11
+                               bg-slate-800
+                               hover:bg-emerald-500
+                               hover:text-slate-900
+                               text-slate-300
+                               rounded-xl
+                               flex items-center justify-center
+                               transition-all
+                               ${paginaPartidos === totalPaginas
+                                   ? 'opacity-40 cursor-not-allowed'
+                                   : ''}"
+                        ${paginaPartidos === totalPaginas ? 'disabled' : ''}>
+
+                        <i class="fa-solid fa-chevron-right"></i>
+
+                    </button>
+
+                `;
+
+                lista.appendChild(paginacion);
+
+
+                document
+                    .getElementById('btnPaginaAnterior')
+                    ?.addEventListener(
+                        'click',
+                        function () {
+
+                            if (paginaPartidos > 1) {
+
+                                paginaPartidos--;
+
+                                mostrarPartidos(false);
+
+                            }
+
+                        }
+                    );
+
+
+                document
+                    .getElementById('btnPaginaSiguiente')
+                    ?.addEventListener(
+                        'click',
+                        function () {
+
+                            if (paginaPartidos < totalPaginas) {
+
+                                paginaPartidos++;
+
+                                mostrarPartidos(false);
+
+                            }
+
+                        }
+                    );
+
+            }
+
+
+            lista
+                .querySelectorAll(
+                    '.btn-eliminar'
+                )
+                .forEach(
+                    btn => {
+
+                        btn.addEventListener(
+                            'click',
+                            function () {
+
+                                eliminarPartido(
+                                    this.dataset.id,
+                                    this.dataset.rival
+                                );
+
+                            }
                         );
 
                     }
                 );
 
 
-                // =====================================================
-                // EVENTOS ELIMINAR
-                // =====================================================
-
-                lista
-                    .querySelectorAll(
-                        '.btn-eliminar'
-                    )
-                    .forEach(
-                        btn => {
-
-                            btn.addEventListener(
-                                'click',
-                                function () {
-
-                                    eliminarPartido(
-                                        this.dataset.id,
-                                        this.dataset.rival
-                                    );
-
-                                }
-                            );
-
-                        }
-                    );
-
-
-                // =====================================================
-                // EVENTOS RESULTADO
-                // =====================================================
-
-                lista
-                    .querySelectorAll(
-                        '.btn-resultado'
-                    )
-                    .forEach(
-                        btn => {
-
-                            btn.addEventListener(
-                                'click',
-                                function () {
-
-                                    cargarResultado(
-                                        this.dataset.id
-                                    );
-
-                                }
-                            );
-
-                        }
-                    );
-
-            }
-
-
-            // =========================================================
-            // ELIMINAR PARTIDO
-            // =========================================================
-
-            async function eliminarPartido(
-                id,
-                rival
-            ) {
-
-
-                if (
-                    !confirm(
-                        `¿Seguro que querés eliminar el partido contra "${rival}"?`
-                    )
-                ) {
-
-                    return;
-
-                }
-
-
-                const token =
-                    getJwt();
-
-
-                if (!token) {
-
-                    alert(
-                        "Sesión expirada."
-                    );
-
-                    window.location.href =
-                        "/login";
-
-                    return;
-
-                }
-
-
-                try {
-
-                    const res =
-                        await fetch(
-                            `/api/partidos/${id}`,
-                            {
-
-                                method: 'DELETE',
-
-                                headers: {
-
-                                    'Authorization':
-                                        'Bearer ' + token,
-
-                                    'Accept':
-                                        'application/json'
-
-                                }
-
-                            }
-                        );
-
-
-                    if (!res.ok) {
-
-                        let mensaje =
-                            "No se pudo eliminar el partido.";
-
-
-                        try {
-
-                            const errorData =
-                                await res.json();
-
-
-                            if (
-                                errorData.mensaje
-                            ) {
-
-                                mensaje =
-                                    errorData.mensaje;
-
-                            } else if (
-                                errorData.message
-                            ) {
-
-                                mensaje =
-                                    errorData.message;
-
-                            }
-
-                        } catch (_) {}
-
-
-                        throw new Error(
-                            mensaje
-                        );
-
-                    }
-
-
-                    await cargarPartidos();
-
-
-                } catch (error) {
-
-                    console.error(
-                        "Error eliminando partido:",
-                        error
-                    );
-
-
-                    alert(
-                        error.message ||
-                        "Error al eliminar el partido."
-                    );
-
-                }
-
-            }
-
-
-            // =========================================================
-            // CARGAR / EDITAR RESULTADO
-            // =========================================================
-
-            async function cargarResultado(id) {
-
-
-                const partido =
-                    partidos.find(
-                        p =>
-                            String(p.id) ===
-                            String(id)
-                    );
-
-
-                if (!partido) {
-
-                    alert(
-                        "No se encontró el partido."
-                    );
-
-                    return;
-
-                }
-
-
-                const resultado =
-                    prompt(
-                        "Ingresá el resultado del partido:",
-                        partido.resultado || ''
-                    );
-
-
-                if (resultado === null) {
-                    return;
-                }
-
-
-                if (!resultado.trim()) {
-
-                    alert(
-                        "El resultado no puede estar vacío."
-                    );
-
-                    return;
-
-                }
-
-
-                const token =
-                    getJwt();
-
-
-                if (!token) {
-
-                    alert(
-                        "Sesión expirada."
-                    );
-
-                    window.location.href =
-                        "/login";
-
-                    return;
-
-                }
-
-
-                try {
-
-                    const res =
-                        await fetch(
-                            `/api/partidos/${id}`,
-                            {
-
-                                method: 'PATCH',
-
-                                headers: {
-
-                                    'Content-Type':
-                                        'application/json',
-
-                                    'Authorization':
-                                        'Bearer ' + token,
-
-                                    'Accept':
-                                        'application/json'
-
-                                },
-
-                                body:
-                                    JSON.stringify({
-
-                                        resultado:
-                                            resultado.trim()
-
-                                    })
-
-                            }
-                        );
-
-
-                    if (!res.ok) {
-
-                        let mensaje =
-                            "No se pudo actualizar el resultado.";
-
-
-                        try {
-
-                            const errorData =
-                                await res.json();
-
-
-                            if (
-                                errorData.mensaje
-                            ) {
-
-                                mensaje =
-                                    errorData.mensaje;
-
-                            } else if (
-                                errorData.message
-                            ) {
-
-                                mensaje =
-                                    errorData.message;
-
-                            }
-
-                        } catch (_) {}
-
-
-                        throw new Error(
-                            mensaje
-                        );
-
-                    }
-
-
-                    await cargarPartidos();
-
-
-                } catch (error) {
-
-                    console.error(
-                        "Error actualizando el resultado:",
-                        error
-                    );
-
-
-                    alert(
-                        error.message ||
-                        "Error al actualizar el resultado."
-                    );
-
-                }
-
-            }
-
-
-            // =========================================================
-            // EVENTOS DE FILTROS
-            // =========================================================
-
-            document.addEventListener(
-                'DOMContentLoaded',
-                function () {
-
-
-                    // ================================================
-                    // CARGAR CAMPEONATOS
-                    // ================================================
-
-                    cargarCampeonatos();
-
-
-                    // ================================================
-                    // BUSCADOR
-                    // ================================================
-
-                    document
-                        .getElementById(
-                            'inputBusqueda'
-                        )
-                        .addEventListener(
-                            'input',
-                            function () {
-
-                                mostrarPartidos();
-
-                            }
-                        );
-
-
-                    // ================================================
-                    // CAMPEONATO
-                    // ================================================
-
-                    document
-                        .getElementById(
-                            'filtroCampeonato'
-                        )
-                        .addEventListener(
-                            'change',
-                            function () {
-
-                                mostrarPartidos();
-
-                            }
-                        );
-
-
-                    // ================================================
-                    // BOTÓN TODOS
-                    // ================================================
-
-                    document
-                        .getElementById(
-                            'btnTodos'
-                        )
-                        .addEventListener(
+            lista
+                .querySelectorAll(
+                    '.btn-resultado'
+                )
+                .forEach(
+                    btn => {
+
+                        btn.addEventListener(
                             'click',
                             function () {
 
-                                document
-                                    .getElementById(
-                                        'inputBusqueda'
-                                    )
-                                    .value = '';
-
-
-                                document
-                                    .getElementById(
-                                        'filtroCampeonato'
-                                    )
-                                    .value = '';
-
-
-                                mostrarPartidos();
+                                cargarResultado(
+                                    this.dataset.id
+                                );
 
                             }
                         );
 
+                    }
+                );
 
-                    // ================================================
-                    // CARGAR PARTIDOS
-                    // ================================================
+        }
 
-                    cargarPartidos();
+
+        async function eliminarPartido(
+            id,
+            rival
+        ) {
+
+
+            if (
+                !confirm(
+                    `¿Seguro que querés eliminar el partido contra "${rival}"?`
+                )
+            ) {
+
+                return;
+
+            }
+
+
+            const token =
+                getJwt();
+
+
+            if (!token) {
+
+                alert(
+                    "Sesión expirada."
+                );
+
+                window.location.href =
+                    "/login";
+
+                return;
+
+            }
+
+
+            try {
+
+                const res =
+                    await fetch(
+                        `/api/partidos/${id}`,
+                        {
+
+                            method: 'DELETE',
+
+                            headers: {
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            }
+
+                        }
+                    );
+
+
+                if (!res.ok) {
+
+                    let mensaje =
+                        "No se pudo eliminar el partido.";
+
+
+                    try {
+
+                        const errorData =
+                            await res.json();
+
+
+                        if (
+                            errorData.mensaje
+                        ) {
+
+                            mensaje =
+                                errorData.mensaje;
+
+                        } else if (
+                            errorData.message
+                        ) {
+
+                            mensaje =
+                                errorData.message;
+
+                        }
+
+                    } catch (_) {}
+
+
+                    throw new Error(
+                        mensaje
+                    );
 
                 }
-            );
 
-        </script>
 
-    </div>
+                await cargarPartidos();
 
-    </body>
 
-    </html>
+            } catch (error) {
+
+                console.error(
+                    "Error eliminando partido:",
+                    error
+                );
+
+
+                alert(
+                    error.message ||
+                    "Error al eliminar el partido."
+                );
+
+            }
+
+        }
+
+
+        async function cargarResultado(id) {
+
+
+            const partido =
+                partidos.find(
+                    p =>
+                        String(p.id) ===
+                        String(id)
+                );
+
+
+            if (!partido) {
+
+                alert(
+                    "No se encontró el partido."
+                );
+
+                return;
+
+            }
+
+
+            const resultado =
+                prompt(
+                    "Ingresá el resultado del partido:",
+                    partido.resultado || ''
+                );
+
+
+            if (resultado === null) {
+                return;
+            }
+
+
+            if (!resultado.trim()) {
+
+                alert(
+                    "El resultado no puede estar vacío."
+                );
+
+                return;
+
+            }
+
+
+            const token =
+                getJwt();
+
+
+            if (!token) {
+
+                alert(
+                    "Sesión expirada."
+                );
+
+                window.location.href =
+                    "/login";
+
+                return;
+
+            }
+
+
+            try {
+
+                const res =
+                    await fetch(
+                        `/api/partidos/${id}`,
+                        {
+
+                            method: 'PATCH',
+
+                            headers: {
+
+                                'Content-Type':
+                                    'application/json',
+
+                                'Authorization':
+                                    'Bearer ' + token,
+
+                                'Accept':
+                                    'application/json'
+
+                            },
+
+                            body:
+                                JSON.stringify({
+
+                                    resultado:
+                                        resultado.trim()
+
+                                })
+
+                        }
+                    );
+
+
+                if (!res.ok) {
+
+                    let mensaje =
+                        "No se pudo actualizar el resultado.";
+
+
+                    try {
+
+                        const errorData =
+                            await res.json();
+
+
+                        if (
+                            errorData.mensaje
+                        ) {
+
+                            mensaje =
+                                errorData.mensaje;
+
+                        } else if (
+                            errorData.message
+                        ) {
+
+                            mensaje =
+                                errorData.message;
+
+                        }
+
+                    } catch (_) {}
+
+
+                    throw new Error(
+                        mensaje
+                    );
+
+                }
+
+
+                await cargarPartidos();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Error actualizando el resultado:",
+                    error
+                );
+
+
+                alert(
+                    error.message ||
+                    "Error al actualizar el resultado."
+                );
+
+            }
+
+        }
+
+
+        document.addEventListener(
+            'DOMContentLoaded',
+            function () {
+
+
+                cargarCampeonatos();
+                cargarCategorias();
+
+
+                document
+                    .getElementById(
+                        'inputBusqueda'
+                    )
+                    .addEventListener(
+                        'input',
+                        function () {
+
+                            mostrarPartidos();
+
+                        }
+                    );
+
+
+                document
+                    .getElementById(
+                        'filtroCampeonato'
+                    )
+                    .addEventListener(
+                        'change',
+                        function () {
+
+                            mostrarPartidos();
+
+                        }
+                    );
+
+
+                document
+                    .getElementById(
+                        'btnTodos'
+                    )
+                    .addEventListener(
+                        'click',
+                        function () {
+
+                            document
+                                .getElementById(
+                                    'inputBusqueda'
+                                )
+                                .value = '';
+
+
+                            document
+                                .getElementById(
+                                    'filtroCampeonato'
+                                )
+                                .value = '';
+
+
+                            mostrarPartidos();
+
+                        }
+                    );
+
+
+                cargarPartidos();
+
+            }
+        );
+
+    </script>
+
+</div>
+
+</body>
+
+</html>

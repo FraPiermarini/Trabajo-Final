@@ -6,268 +6,234 @@
 
 <head>
 
-```
 <meta charset="UTF-8">
 
 <title>Nuevo Campeonato</title>
 
 <link rel="icon" href="data:,">
-```
 
 </head>
 
 <body>
 
-<div id="content" class="max-w-[1000px] mx-auto">
+<div id="content" class="max-w-[1000px] mx-auto w-full">
 
-```
-<!-- ========================================================= -->
-<!-- HEADER -->
-<!-- ========================================================= -->
-
-<div class="flex items-center gap-4 mb-10">
-
-    <a th:href="@{/campeonatos}"
-       class="w-11 h-11 flex items-center justify-center
-              bg-[#0f172a] border border-slate-800 rounded-xl
-              text-slate-400 hover:text-emerald-500
-              hover:border-emerald-500/30 transition-all">
-
-        <i class="fa-solid fa-arrow-left"></i>
-
-    </a>
+<div class="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-10">
 
 
-    <div>
+<a th:href="@{/campeonatos}"
+   class="w-10 h-10 sm:w-11 sm:h-11 shrink-0 flex items-center justify-center
+          bg-[#0f172a] border border-slate-800 rounded-xl
+          text-slate-400 hover:text-emerald-500
+          hover:border-emerald-500/30 transition-all">
 
-        <h1 id="formTitle"
-            class="text-4xl font-black text-white
-                   italic uppercase tracking-tight">
+    <i class="fa-solid fa-arrow-left"></i>
 
-            Nuevo Campeonato
-
-        </h1>
+</a>
 
 
-        <p class="text-emerald-500 font-bold mt-1">
+<div class="min-w-0">
 
-            Completá los datos del campeonato.
+    <h1 id="formTitle"
+        class="text-2xl sm:text-3xl md:text-4xl font-black text-white
+               italic uppercase tracking-tight break-words">
 
-        </p>
+        Nuevo Campeonato
+
+    </h1>
+
+
+    <p class="text-emerald-500 font-bold mt-1 text-sm sm:text-base">
+
+        Completá los datos del campeonato.
+
+    </p>
+
+</div>
+
+
+</div>
+
+
+<form id="campeonatoForm">
+
+
+<input type="hidden" id="campeonatoId">
+
+
+<div class="bg-[#0f172a]
+            border border-slate-800
+            rounded-2xl sm:rounded-[2.5rem]
+            p-5 sm:p-8">
+
+
+
+    <div class="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+
+        <div class="w-11 h-11 sm:w-12 sm:h-12 shrink-0 rounded-2xl
+                    bg-emerald-500/10
+                    flex items-center justify-center
+                    text-emerald-500">
+
+            <i class="fa-solid fa-trophy text-lg sm:text-xl"></i>
+
+        </div>
+
+
+        <div class="min-w-0">
+
+            <h2 class="text-lg sm:text-xl font-black
+                       text-white
+                       uppercase italic">
+
+                Datos del campeonato
+
+            </h2>
+
+
+            <p class="text-[10px] sm:text-xs text-slate-600
+                      font-bold uppercase
+                      tracking-widest mt-1">
+
+                Información general
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+
+
+        <div class="space-y-2 min-w-0">
+
+            <label for="nombre"
+                   class="text-[10px]
+                          font-black
+                          text-slate-500
+                          uppercase
+                          tracking-widest
+                          ml-1">
+
+                Nombre
+
+            </label>
+
+
+            <input type="text"
+                   id="nombre"
+                   required
+                   maxlength="100"
+                   placeholder="Ej: Liga Regional, Torneo Apertura..."
+                   class="w-full min-w-0
+                          bg-[#0a0f1d]
+                          border border-slate-800
+                          text-slate-200
+                          px-4 sm:px-5 py-3.5 sm:py-4
+                          rounded-xl
+                          outline-none
+                          focus:ring-2
+                          focus:ring-emerald-500
+                          focus:border-transparent
+                          transition-all">
+
+        </div>
+
+        <div class="space-y-2 min-w-0">
+
+            <label for="año"
+                   class="text-[10px]
+                          font-black
+                          text-slate-500
+                          uppercase
+                          tracking-widest
+                          ml-1">
+
+                Año
+
+            </label>
+
+
+            <input type="text"
+                   id="año"
+                   required
+                   maxlength="4"
+                   placeholder="Ej: 2026"
+                   class="w-full min-w-0
+                          bg-[#0a0f1d]
+                          border border-slate-800
+                          text-slate-200
+                          px-4 sm:px-5 py-3.5 sm:py-4
+                          rounded-xl
+                          outline-none
+                          focus:ring-2
+                          focus:ring-emerald-500
+                          focus:border-transparent
+                          transition-all">
+
+        </div>
+
+    </div>
+
+    <div class="flex flex-col-reverse sm:flex-row
+                sm:justify-end
+                gap-3
+                mt-6 sm:mt-8
+                pt-6 sm:pt-8
+                border-t border-slate-800">
+
+
+
+        <a th:href="@{/campeonatos}"
+           class="w-full sm:w-auto
+                  text-center
+                  px-6 py-3
+                  rounded-xl
+                  border border-slate-800
+                  bg-[#0a0f1d]
+                  text-slate-400
+                  hover:text-white
+                  font-bold
+                  transition-all">
+
+            Cancelar
+
+        </a>
+
+
+        <button type="submit"
+                id="submitButton"
+                class="w-full sm:w-auto
+                       px-8 py-3
+                       rounded-xl
+                       bg-emerald-500
+                       hover:bg-emerald-400
+                       text-slate-900
+                       font-black
+                       uppercase
+                       text-xs
+                       tracking-widest
+                       shadow-lg
+                       shadow-emerald-500/20
+                       transition-all">
+
+            <i class="fa-solid fa-floppy-disk mr-2"></i>
+
+            Guardar campeonato
+
+        </button>
 
     </div>
 
 </div>
 
 
-<!-- ========================================================= -->
-<!-- FORMULARIO -->
-<!-- ========================================================= -->
-
-<form id="campeonatoForm">
-
-    <input type="hidden" id="campeonatoId">
-
-
-    <div class="bg-[#0f172a]
-                border border-slate-800
-                rounded-[2.5rem]
-                p-8">
-
-
-        <!-- ================================================= -->
-        <!-- CABECERA -->
-        <!-- ================================================= -->
-
-        <div class="flex items-center gap-4 mb-8">
-
-            <div class="w-12 h-12 rounded-2xl
-                        bg-emerald-500/10
-                        flex items-center justify-center
-                        text-emerald-500">
-
-                <i class="fa-solid fa-trophy text-xl"></i>
-
-            </div>
-
-
-            <div>
-
-                <h2 class="text-xl font-black
-                           text-white
-                           uppercase italic">
-
-                    Datos del campeonato
-
-                </h2>
-
-
-                <p class="text-xs text-slate-600
-                          font-bold uppercase
-                          tracking-widest mt-1">
-
-                    Información general
-
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <!-- ================================================= -->
-        <!-- CAMPOS -->
-        <!-- ================================================= -->
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-
-            <!-- ================================================= -->
-            <!-- NOMBRE -->
-            <!-- ================================================= -->
-
-            <div class="space-y-2">
-
-                <label for="nombre"
-                       class="text-[10px]
-                              font-black
-                              text-slate-500
-                              uppercase
-                              tracking-widest
-                              ml-1">
-
-                    Nombre
-
-                </label>
-
-
-                <input type="text"
-                       id="nombre"
-                       required
-                       maxlength="100"
-                       placeholder="Ej: Liga Regional, Torneo Apertura..."
-                       class="w-full
-                              bg-[#0a0f1d]
-                              border border-slate-800
-                              text-slate-200
-                              px-5 py-4
-                              rounded-xl
-                              outline-none
-                              focus:ring-2
-                              focus:ring-emerald-500
-                              focus:border-transparent
-                              transition-all">
-
-            </div>
-
-
-            <!-- ================================================= -->
-            <!-- AÑO -->
-            <!-- ================================================= -->
-
-            <div class="space-y-2">
-
-                <label for="año"
-                       class="text-[10px]
-                              font-black
-                              text-slate-500
-                              uppercase
-                              tracking-widest
-                              ml-1">
-
-                    Año
-
-                </label>
-
-
-                <input type="text"
-                       id="año"
-                       required
-                       maxlength="4"
-                       placeholder="Ej: 2026"
-                       class="w-full
-                              bg-[#0a0f1d]
-                              border border-slate-800
-                              text-slate-200
-                              px-5 py-4
-                              rounded-xl
-                              outline-none
-                              focus:ring-2
-                              focus:ring-emerald-500
-                              focus:border-transparent
-                              transition-all">
-
-            </div>
-
-        </div>
-
-
-        <!-- ================================================= -->
-        <!-- BOTONES -->
-        <!-- ================================================= -->
-
-        <div class="flex justify-end gap-3
-                    mt-8 pt-8
-                    border-t border-slate-800">
-
-
-            <!-- CANCELAR -->
-
-            <a th:href="@{/campeonatos}"
-               class="px-6 py-3
-                      rounded-xl
-                      border border-slate-800
-                      bg-[#0a0f1d]
-                      text-slate-400
-                      hover:text-white
-                      font-bold
-                      transition-all">
-
-                Cancelar
-
-            </a>
-
-
-            <!-- GUARDAR -->
-
-            <button type="submit"
-                    id="submitButton"
-                    class="px-8 py-3
-                           rounded-xl
-                           bg-emerald-500
-                           hover:bg-emerald-400
-                           text-slate-900
-                           font-black
-                           uppercase
-                           text-xs
-                           tracking-widest
-                           shadow-lg
-                           shadow-emerald-500/20
-                           transition-all">
-
-                <i class="fa-solid fa-floppy-disk mr-2"></i>
-
-                Guardar campeonato
-
-            </button>
-
-        </div>
-
-    </div>
-
 </form>
-
-
-<!-- ========================================================= -->
-<!-- JAVASCRIPT -->
-<!-- ========================================================= -->
 
 <script>
 
-
-    // =========================================================
-    // OBTENER JWT
-    // =========================================================
 
     function getJwt() {
 
@@ -284,10 +250,6 @@
 
     }
 
-
-    // =========================================================
-    // CARGAR CAMPEONATO PARA EDITAR
-    // =========================================================
 
     async function cargarCampeonato(id) {
 
@@ -358,11 +320,6 @@
                 campeonato
             );
 
-
-            // =================================================
-            // CARGAR DATOS
-            // =================================================
-
             document.getElementById(
                 'campeonatoId'
             ).value =
@@ -379,11 +336,6 @@
                 'año'
             ).value =
                 campeonato.año || '';
-
-
-            // =================================================
-            // CAMBIAR MODO EDICIÓN
-            // =================================================
 
             document.getElementById(
                 'formTitle'
@@ -415,10 +367,6 @@
     }
 
 
-    // =========================================================
-    // INICIALIZAR
-    // =========================================================
-
     document.addEventListener(
         'DOMContentLoaded',
         function () {
@@ -434,8 +382,6 @@
                 params.get('id');
 
 
-            // Si existe ID, estamos editando
-
             if (id) {
 
                 cargarCampeonato(id);
@@ -445,10 +391,6 @@
         }
     );
 
-
-    // =========================================================
-    // GUARDAR / ACTUALIZAR
-    // =========================================================
 
     document.getElementById(
         'campeonatoForm'
@@ -473,11 +415,6 @@
 
             }
 
-
-            // =================================================
-            // DATOS
-            // =================================================
-
             const id =
                 document.getElementById(
                     'campeonatoId'
@@ -495,10 +432,6 @@
                     'año'
                 ).value.trim();
 
-
-            // =================================================
-            // VALIDACIONES
-            // =================================================
 
             if (!nombre) {
 
@@ -533,10 +466,6 @@
             }
 
 
-            // =================================================
-            // OBJETO
-            // =================================================
-
             const campeonatoData = {
 
                 nombre: nombre,
@@ -551,10 +480,6 @@
                 campeonatoData
             );
 
-
-            // =================================================
-            // BOTÓN
-            // =================================================
 
             const boton =
                 document.getElementById(
@@ -571,10 +496,6 @@
 
             try {
 
-
-                // =================================================
-                // URL Y MÉTODO
-                // =================================================
 
                 const url =
                     id
@@ -616,10 +537,6 @@
                         }
                     );
 
-
-                // =================================================
-                // ERROR
-                // =================================================
 
                 if (!res.ok) {
 
@@ -683,10 +600,6 @@
                 }
 
 
-                // =================================================
-                // ÉXITO
-                // =================================================
-
                 alert(
                     id
                         ? "Campeonato actualizado correctamente."
@@ -729,7 +642,6 @@
     );
 
 </script>
-```
 
 </div>
 

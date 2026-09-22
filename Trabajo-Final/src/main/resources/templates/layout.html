@@ -1,4 +1,3 @@
-```html
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       th:fragment="mainLayout(content)"
@@ -49,9 +48,15 @@
             border-radius: 10px;
         }
 
+
+        .sidebar-overlay {
+            display: none;
+        }
+
         @media (max-width: 768px) {
 
             .sidebar {
+                width: min(18rem, 85vw);
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
             }
@@ -60,8 +65,80 @@
                 transform: translateX(0);
             }
 
+            .sidebar-overlay {
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.55);
+                z-index: 40;
+            }
+
+            .sidebar.open + .sidebar-overlay {
+                display: block;
+            }
+
             .main-content {
                 margin-left: 0 !important;
+                width: 100%;
+            }
+
+            header {
+                padding-left: 1rem !important;
+                padding-right: 1rem !important;
+            }
+
+            #pageTitle {
+                max-width: 55vw;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            #usuarioEmail,
+            #usuarioRol {
+                max-width: 30vw;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .main-content > section {
+                padding: 1rem !important;
+            }
+
+        }
+
+        @media (max-width: 480px) {
+
+            header {
+                height: 4.5rem;
+            }
+
+            #pageTitle {
+                font-size: 0.9rem;
+                max-width: 42vw;
+            }
+
+            .main-content > section {
+                padding: 0.75rem !important;
+            }
+
+            #usuarioAvatar {
+                width: 2.25rem;
+                height: 2.25rem;
+                min-width: 2.25rem;
+            }
+
+            .sidebar .p-8 {
+                padding: 1.25rem;
+            }
+
+            .sidebar nav {
+                padding-left: 0.75rem;
+                padding-right: 0.75rem;
+            }
+
+            .sidebar .p-6 {
+                padding: 1rem;
             }
 
         }
@@ -74,17 +151,10 @@
 <body class="flex min-h-screen">
 
 
-<!-- ========================================================= -->
-<!-- SIDEBAR -->
-<!-- ========================================================= -->
-
 <aside id="sidebar"
        class="sidebar fixed inset-y-0 left-0 w-72 bg-[#0f172a] border-r border-slate-800 flex flex-col z-50">
 
 
-    <!-- ===================================================== -->
-    <!-- LOGO -->
-    <!-- ===================================================== -->
 
     <div class="p-8">
 
@@ -112,16 +182,8 @@
     </div>
 
 
-    <!-- ===================================================== -->
-    <!-- NAVEGACIÓN -->
-    <!-- ===================================================== -->
-
     <nav class="flex-1 px-4 space-y-1 overflow-y-auto">
 
-
-        <!-- ================================================= -->
-        <!-- INICIO -->
-        <!-- ================================================= -->
 
         <a th:href="@{/dashboard}"
            data-page="dashboard"
@@ -135,11 +197,6 @@
 
         </a>
 
-
-        <!-- ================================================= -->
-        <!-- JUGADORES -->
-        <!-- ADMIN / ENTRENADOR / USUARIO -->
-        <!-- ================================================= -->
 
         <a th:href="@{/jugadores}"
            data-page="jugadores"
@@ -155,11 +212,6 @@
         </a>
 
 
-        <!-- ================================================= -->
-        <!-- CATEGORÍAS -->
-        <!-- ADMIN / ENTRENADOR / USUARIO -->
-        <!-- ================================================= -->
-
         <a th:href="@{/categorias}"
            data-page="categorias"
            data-roles="ADMIN,ENTRENADOR,USUARIO"
@@ -173,11 +225,6 @@
 
         </a>
 
-
-        <!-- ================================================= -->
-        <!-- ENTRENADORES -->
-        <!-- ADMIN / ENTRENADOR / USUARIO -->
-        <!-- ================================================= -->
 
         <a th:href="@{/entrenadores}"
            data-page="entrenadores"
@@ -193,11 +240,6 @@
         </a>
 
 
-        <!-- ================================================= -->
-        <!-- PARTIDOS -->
-        <!-- ADMIN / ENTRENADOR / USUARIO -->
-        <!-- ================================================= -->
-
         <a th:href="@{/partidos}"
            data-page="partidos"
            data-roles="ADMIN,ENTRENADOR,USUARIO"
@@ -211,11 +253,6 @@
 
         </a>
 
-
-        <!-- ================================================= -->
-        <!-- CAMPEONATOS -->
-        <!-- ADMIN / ENTRENADOR / USUARIO -->
-        <!-- ================================================= -->
 
         <a th:href="@{/campeonatos}"
            data-page="campeonatos"
@@ -231,11 +268,6 @@
         </a>
 
 
-        <!-- ================================================= -->
-        <!-- ESTADÍSTICAS -->
-        <!-- ADMIN / ENTRENADOR / USUARIO -->
-        <!-- ================================================= -->
-
         <a th:href="@{/estadisticas}"
            data-page="estadisticas"
            data-roles="ADMIN,ENTRENADOR,USUARIO"
@@ -249,11 +281,6 @@
 
         </a>
 
-
-        <!-- ================================================= -->
-        <!-- INCIDENCIAS -->
-        <!-- ADMIN / ENTRENADOR / USUARIO -->
-        <!-- ================================================= -->
 
         <a th:href="@{/incidencias}"
            data-page="incidencias"
@@ -269,11 +296,6 @@
         </a>
 
 
-        <!-- ================================================= -->
-        <!-- REPORTES -->
-        <!-- ADMIN / ENTRENADOR / USUARIO -->
-        <!-- ================================================= -->
-
         <a th:href="@{/reportes}"
            data-page="reportes"
            data-roles="ADMIN,ENTRENADOR,USUARIO"
@@ -288,10 +310,6 @@
         </a>
 
 
-        <!-- ================================================= -->
-        <!-- CONFIGURACIÓN -->
-        <!-- SOLO ADMIN -->
-        <!-- ================================================= -->
 
         <a th:href="@{/configuracion}"
            data-page="configuracion"
@@ -310,10 +328,6 @@
 
     </nav>
 
-
-    <!-- ===================================================== -->
-    <!-- PARTE INFERIOR -->
-    <!-- ===================================================== -->
 
     <div class="p-6">
 
@@ -335,11 +349,6 @@
 
         </div>
 
-
-        <!-- ================================================= -->
-        <!-- LOGOUT -->
-        <!-- ================================================= -->
-
         <button
             onclick="logout()"
             class="flex items-center gap-4 text-red-500 font-bold px-4 hover:translate-x-2 transition-transform">
@@ -357,23 +366,13 @@
 </aside>
 
 
-
-<!-- ========================================================= -->
-<!-- CONTENIDO PRINCIPAL -->
-<!-- ========================================================= -->
-
 <main class="main-content flex-1 ml-72 flex flex-col min-h-screen">
 
 
-    <!-- ===================================================== -->
-    <!-- HEADER -->
-    <!-- ===================================================== -->
 
     <header
         class="h-20 border-b border-slate-800 flex items-center px-10 justify-between sticky top-0 bg-[#0a0f1d]/80 backdrop-blur-xl z-40">
 
-
-        <!-- IZQUIERDA -->
 
         <div class="flex items-center gap-3">
 
@@ -397,28 +396,10 @@
         </div>
 
 
-        <!-- DERECHA -->
-
         <div class="flex items-center gap-6">
 
 
-            <!-- NOTIFICACIONES -->
-
-            <div class="relative">
-
-                <i
-                    class="fa-solid fa-bell text-slate-500 cursor-pointer hover:text-emerald-500 transition-colors">
-                </i>
-
-                <span
-                    class="absolute -top-1 -right-1 w-2 h-2 bg-emerald-500 rounded-full border-2 border-[#0a0f1d]">
-                </span>
-
-            </div>
-
-
-            <!-- USUARIO -->
-
+            
             <div
                 class="flex items-center gap-3 pl-6 border-l border-slate-800">
 
@@ -444,8 +425,6 @@
                 </div>
 
 
-                <!-- AVATAR -->
-
                 <div
                     id="usuarioAvatar"
                     class="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500/50 flex items-center justify-center text-emerald-500 font-bold">
@@ -461,11 +440,6 @@
     </header>
 
 
-
-    <!-- ===================================================== -->
-    <!-- CONTENIDO -->
-    <!-- ===================================================== -->
-
     <section class="p-10 max-w-[1600px] mx-auto w-full">
 
         <div th:replace="${content}"></div>
@@ -475,17 +449,8 @@
 </main>
 
 
-
-<!-- ========================================================= -->
-<!-- JAVASCRIPT GLOBAL -->
-<!-- ========================================================= -->
-
 <script>
 
-
-    /* =========================================================
-       JWT
-    ========================================================= */
 
     function getJwt() {
 
@@ -499,11 +464,6 @@
 
     }
 
-
-
-    /* =========================================================
-       OBTENER ROL REAL DEL JWT
-    ========================================================= */
 
     function obtenerRolUsuario(payload) {
 
@@ -541,11 +501,6 @@
     }
 
 
-
-    /* =========================================================
-       APLICAR PERMISOS AL MENÚ
-    ========================================================= */
-
     function aplicarPermisosMenu(rol) {
 
         const menuItems =
@@ -573,11 +528,6 @@
         });
 
 
-        /*
-         * Inicio está disponible para todos
-         * los usuarios autenticados.
-         */
-
         const dashboard =
             document.querySelector('[data-page="dashboard"]');
 
@@ -589,12 +539,6 @@
         }
 
     }
-
-
-
-    /* =========================================================
-       DATOS DEL USUARIO
-    ========================================================= */
 
     function cargarUsuario() {
 
@@ -633,10 +577,6 @@
                 );
 
 
-            /*
-             * EMAIL
-             */
-
             const email =
                 payload.sub ||
                 payload.email ||
@@ -648,9 +588,6 @@
             ).innerText = email;
 
 
-            /*
-             * ROL
-             */
 
             const rol =
                 obtenerRolUsuario(payload);
@@ -667,13 +604,6 @@
             }
 
 
-            /*
-             * Guardamos el rol REAL.
-             *
-             * ADMIN
-             * ENTRENADOR
-             * USUARIO
-             */
 
             window.usuarioRol = rol;
 
@@ -684,9 +614,6 @@
             );
 
 
-            /*
-             * Texto amigable
-             */
 
             let rolTexto;
 
@@ -726,9 +653,6 @@
             ).innerText = rolTexto;
 
 
-            /*
-             * AVATAR
-             */
 
             const iniciales =
                 email
@@ -741,9 +665,6 @@
             ).innerText = iniciales;
 
 
-            /*
-             * Aplicamos permisos al menú
-             */
 
             aplicarPermisosMenu(rol);
 
@@ -760,11 +681,6 @@
     }
 
 
-
-    /* =========================================================
-       PÁGINA ACTIVA
-    ========================================================= */
-
     function marcarPaginaActual() {
 
         const path =
@@ -776,6 +692,12 @@
 
 
         menuItems.forEach(item => {
+
+            item.addEventListener("click", function () {
+                if (window.innerWidth <= 768) {
+                    document.getElementById("sidebar").classList.remove("open");
+                }
+            });
 
             const page =
                 item.dataset.page;
@@ -799,9 +721,6 @@
         });
 
 
-        /*
-         * TÍTULOS
-         */
 
         const titulos = {
 
@@ -847,11 +766,6 @@
     }
 
 
-
-    /* =========================================================
-       LOGOUT
-    ========================================================= */
-
     function logout() {
 
         document.cookie =
@@ -871,11 +785,6 @@
     }
 
 
-
-    /* =========================================================
-       SIDEBAR MOBILE
-    ========================================================= */
-
     function toggleSidebar() {
 
         const sidebar =
@@ -886,11 +795,6 @@
 
     }
 
-
-
-    /* =========================================================
-       INICIALIZACIÓN
-    ========================================================= */
 
     document.addEventListener(
         "DOMContentLoaded",
@@ -909,4 +813,3 @@
 </body>
 
 </html>
-```

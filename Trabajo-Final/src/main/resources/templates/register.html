@@ -24,13 +24,16 @@
             box-sizing: border-box;
         }
 
+        html,
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100%;
         }
 
-        /* =====================================================
-           AUTOCOMPLETADO CHROME
-           ===================================================== */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
 
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
@@ -53,15 +56,14 @@
 
         input {
             color: #ffffff !important;
+            min-width: 0;
         }
 
         input::placeholder {
             color: #64748b;
         }
 
-        /* =====================================================
-           ANIMACIONES
-           ===================================================== */
+
 
         .contenedor {
             animation: aparecer 0.6s ease-out;
@@ -99,12 +101,10 @@
 
         }
 
-        /* =====================================================
-           CAMPOS
-           ===================================================== */
 
         .campo {
             transition: all 0.2s ease;
+            min-width: 0;
         }
 
         .campo:focus-within {
@@ -116,9 +116,6 @@
 
         }
 
-        /* =====================================================
-           BOTÓN
-           ===================================================== */
 
         .boton {
             transition: all 0.2s ease;
@@ -133,9 +130,6 @@
 
         }
 
-        /* =====================================================
-           DETALLE VERDE
-           ===================================================== */
 
         .detalle-verde {
 
@@ -148,9 +142,6 @@
 
         }
 
-        /* =====================================================
-           IMAGEN DEL CLUB
-           ===================================================== */
 
         .imagen-club {
 
@@ -158,11 +149,6 @@
             height: 100%;
 
             object-fit: contain;
-
-            /*
-             * Se elimina visualmente el espacio negro superior
-             * e inferior de la imagen original.
-             */
 
             transform: scale(1.24);
 
@@ -174,6 +160,151 @@
         .imagen:hover .imagen-club {
 
             transform: scale(1.27);
+
+        }
+
+
+        @media (max-width: 767px) {
+
+            body {
+                align-items: flex-start;
+            }
+
+            .contenedor {
+                min-height: 0 !important;
+                max-height: none !important;
+                margin-top: 0.5rem;
+                margin-bottom: 0.5rem;
+            }
+
+        }
+
+        @media (max-width: 480px) {
+
+            body {
+                padding: 0.5rem !important;
+            }
+
+            .contenedor {
+                border-radius: 1.5rem;
+            }
+
+            .contenedor > div:last-child {
+                padding-left: 1rem;
+                padding-right: 1rem;
+                padding-top: 1.25rem;
+                padding-bottom: 1.25rem;
+            }
+
+            .contenedor > div:last-child > div {
+                max-width: 100%;
+            }
+
+            .contenedor .text-center.mb-5 {
+                margin-bottom: 1rem;
+            }
+
+            .contenedor .text-center.mb-5 > div:first-child {
+                width: 2.75rem;
+                height: 2.75rem;
+                margin-top: 0;
+                margin-bottom: 0.5rem;
+            }
+
+            .contenedor .text-center.mb-5 > div:first-child i {
+                font-size: 0.95rem;
+            }
+
+            .contenedor h1 {
+                font-size: 1.25rem;
+                line-height: 1.5rem;
+            }
+
+            .contenedor h2 {
+                font-size: 1rem;
+                line-height: 1.4rem;
+            }
+
+            .contenedor form {
+                gap: 0.75rem;
+            }
+
+            .contenedor .campo {
+                padding-left: 0.65rem;
+                padding-right: 0.65rem;
+            }
+
+            .contenedor .campo input {
+                padding-top: 0.6rem;
+                padding-bottom: 0.6rem;
+            }
+
+            .contenedor .boton {
+                padding-top: 0.7rem;
+                padding-bottom: 0.7rem;
+            }
+
+        }
+
+        @media (max-width: 360px) {
+
+            body {
+                padding: 0.35rem !important;
+            }
+
+            .contenedor {
+                border-radius: 1.25rem;
+            }
+
+            .contenedor > div:last-child {
+                padding-left: 0.8rem;
+                padding-right: 0.8rem;
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+
+            .contenedor .grid.grid-cols-2 {
+                grid-template-columns: 1fr;
+                gap: 0.75rem;
+            }
+
+            .contenedor .text-center.mb-5 {
+                margin-bottom: 0.75rem;
+            }
+
+            .contenedor .text-center.mb-5 > div:first-child {
+                width: 2.5rem;
+                height: 2.5rem;
+            }
+
+            .contenedor h1 {
+                font-size: 1.15rem;
+            }
+
+            .contenedor h2 {
+                font-size: 0.95rem;
+            }
+
+            .contenedor p {
+                line-height: 1.35rem;
+            }
+
+            .contenedor .campo input {
+                font-size: 0.75rem;
+            }
+
+            .contenedor .boton {
+                font-size: 0.8rem;
+            }
+
+            .contenedor .text-center.mt-4 p {
+                font-size: 0.68rem;
+            }
+
+            .contenedor .mt-4.pt-3 p {
+                font-size: 0.55rem;
+                line-height: 0.9rem;
+            }
 
         }
 
@@ -191,9 +322,6 @@
     style="min-height: 540px; max-height: 650px;">
 
 
-    <!-- =====================================================
-         IMAGEN DEL CLUB
-         ===================================================== -->
 
     <div
         class="imagen hidden md:flex md:w-[43%] bg-[#effff7] items-center justify-center overflow-hidden relative">
@@ -221,19 +349,11 @@
     </div>
 
 
-    <!-- =====================================================
-         FORMULARIO REGISTRO
-         ===================================================== -->
-
     <div
         class="w-full md:w-[57%] flex items-center justify-center px-7 py-7 sm:px-10 sm:py-8">
 
         <div class="w-full max-w-sm">
 
-
-            <!-- =================================================
-                 IDENTIDAD
-                 ================================================= -->
 
             <div
                 class="text-center mb-5">
@@ -273,10 +393,6 @@
             </div>
 
 
-            <!-- =================================================
-                 DESCRIPCIÓN
-                 ================================================= -->
-
             <div
                 class="mb-4">
 
@@ -298,32 +414,21 @@
             </div>
 
 
-            <!-- =================================================
-                 ALERTA
-                 ================================================= -->
-
             <div
                 id="alert"
                 class="hidden p-3 mb-4 rounded-xl text-xs sm:text-sm">
             </div>
 
 
-            <!-- =================================================
-                 FORMULARIO
-                 ================================================= -->
 
             <form
                 id="registerForm"
                 class="space-y-3.5">
 
 
-                <!-- NOMBRE / APELLIDO -->
-
                 <div
                     class="grid grid-cols-2 gap-3">
 
-
-                    <!-- NOMBRE -->
 
                     <div>
 
@@ -356,8 +461,6 @@
 
                     </div>
 
-
-                    <!-- APELLIDO -->
 
                     <div>
 
@@ -393,8 +496,6 @@
                 </div>
 
 
-                <!-- EMAIL -->
-
                 <div>
 
                     <label
@@ -425,9 +526,6 @@
                     </div>
 
                 </div>
-
-
-                <!-- CONTRASEÑA -->
 
                 <div>
 
@@ -460,7 +558,7 @@
                         <button
                             type="button"
                             id="togglePassword"
-                            class="text-slate-500 hover:text-emerald-400 transition ml-2">
+                            class="text-slate-500 hover:text-emerald-400 transition ml-2 shrink-0">
 
                             <i
                                 id="eyeIcon"
@@ -471,8 +569,6 @@
 
                     </div>
 
-
-                    <!-- INDICADOR DE CONTRASEÑA -->
 
                     <div
                         class="flex gap-1.5 mt-2">
@@ -505,9 +601,6 @@
 
                 </div>
 
-
-                <!-- BOTÓN -->
-
                 <button
                     type="submit"
                     id="btn"
@@ -525,10 +618,6 @@
             </form>
 
 
-            <!-- =================================================
-                 FRASE
-                 ================================================= -->
-
             <div
                 class="text-center mt-4">
 
@@ -542,9 +631,6 @@
             </div>
 
 
-            <!-- =================================================
-                 LOGIN
-                 ================================================= -->
 
             <div
                 class="mt-4 text-center">
@@ -566,10 +652,6 @@
 
             </div>
 
-
-            <!-- =================================================
-                 FOOTER
-                 ================================================= -->
 
             <div
                 class="mt-4 pt-3 border-t border-slate-800 text-center">
@@ -593,9 +675,6 @@
 
 <script>
 
-    // =====================================================
-    // MOSTRAR / OCULTAR CONTRASEÑA
-    // =====================================================
 
     document
         .getElementById('togglePassword')
@@ -628,10 +707,6 @@
 
         });
 
-
-    // =====================================================
-    // INDICADOR DE CONTRASEÑA
-    // =====================================================
 
     document
         .getElementById('password')
@@ -712,10 +787,6 @@
 
         });
 
-
-    // =====================================================
-    // REGISTRO
-    // =====================================================
 
     document
         .getElementById('registerForm')
@@ -874,3 +945,4 @@
 
 </body>
 </html>
+

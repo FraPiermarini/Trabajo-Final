@@ -22,9 +22,6 @@
      th:attr="data-puede-editar=${#authorization.expression('hasAnyRole(''ENTRENADOR'',''ADMIN'')')}">
 
 
-<!-- ========================================================= -->
-<!-- HEADER -->
-<!-- ========================================================= -->
 
 <div class="flex flex-col md:flex-row
             md:items-center justify-between
@@ -90,10 +87,6 @@
 </div>
 
 
-<!-- ========================================================= -->
-<!-- FILTROS -->
-<!-- ========================================================= -->
-
 <div class="bg-[#0f172a]
             border border-slate-800
             rounded-2xl
@@ -103,7 +96,6 @@
     <div class="flex flex-col lg:flex-row gap-3">
 
 
-        <!-- BUSCAR JUGADOR -->
 
         <div class="relative flex-1">
 
@@ -137,7 +129,6 @@
         </div>
 
 
-        <!-- BUSCAR PARTIDO -->
 
         <div class="relative flex-1">
 
@@ -171,7 +162,6 @@
         </div>
 
 
-        <!-- TODOS -->
 
         <button
             id="btnTodos"
@@ -196,10 +186,6 @@
 
 </div>
 
-
-<!-- ========================================================= -->
-<!-- TITULO LISTADO -->
-<!-- ========================================================= -->
 
 <div class="flex items-center justify-between mb-5">
 
@@ -231,10 +217,6 @@
 
 </div>
 
-
-<!-- ========================================================= -->
-<!-- TABLA -->
-<!-- ========================================================= -->
 
 <div class="bg-[#0f172a]
             border border-slate-800
@@ -293,7 +275,7 @@
                            text-slate-500
                            uppercase">
 
-                    ⚽
+                    Goles
 
                 </th>
 
@@ -317,7 +299,7 @@
                            text-slate-500
                            uppercase">
 
-                    🟨
+                    Amarillas
 
                 </th>
 
@@ -329,7 +311,7 @@
                            text-slate-500
                            uppercase">
 
-                    🟥
+                    Rojas
 
                 </th>
 
@@ -372,10 +354,6 @@
     </div>
 
 
-    <!-- ===================================================== -->
-    <!-- LOADING -->
-    <!-- ===================================================== -->
-
     <div id="loading"
          class="py-20 text-center">
 
@@ -402,10 +380,6 @@
 
     </div>
 
-
-    <!-- ===================================================== -->
-    <!-- VACÍO -->
-    <!-- ===================================================== -->
 
     <div id="estadoVacio"
          class="hidden
@@ -462,10 +436,6 @@
     </div>
 
 
-    <!-- ===================================================== -->
-    <!-- ERROR -->
-    <!-- ===================================================== -->
-
     <div id="estadoError"
          class="hidden
                 m-6
@@ -492,28 +462,19 @@
 </div>
 
 
-<!-- ========================================================= -->
-<!-- JAVASCRIPT -->
-<!-- IMPORTANTE: QUEDA DENTRO DE #content -->
-<!-- ========================================================= -->
 
 <script>
 
-
-    // =========================================================
-    // VARIABLES
-    // =========================================================
 
     let jugadores = [];
 
     let partidos = [];
 
     let estadisticas = [];
+    let paginaEstadisticas = 0;
+    const ESTADISTICAS_POR_PAGINA = 7;
 
 
-    // =========================================================
-    // VERIFICAR ROL
-    // =========================================================
 
     function puedeEditarRol() {
 
@@ -525,9 +486,6 @@
     }
 
 
-    // =========================================================
-    // JWT
-    // =========================================================
 
     function getJwt() {
 
@@ -546,9 +504,6 @@
     }
 
 
-    // =========================================================
-    // ESCAPAR HTML
-    // =========================================================
 
     function escapeHtml(str) {
 
@@ -565,9 +520,6 @@
     }
 
 
-    // =========================================================
-    // NORMALIZAR RESPUESTA
-    // =========================================================
 
     function normalizarLista(data) {
 
@@ -613,10 +565,6 @@
     }
 
 
-    // =========================================================
-    // FORMATEAR FECHA
-    // =========================================================
-
     function formatearFecha(fecha) {
 
         if (!fecha) {
@@ -642,9 +590,6 @@
     }
 
 
-    // =========================================================
-    // CARGAR DATOS
-    // =========================================================
 
     async function cargarDatos() {
 
@@ -687,9 +632,6 @@
         try {
 
 
-            // =================================================
-            // CARGAR ESTADÍSTICAS
-            // =================================================
 
             const estadisticasResponse =
                 await fetch(
@@ -749,9 +691,6 @@
                 );
 
 
-            // =================================================
-            // CARGAR JUGADORES
-            // =================================================
 
             const jugadoresResponse =
                 await fetch(
@@ -809,10 +748,6 @@
 
             }
 
-
-            // =================================================
-            // CARGAR PARTIDOS
-            // =================================================
 
             const partidosResponse =
                 await fetch(
@@ -889,10 +824,6 @@
             );
 
 
-            // =================================================
-            // MOSTRAR
-            // =================================================
-
             mostrarEstadisticas();
 
 
@@ -925,10 +856,6 @@
     }
 
 
-    // =========================================================
-    // OBTENER JUGADOR
-    // =========================================================
-
     function obtenerJugador(id) {
 
         return jugadores.find(
@@ -939,10 +866,6 @@
 
     }
 
-
-    // =========================================================
-    // NOMBRE JUGADOR
-    // =========================================================
 
     function nombreJugador(id) {
 
@@ -979,10 +902,6 @@
     }
 
 
-    // =========================================================
-    // OBTENER PARTIDO
-    // =========================================================
-
     function obtenerPartido(id) {
 
         return partidos.find(
@@ -993,10 +912,6 @@
 
     }
 
-
-    // =========================================================
-    // DESCRIPCIÓN PARTIDO
-    // =========================================================
 
     function descripcionPartido(id) {
 
@@ -1038,10 +953,6 @@
     }
 
 
-    // =========================================================
-    // TEXTO BUSCABLE DEL JUGADOR
-    // =========================================================
-
     function textoJugador(id) {
 
         const jugador =
@@ -1073,10 +984,6 @@
 
     }
 
-
-    // =========================================================
-    // TEXTO BUSCABLE DEL PARTIDO
-    // =========================================================
 
     function textoPartido(id) {
 
@@ -1125,10 +1032,6 @@
     }
 
 
-    // =========================================================
-    // MOSTRAR ESTADÍSTICAS
-    // =========================================================
-
     function mostrarEstadisticas() {
 
         const tabla =
@@ -1170,10 +1073,6 @@
             "";
 
 
-        // =====================================================
-        // TEXTOS DE FILTRO
-        // =====================================================
-
         const textoJugadorFiltro =
             inputJugador.value
                 .trim()
@@ -1191,17 +1090,11 @@
             textoPartidoFiltro !== "";
 
 
-        // =====================================================
-        // COPIAR ESTADÍSTICAS
-        // =====================================================
 
         let filtradas =
             [...estadisticas];
 
 
-        // =====================================================
-        // FILTRO JUGADOR
-        // =====================================================
 
         if (textoJugadorFiltro !== "") {
 
@@ -1220,10 +1113,6 @@
         }
 
 
-        // =====================================================
-        // FILTRO PARTIDO
-        // =====================================================
-
         if (textoPartidoFiltro !== "") {
 
             filtradas =
@@ -1241,10 +1130,6 @@
         }
 
 
-        // =====================================================
-        // ORDENAR POR FECHA DEL PARTIDO
-        // MÁS RECIENTE PRIMERO
-        // =====================================================
 
         filtradas.sort(
             (a, b) => {
@@ -1288,8 +1173,6 @@
                 }
 
 
-                // Si tienen la misma fecha,
-                // la estadística con ID mayor va primero
 
                 return Number(
                     b.id || 0
@@ -1301,10 +1184,6 @@
             }
         );
 
-
-        // =====================================================
-        // SIN BÚSQUEDA → SOLO ÚLTIMAS 3
-        // =====================================================
 
         if (!hayBusqueda) {
 
@@ -1329,10 +1208,6 @@
         }
 
 
-        // =====================================================
-        // CON BÚSQUEDA → TODAS
-        // =====================================================
-
         else {
 
             document.getElementById(
@@ -1347,11 +1222,6 @@
                 `${filtradas.length} estadística${filtradas.length === 1 ? "" : "s"} encontrada${filtradas.length === 1 ? "" : "s"}.`;
 
         }
-
-
-        // =====================================================
-        // SIN RESULTADOS
-        // =====================================================
 
         if (
             filtradas.length === 0
@@ -1405,11 +1275,28 @@
         );
 
 
-        // =====================================================
-        // CREAR FILAS
-        // =====================================================
+        const totalPaginas = hayBusqueda
+            ? Math.ceil(filtradas.length / ESTADISTICAS_POR_PAGINA)
+            : 1;
 
-        filtradas.forEach(
+        if (hayBusqueda && paginaEstadisticas >= totalPaginas) {
+            paginaEstadisticas = totalPaginas - 1;
+        }
+
+        const inicioPagina = hayBusqueda
+            ? paginaEstadisticas * ESTADISTICAS_POR_PAGINA
+            : 0;
+
+        const estadisticasMostrar = hayBusqueda
+            ? filtradas.slice(
+                inicioPagina,
+                inicioPagina + ESTADISTICAS_POR_PAGINA
+              )
+            : filtradas;
+
+
+
+        estadisticasMostrar.forEach(
             estadistica => {
 
 
@@ -1478,9 +1365,6 @@
 
                 fila.innerHTML = `
 
-                    <!-- ===================================== -->
-                    <!-- JUGADOR -->
-                    <!-- ===================================== -->
 
                     <td class="px-6 py-5">
 
@@ -1528,10 +1412,6 @@
                     </td>
 
 
-                    <!-- ===================================== -->
-                    <!-- PARTIDO -->
-                    <!-- ===================================== -->
-
                     <td class="px-6 py-5">
 
                         <span class="text-sm
@@ -1549,10 +1429,6 @@
                     </td>
 
 
-                    <!-- ===================================== -->
-                    <!-- MINUTOS -->
-                    <!-- ===================================== -->
-
                     <td class="px-6 py-5
                                text-center
                                font-black
@@ -1562,10 +1438,6 @@
 
                     </td>
 
-
-                    <!-- ===================================== -->
-                    <!-- GOLES -->
-                    <!-- ===================================== -->
 
                     <td class="px-6 py-5
                                text-center
@@ -1577,10 +1449,6 @@
                     </td>
 
 
-                    <!-- ===================================== -->
-                    <!-- ASISTENCIAS -->
-                    <!-- ===================================== -->
-
                     <td class="px-6 py-5
                                text-center
                                font-bold
@@ -1590,10 +1458,6 @@
 
                     </td>
 
-
-                    <!-- ===================================== -->
-                    <!-- AMARILLAS -->
-                    <!-- ===================================== -->
 
                     <td class="px-6 py-5
                                text-center
@@ -1605,10 +1469,6 @@
                     </td>
 
 
-                    <!-- ===================================== -->
-                    <!-- ROJAS -->
-                    <!-- ===================================== -->
-
                     <td class="px-6 py-5
                                text-center
                                font-bold
@@ -1618,10 +1478,6 @@
 
                     </td>
 
-
-                    <!-- ===================================== -->
-                    <!-- TITULAR -->
-                    <!-- ===================================== -->
 
                     <td class="px-6 py-5 text-center">
 
@@ -1664,10 +1520,6 @@
                     </td>
 
 
-                    <!-- ===================================== -->
-                    <!-- ACCIONES -->
-                    <!-- ===================================== -->
-
                     <td class="px-6 py-5 text-right">
 
                         <div class="flex items-center justify-end gap-2">
@@ -1688,12 +1540,70 @@
             }
         );
 
+
+
+        const paginacionExistente =
+            document.getElementById("paginacionEstadisticas");
+
+        if (paginacionExistente) {
+            paginacionExistente.remove();
+        }
+
+        if (hayBusqueda && totalPaginas > 1) {
+
+            const paginacion = document.createElement("div");
+
+            paginacion.id = "paginacionEstadisticas";
+            paginacion.className =
+                "flex items-center justify-center gap-3 mt-6";
+
+            paginacion.innerHTML = `
+                <button
+                    type="button"
+                    id="btnAnteriorEstadisticas"
+                    class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition-all ${paginaEstadisticas === 0 ? "opacity-40 cursor-not-allowed" : ""}"
+                    ${paginaEstadisticas === 0 ? "disabled" : ""}>
+                    <i class="fa-solid fa-chevron-left mr-2"></i>
+                    Anterior
+                </button>
+
+                <span class="text-xs font-black text-slate-500 uppercase tracking-widest">
+                    ${paginaEstadisticas + 1} / ${totalPaginas}
+                </span>
+
+                <button
+                    type="button"
+                    id="btnSiguienteEstadisticas"
+                    class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold text-xs hover:bg-slate-700 transition-all ${paginaEstadisticas === totalPaginas - 1 ? "opacity-40 cursor-not-allowed" : ""}"
+                    ${paginaEstadisticas === totalPaginas - 1 ? "disabled" : ""}>
+                    Siguiente
+                    <i class="fa-solid fa-chevron-right ml-2"></i>
+                </button>
+            `;
+
+            tabla.parentElement.parentElement.appendChild(paginacion);
+
+            document
+                .getElementById("btnAnteriorEstadisticas")
+                ?.addEventListener("click", function () {
+                    if (paginaEstadisticas > 0) {
+                        paginaEstadisticas--;
+                        mostrarEstadisticas();
+                    }
+                });
+
+            document
+                .getElementById("btnSiguienteEstadisticas")
+                ?.addEventListener("click", function () {
+                    if (paginaEstadisticas < totalPaginas - 1) {
+                        paginaEstadisticas++;
+                        mostrarEstadisticas();
+                    }
+                });
+        }
+
     }
 
-
-    // =========================================================
-    // ELIMINAR ESTADÍSTICA
-    // =========================================================
 
     async function eliminarEstadistica(
         id
@@ -1825,18 +1735,11 @@
     }
 
 
-    // =========================================================
-    // EVENTOS
-    // =========================================================
-
     document.addEventListener(
         "DOMContentLoaded",
         function () {
 
 
-            // =================================================
-            // BUSCAR JUGADOR
-            // =================================================
 
             document
                 .getElementById(
@@ -1846,15 +1749,12 @@
                     "input",
                     function () {
 
+                        paginaEstadisticas = 0;
                         mostrarEstadisticas();
 
                     }
                 );
 
-
-            // =================================================
-            // BUSCAR PARTIDO
-            // =================================================
 
             document
                 .getElementById(
@@ -1864,15 +1764,12 @@
                     "input",
                     function () {
 
+                        paginaEstadisticas = 0;
                         mostrarEstadisticas();
 
                     }
                 );
 
-
-            // =================================================
-            // BOTÓN TODOS
-            // =================================================
 
             document
                 .getElementById(
@@ -1898,16 +1795,12 @@
                             .value =
                             "";
 
-
+                        paginaEstadisticas = 0;
                         mostrarEstadisticas();
 
                     }
                 );
 
-
-            // =================================================
-            // CARGAR DATOS
-            // =================================================
 
             cargarDatos();
 
@@ -1921,4 +1814,3 @@
 </body>
 
 </html>
-``

@@ -12,75 +12,57 @@
 
 <body>
 
-<div id="content" class="max-w-[1200px] mx-auto">
+<div id="content" class="max-w-[1200px] mx-auto w-full">
 
-<!-- ========================================================= -->
+<div class="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-10">
 
-<!-- HEADER -->
+    <a th:href="@{/estadisticas}"
+       class="w-10 h-10 sm:w-11 sm:h-11 shrink-0 flex items-center justify-center
+              bg-[#0f172a] border border-slate-800 rounded-xl
+              text-slate-400 hover:text-emerald-500
+              hover:border-emerald-500/30 transition-all">
 
-<!-- ========================================================= -->
+        <i class="fa-solid fa-arrow-left"></i>
 
-<div class="flex items-center gap-4 mb-10">
+    </a>
 
-```
-<a th:href="@{/estadisticas}"
-   class="w-11 h-11 flex items-center justify-center
-          bg-[#0f172a] border border-slate-800 rounded-xl
-          text-slate-400 hover:text-emerald-500
-          hover:border-emerald-500/30 transition-all">
+    <div class="min-w-0">
 
-    <i class="fa-solid fa-arrow-left"></i>
+        <h1 id="formTitle"
+            class="text-2xl sm:text-3xl md:text-4xl font-black text-white
+                   tracking-tight italic uppercase break-words">
 
-</a>
+            Nueva Estadística
 
-<div>
+        </h1>
 
-    <h1 id="formTitle"
-        class="text-4xl font-black text-white
-               tracking-tight italic uppercase">
+        <p id="formDescription"
+           class="text-emerald-500 font-bold mt-1
+                  text-sm sm:text-base">
 
-        Nueva Estadística
+            Registrá el rendimiento de un jugador en un partido.
 
-    </h1>
+        </p>
 
-    <p id="formDescription"
-       class="text-emerald-500 font-bold mt-1">
-
-        Registrá el rendimiento de un jugador en un partido.
-
-    </p>
-
-</div>
-```
+    </div>
 
 </div>
 
-<!-- ========================================================= -->
 
-<!-- FORMULARIO -->
-
-<!-- ========================================================= -->
-
-<form id="estadisticaForm" class="space-y-8">
-
-```
-<!-- ID OCULTO -->
+<form id="estadisticaForm" class="space-y-5 sm:space-y-8">
 
 <input type="hidden"
        id="estadisticaId">
 
 
-<!-- ========================================================= -->
-<!-- PARTIDO Y JUGADOR -->
-<!-- ========================================================= -->
-
 <div class="bg-[#0f172a]
             border border-slate-800
-            rounded-[2.5rem] p-8">
+            rounded-2xl sm:rounded-[2.5rem]
+            p-5 sm:p-8">
 
-    <div class="flex items-center gap-3 mb-8">
+    <div class="flex items-center gap-3 mb-6 sm:mb-8">
 
-        <div class="w-10 h-10 rounded-xl
+        <div class="w-10 h-10 shrink-0 rounded-xl
                     bg-emerald-500/10
                     flex items-center justify-center
                     text-emerald-500">
@@ -89,10 +71,11 @@
 
         </div>
 
-        <div>
+        <div class="min-w-0">
 
             <h3 class="font-black text-white
-                       uppercase italic">
+                       uppercase italic
+                       text-sm sm:text-base">
 
                 Partido y jugador
 
@@ -100,7 +83,8 @@
 
             <p class="text-[10px] text-slate-600
                       font-bold uppercase
-                      tracking-widest">
+                      tracking-widest
+                      break-words">
 
                 Seleccioná primero la categoría
 
@@ -111,14 +95,10 @@
     </div>
 
 
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-5 sm:gap-6">
 
 
-        <!-- ================================================= -->
-        <!-- CATEGORIA -->
-        <!-- ================================================= -->
-
-        <div>
+        <div class="min-w-0">
 
             <label for="categoriaId"
                    class="block text-[10px]
@@ -131,7 +111,7 @@
 
             <select id="categoriaId"
                     required
-                    class="w-full
+                    class="w-full min-w-0
                            bg-[#0a0f1d]
                            border border-slate-800
                            text-slate-200
@@ -152,11 +132,41 @@
         </div>
 
 
-        <!-- ================================================= -->
-        <!-- PARTIDO -->
-        <!-- ================================================= -->
+        <div class="min-w-0">
 
-        <div>
+            <label for="campeonatoId"
+                   class="block text-[10px]
+                          font-black text-slate-500
+                          uppercase tracking-widest mb-2">
+
+                Campeonato
+
+            </label>
+
+            <select id="campeonatoId"
+                    required
+                    class="w-full min-w-0
+                           bg-[#0a0f1d]
+                           border border-slate-800
+                           text-slate-200
+                           px-4 py-3
+                           rounded-xl
+                           outline-none
+                           focus:ring-2
+                           focus:ring-emerald-500
+                           focus:border-transparent
+                           transition-all">
+
+                <option value="">
+                    Cargando campeonatos...
+                </option>
+
+            </select>
+
+        </div>
+
+
+        <div class="min-w-0">
 
             <label for="partidoId"
                    class="block text-[10px]
@@ -170,7 +180,7 @@
             <select id="partidoId"
                     required
                     disabled
-                    class="w-full
+                    class="w-full min-w-0
                            bg-[#0a0f1d]
                            border border-slate-800
                            text-slate-200
@@ -185,7 +195,7 @@
                            disabled:cursor-not-allowed">
 
                 <option value="">
-                    Seleccione primero una categoría...
+                    Seleccione primero un campeonato y una categoría...
                 </option>
 
             </select>
@@ -193,11 +203,7 @@
         </div>
 
 
-        <!-- ================================================= -->
-        <!-- JUGADOR -->
-        <!-- ================================================= -->
-
-        <div>
+        <div class="min-w-0">
 
             <label for="jugadorId"
                    class="block text-[10px]
@@ -208,28 +214,31 @@
 
             </label>
 
-            <select id="jugadorId"
-                    required
-                    disabled
-                    class="w-full
-                           bg-[#0a0f1d]
-                           border border-slate-800
-                           text-slate-200
-                           px-4 py-3
-                           rounded-xl
-                           outline-none
-                           focus:ring-2
-                           focus:ring-emerald-500
-                           focus:border-transparent
-                           transition-all
-                           disabled:opacity-50
-                           disabled:cursor-not-allowed">
+            <input type="hidden"
+                   id="jugadorId">
 
-                <option value="">
-                    Seleccione primero una categoría...
-                </option>
+            <input type="text"
+                   id="jugadorBusqueda"
+                   list="jugadoresSugerencias"
+                   required
+                   disabled
+                   autocomplete="off"
+                   placeholder="Buscar jugador..."
+                   class="w-full min-w-0
+                          bg-[#0a0f1d]
+                          border border-slate-800
+                          text-slate-200
+                          px-4 py-3
+                          rounded-xl
+                          outline-none
+                          focus:ring-2
+                          focus:ring-emerald-500
+                          focus:border-transparent
+                          transition-all
+                          disabled:opacity-50
+                          disabled:cursor-not-allowed">
 
-            </select>
+            <datalist id="jugadoresSugerencias"></datalist>
 
         </div>
 
@@ -238,17 +247,14 @@
 </div>
 
 
-<!-- ========================================================= -->
-<!-- RENDIMIENTO -->
-<!-- ========================================================= -->
-
 <div class="bg-[#0f172a]
             border border-slate-800
-            rounded-[2.5rem] p-8">
+            rounded-2xl sm:rounded-[2.5rem]
+            p-5 sm:p-8">
 
-    <div class="flex items-center gap-3 mb-8">
+    <div class="flex items-center gap-3 mb-6 sm:mb-8">
 
-        <div class="w-10 h-10 rounded-xl
+        <div class="w-10 h-10 shrink-0 rounded-xl
                     bg-emerald-500/10
                     flex items-center justify-center
                     text-emerald-500">
@@ -257,10 +263,11 @@
 
         </div>
 
-        <div>
+        <div class="min-w-0">
 
             <h3 class="font-black text-white
-                       uppercase italic">
+                       uppercase italic
+                       text-sm sm:text-base">
 
                 Rendimiento
 
@@ -268,7 +275,8 @@
 
             <p class="text-[10px] text-slate-600
                       font-bold uppercase
-                      tracking-widest">
+                      tracking-widest
+                      break-words">
 
                 Datos estadísticos del partido
 
@@ -279,12 +287,11 @@
     </div>
 
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 sm:gap-6">
 
 
-        <!-- MINUTOS -->
 
-        <div>
+        <div class="min-w-0">
 
             <label for="minutos"
                    class="block text-[10px]
@@ -300,7 +307,7 @@
                    min="0"
                    value="0"
                    required
-                   class="w-full
+                   class="w-full min-w-0
                           bg-[#0a0f1d]
                           border border-slate-800
                           text-slate-200
@@ -315,9 +322,8 @@
         </div>
 
 
-        <!-- GOLES -->
 
-        <div>
+        <div class="min-w-0">
 
             <label for="goles"
                    class="block text-[10px]
@@ -333,7 +339,7 @@
                    min="0"
                    value="0"
                    required
-                   class="w-full
+                   class="w-full min-w-0
                           bg-[#0a0f1d]
                           border border-slate-800
                           text-slate-200
@@ -348,9 +354,8 @@
         </div>
 
 
-        <!-- ASISTENCIAS -->
 
-        <div>
+        <div class="min-w-0">
 
             <label for="asistencias"
                    class="block text-[10px]
@@ -366,7 +371,7 @@
                    min="0"
                    value="0"
                    required
-                   class="w-full
+                   class="w-full min-w-0
                           bg-[#0a0f1d]
                           border border-slate-800
                           text-slate-200
@@ -381,9 +386,7 @@
         </div>
 
 
-        <!-- ROJAS -->
-
-        <div>
+        <div class="min-w-0">
 
             <label for="rojas"
                    class="block text-[10px]
@@ -399,7 +402,7 @@
                    min="0"
                    value="0"
                    required
-                   class="w-full
+                   class="w-full min-w-0
                           bg-[#0a0f1d]
                           border border-slate-800
                           text-slate-200
@@ -414,9 +417,7 @@
         </div>
 
 
-        <!-- AMARILLAS -->
-
-        <div>
+        <div class="min-w-0">
 
             <label for="amarillas"
                    class="block text-[10px]
@@ -432,7 +433,7 @@
                    min="0"
                    value="0"
                    required
-                   class="w-full
+                   class="w-full min-w-0
                           bg-[#0a0f1d]
                           border border-slate-800
                           text-slate-200
@@ -447,15 +448,14 @@
         </div>
 
 
-        <!-- TITULAR -->
 
-        <div class="flex items-center">
+        <div class="flex items-center min-w-0">
 
             <label class="flex items-center gap-3 cursor-pointer">
 
                 <input type="checkbox"
                        id="titular"
-                       class="w-5 h-5 rounded
+                       class="w-5 h-5 shrink-0 rounded
                               border-slate-600
                               bg-[#0a0f1d]
                               text-emerald-500
@@ -476,14 +476,13 @@
 </div>
 
 
-<!-- ========================================================= -->
-<!-- BOTONES -->
-<!-- ========================================================= -->
-
-<div class="flex justify-end gap-3">
+<div class="flex flex-col-reverse sm:flex-row
+            sm:justify-end gap-3">
 
     <a th:href="@{/estadisticas}"
-       class="px-6 py-3 rounded-xl
+       class="w-full sm:w-auto
+              text-center
+              px-6 py-3 rounded-xl
               border border-slate-800
               bg-[#0f172a]
               text-slate-400
@@ -498,7 +497,8 @@
 
     <button type="submit"
             id="submitButton"
-            class="px-8 py-3 rounded-xl
+            class="w-full sm:w-auto
+                   px-8 py-3 rounded-xl
                    bg-emerald-500
                    hover:bg-emerald-400
                    text-slate-900
@@ -515,31 +515,19 @@
     </button>
 
 </div>
-```
 
 </form>
 
-<!-- ========================================================= -->
-
-<!-- JAVASCRIPT -->
-
-<!-- ========================================================= -->
 
 <script>
 
-
-    // =========================================================
-    // VARIABLES
-    // =========================================================
 
     let partidosDisponibles = [];
 
     let jugadoresDisponibles = [];
 
+    let campeonatosDisponibles = [];
 
-    // =========================================================
-    // OBTENER JWT
-    // =========================================================
 
     function getJwt() {
 
@@ -556,9 +544,6 @@
     }
 
 
-    // =========================================================
-    // NORMALIZAR RESPUESTA
-    // =========================================================
 
     function obtenerArray(data) {
 
@@ -591,9 +576,171 @@
     }
 
 
-    // =========================================================
-    // CARGAR CATEGORÍAS
-    // =========================================================
+
+    async function cargarCampeonatos() {
+
+        const select =
+            document.getElementById('campeonatoId');
+
+        const token =
+            getJwt();
+
+
+        if (!token) {
+
+            alert("Sesión expirada.");
+
+            window.location.href =
+                "/login";
+
+            return false;
+        }
+
+
+        try {
+
+            const res =
+                await fetch(
+                    '/api/campeonatos',
+                    {
+
+                        method: 'GET',
+
+                        headers: {
+
+                            'Authorization':
+                                'Bearer ' + token,
+
+                            'Accept':
+                                'application/json'
+
+                        }
+
+                    }
+                );
+
+
+            if (!res.ok) {
+
+                if (
+                    res.status === 401 ||
+                    res.status === 403
+                ) {
+
+                    throw new Error(
+                        "No tenés permisos para consultar los campeonatos."
+                    );
+
+                }
+
+                throw new Error(
+                    "No se pudieron cargar los campeonatos."
+                );
+
+            }
+
+
+            const data =
+                await res.json();
+
+
+            console.log(
+                "Respuesta /api/campeonatos:",
+                data
+            );
+
+
+            campeonatosDisponibles =
+                obtenerArray(data);
+
+
+            select.innerHTML = `
+
+                <option value="">
+                    Seleccione un campeonato...
+                </option>
+
+            `;
+
+
+            if (campeonatosDisponibles.length === 0) {
+
+                select.innerHTML = `
+
+                    <option value="">
+                        No hay campeonatos registrados
+                    </option>
+
+                `;
+
+                return false;
+            }
+
+
+            campeonatosDisponibles.forEach(campeonato => {
+
+                if (!campeonato.id) {
+                    return;
+                }
+
+
+                const option =
+                    document.createElement('option');
+
+
+                option.value =
+                    campeonato.id;
+
+
+                const nombre =
+                    campeonato.nombre ??
+                    campeonato.descripcion ??
+                    `Campeonato #${campeonato.id}`;
+
+
+                option.textContent =
+                    campeonato.año
+                        ? `${nombre} - ${campeonato.año}`
+                        : nombre;
+
+
+                select.appendChild(option);
+
+            });
+
+
+            return true;
+
+
+        } catch (error) {
+
+            console.error(
+                "Error cargando campeonatos:",
+                error
+            );
+
+
+            select.innerHTML = `
+
+                <option value="">
+                    Error al cargar campeonatos
+                </option>
+
+            `;
+
+
+            alert(
+                error.message ||
+                "No se pudieron cargar los campeonatos."
+            );
+
+
+            return false;
+
+        }
+
+    }
+
 
     async function cargarCategorias() {
 
@@ -638,7 +785,7 @@
                 );
 
 
-            if (!res.ok) {
+        if (!res.ok) {
 
                 if (
                     res.status === 401 ||
@@ -758,10 +905,6 @@
     }
 
 
-    // =========================================================
-    // CARGAR TODOS LOS PARTIDOS
-    // =========================================================
-
     async function cargarPartidos() {
 
         const token =
@@ -859,10 +1002,6 @@
 
     }
 
-
-    // =========================================================
-    // CARGAR TODOS LOS JUGADORES
-    // =========================================================
 
     async function cargarJugadores() {
 
@@ -962,14 +1101,13 @@
     }
 
 
-    // =========================================================
-    // MOSTRAR PARTIDOS DE LA CATEGORÍA
-    // =========================================================
-
     function mostrarPartidosPorCategoria(categoriaId) {
 
         const select =
             document.getElementById('partidoId');
+
+        const campeonatoId =
+            document.getElementById('campeonatoId').value;
 
 
         select.innerHTML = `
@@ -984,6 +1122,20 @@
         select.disabled = true;
 
 
+        if (!campeonatoId) {
+
+            select.innerHTML = `
+
+                <option value="">
+                    Seleccione primero un campeonato...
+                </option>
+
+            `;
+
+            return;
+        }
+
+
         if (!categoriaId) {
 
             select.innerHTML = `
@@ -995,14 +1147,15 @@
             `;
 
             return;
-
         }
 
 
         const partidosFiltrados =
             partidosDisponibles.filter(partido =>
                 String(partido.categoriaId) ===
-                String(categoriaId)
+                String(categoriaId) &&
+                String(partido.campeonatoId) ===
+                String(campeonatoId)
             );
 
 
@@ -1011,13 +1164,12 @@
             select.innerHTML = `
 
                 <option value="">
-                    No hay partidos en esta categoría
+                    No hay partidos en este campeonato y categoría
                 </option>
 
             `;
 
             return;
-
         }
 
 
@@ -1037,7 +1189,8 @@
 
 
             const condicion =
-                partido.local === true
+                partido.local === true ||
+                partido.local === "true"
                     ? "Local"
                     : "Visitante";
 
@@ -1058,40 +1211,31 @@
     }
 
 
-    // =========================================================
-    // MOSTRAR JUGADORES DE LA CATEGORÍA
-    // =========================================================
-
     function mostrarJugadoresPorCategoria(categoriaId) {
 
-        const select =
+        const input =
+            document.getElementById('jugadorBusqueda');
+
+        const hidden =
             document.getElementById('jugadorId');
 
-
-        select.innerHTML = `
-
-            <option value="">
-                Seleccione un jugador...
-            </option>
-
-        `;
+        const datalist =
+            document.getElementById('jugadoresSugerencias');
 
 
-        select.disabled = true;
+        input.value = '';
+        hidden.value = '';
+        datalist.innerHTML = '';
+
+        input.disabled = true;
 
 
         if (!categoriaId) {
 
-            select.innerHTML = `
-
-                <option value="">
-                    Seleccione primero una categoría...
-                </option>
-
-            `;
+            input.placeholder =
+                'Seleccione primero una categoría...';
 
             return;
-
         }
 
 
@@ -1104,16 +1248,10 @@
 
         if (jugadoresFiltrados.length === 0) {
 
-            select.innerHTML = `
-
-                <option value="">
-                    No hay jugadores en esta categoría
-                </option>
-
-            `;
+            input.placeholder =
+                'No hay jugadores en esta categoría';
 
             return;
-
         }
 
 
@@ -1122,14 +1260,6 @@
             if (!jugador.id) {
                 return;
             }
-
-
-            const option =
-                document.createElement('option');
-
-
-            option.value =
-                jugador.id;
 
 
             const nombre =
@@ -1144,24 +1274,74 @@
                 "";
 
 
-            option.textContent =
+            const nombreCompleto =
                 `${nombre} ${apellido}`.trim()
                 || `Jugador #${jugador.id}`;
 
 
-            select.appendChild(option);
+            const option =
+                document.createElement('option');
+
+
+            option.value =
+                nombreCompleto;
+
+            option.dataset.id =
+                jugador.id;
+
+
+            datalist.appendChild(option);
 
         });
 
 
-        select.disabled = false;
+        input.placeholder =
+            'Buscar jugador por nombre...';
+
+        input.disabled = false;
 
     }
 
 
-    // =========================================================
-    // CAMBIO DE CATEGORÍA
-    // =========================================================
+    document.getElementById(
+        'jugadorBusqueda'
+    ).addEventListener(
+        'input',
+        function () {
+
+            const texto =
+                this.value.trim().toLowerCase();
+
+            const hidden =
+                document.getElementById('jugadorId');
+
+            const opciones =
+                document.querySelectorAll(
+                    '#jugadoresSugerencias option'
+                );
+
+
+            hidden.value = '';
+
+
+            for (const opcion of opciones) {
+
+                if (
+                    opcion.value.trim().toLowerCase() ===
+                    texto
+                ) {
+
+                    hidden.value =
+                        opcion.dataset.id;
+
+                    break;
+                }
+
+            }
+
+        }
+    );
+
 
     document.getElementById(
         'categoriaId'
@@ -1186,9 +1366,25 @@
     );
 
 
-    // =========================================================
-    // CARGAR ESTADÍSTICA PARA EDITAR
-    // =========================================================
+    document.getElementById(
+        'campeonatoId'
+    ).addEventListener(
+        'change',
+        function () {
+
+            const categoriaId =
+                document.getElementById(
+                    'categoriaId'
+                ).value;
+
+
+            mostrarPartidosPorCategoria(
+                categoriaId
+            );
+
+        }
+    );
+
 
     async function cargarDatosEstadistica(id) {
 
@@ -1271,19 +1467,11 @@
             );
 
 
-            // =================================================
-            // ID
-            // =================================================
-
             document.getElementById(
                 'estadisticaId'
             ).value =
                 estadistica.id || id;
 
-
-            // =================================================
-            // BUSCAR PARTIDO
-            // =================================================
 
             const partido =
                 partidosDisponibles.find(
@@ -1293,14 +1481,22 @@
                 );
 
 
-            // =================================================
-            // CATEGORÍA
-            // =================================================
-
             if (
                 partido &&
                 partido.categoriaId
             ) {
+
+                const campeonatoSelect =
+                    document.getElementById(
+                        'campeonatoId'
+                    );
+
+
+                campeonatoSelect.value =
+                    String(
+                        partido.campeonatoId ?? ''
+                    );
+
 
                 const categoriaSelect =
                     document.getElementById(
@@ -1326,10 +1522,6 @@
             }
 
 
-            // =================================================
-            // PARTIDO
-            // =================================================
-
             document.getElementById(
                 'partidoId'
             ).value =
@@ -1338,21 +1530,43 @@
                 );
 
 
-            // =================================================
-            // JUGADOR
-            // =================================================
-
-            document.getElementById(
-                'jugadorId'
-            ).value =
-                String(
-                    estadistica.jugadorId ?? ''
+            const jugadorEditado =
+                jugadoresDisponibles.find(
+                    jugador =>
+                        String(jugador.id) ===
+                        String(estadistica.jugadorId)
                 );
 
 
-            // =================================================
-            // RENDIMIENTO
-            // =================================================
+            if (jugadorEditado) {
+
+                const nombre =
+                    jugadorEditado.nombre ??
+                    jugadorEditado.nombres ??
+                    "";
+
+
+                const apellido =
+                    jugadorEditado.apellido ??
+                    jugadorEditado.apellidos ??
+                    "";
+
+
+                document.getElementById(
+                    'jugadorBusqueda'
+                ).value =
+                    `${nombre} ${apellido}`.trim();
+
+
+                document.getElementById(
+                    'jugadorId'
+                ).value =
+                    String(
+                        estadistica.jugadorId
+                    );
+
+            }
+
 
             document.getElementById(
                 'minutos'
@@ -1390,10 +1604,6 @@
                 estadistica.titular === true;
 
 
-            // =================================================
-            // CAMBIAR INTERFAZ
-            // =================================================
-
             document.getElementById(
                 'formTitle'
             ).innerText =
@@ -1430,10 +1640,6 @@
     }
 
 
-    // =========================================================
-    // INICIALIZAR
-    // =========================================================
-
     document.addEventListener(
         'DOMContentLoaded',
         async function () {
@@ -1454,10 +1660,6 @@
             }
 
 
-            // =================================================
-            // DETECTAR SI ES EDICIÓN
-            // =================================================
-
             const params =
                 new URLSearchParams(
                     window.location.search
@@ -1468,9 +1670,14 @@
                 params.get('id');
 
 
-            // =================================================
-            // CARGAR CATEGORÍAS, PARTIDOS Y JUGADORES
-            // =================================================
+            const campeonatosCargados =
+                await cargarCampeonatos();
+
+
+            if (!campeonatosCargados) {
+                return;
+            }
+
 
             const categoriasCargadas =
                 await cargarCategorias();
@@ -1490,10 +1697,6 @@
             ]);
 
 
-            // =================================================
-            // SI HAY ID, CARGAR ESTADÍSTICA
-            // =================================================
-
             if (id) {
 
                 await cargarDatosEstadistica(id);
@@ -1503,10 +1706,6 @@
         }
     );
 
-
-    // =========================================================
-    // GUARDAR / ACTUALIZAR ESTADÍSTICA
-    // =========================================================
 
     document.getElementById(
         'estadisticaForm'
@@ -1533,19 +1732,11 @@
             }
 
 
-            // =================================================
-            // ID
-            // =================================================
-
             const id =
                 document.getElementById(
                     'estadisticaId'
                 ).value;
 
-
-            // =================================================
-            // DATOS
-            // =================================================
 
             const partidoId =
                 document.getElementById(
@@ -1595,9 +1786,22 @@
                 ).checked;
 
 
-            // =================================================
-            // VALIDACIONES
-            // =================================================
+            const campeonatoId =
+                document.getElementById(
+                    'campeonatoId'
+                ).value;
+
+
+            if (!campeonatoId) {
+
+                alert(
+                    "Debés seleccionar un campeonato."
+                );
+
+                return;
+
+            }
+
 
             if (!partidoId) {
 
@@ -1620,10 +1824,6 @@
 
             }
 
-
-            // =================================================
-            // OBJETO
-            // =================================================
 
             const estadisticaData = {
 
@@ -1660,10 +1860,6 @@
             );
 
 
-            // =================================================
-            // BOTÓN
-            // =================================================
-
             const boton =
                 document.getElementById(
                     'submitButton'
@@ -1679,10 +1875,6 @@
 
 
             try {
-
-                // =================================================
-                // URL Y MÉTODO
-                // =================================================
 
                 const url =
                     id
@@ -1707,10 +1899,6 @@
                     url
                 );
 
-
-                // =================================================
-                // REQUEST
-                // =================================================
 
                 const res =
                     await fetch(
@@ -1741,10 +1929,6 @@
                         }
                     );
 
-
-                // =================================================
-                // ERROR
-                // =================================================
 
                 if (!res.ok) {
 
@@ -1805,10 +1989,6 @@
                 }
 
 
-                // =================================================
-                // RESPUESTA
-                // =================================================
-
                 let savedEstadistica =
                     null;
 
@@ -1833,10 +2013,6 @@
                     savedEstadistica
                 );
 
-
-                // =================================================
-                // ÉXITO
-                // =================================================
 
                 alert(
                     id

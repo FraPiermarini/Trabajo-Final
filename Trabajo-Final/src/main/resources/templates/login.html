@@ -24,14 +24,17 @@
             box-sizing: border-box;
         }
 
+        html,
         body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100%;
         }
 
-        /* =====================================================
-           AUTOCOMPLETADO CHROME
-           Evita que los datos guardados aparezcan con fondo blanco
-           ===================================================== */
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+        }
+
+
 
         input:-webkit-autofill,
         input:-webkit-autofill:hover,
@@ -60,9 +63,6 @@
             color: #64748b;
         }
 
-        /* =====================================================
-           ANIMACIONES
-           ===================================================== */
 
         .contenedor {
             animation: aparecer 0.6s ease-out;
@@ -100,10 +100,6 @@
 
         }
 
-        /* =====================================================
-           CAMPOS
-           ===================================================== */
-
         .campo {
             transition: all 0.2s ease;
         }
@@ -117,9 +113,6 @@
 
         }
 
-        /* =====================================================
-           BOTÓN
-           ===================================================== */
 
         .boton {
             transition: all 0.2s ease;
@@ -134,9 +127,6 @@
 
         }
 
-        /* =====================================================
-           DETALLE DE IDENTIDAD
-           ===================================================== */
 
         .detalle-verde {
 
@@ -149,9 +139,6 @@
 
         }
 
-        /* =====================================================
-           IMAGEN DEL CLUB
-           ===================================================== */
 
         .imagen-club {
 
@@ -160,11 +147,6 @@
 
             object-fit: contain;
 
-            /*
-             * La imagen original posee franjas negras arriba
-             * y abajo. El zoom permite eliminarlas visualmente
-             * manteniendo el contenido principal del club.
-             */
 
             transform: scale(1.24);
 
@@ -176,6 +158,49 @@
         .imagen:hover .imagen-club {
 
             transform: scale(1.27);
+
+        }
+
+
+        @media (max-width: 767px) {
+
+            body {
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+
+            .contenedor {
+                min-height: auto !important;
+                max-height: none !important;
+            }
+
+        }
+
+        @media (max-width: 480px) {
+
+            body {
+                padding: 0.75rem;
+            }
+
+            .contenedor {
+                border-radius: 1.5rem !important;
+            }
+
+            .detalle-verde {
+                width: 34px;
+            }
+
+        }
+
+        @media (max-width: 360px) {
+
+            body {
+                padding: 0.5rem;
+            }
+
+            .contenedor {
+                border-radius: 1.25rem !important;
+            }
 
         }
 
@@ -192,10 +217,6 @@
     class="contenedor w-full max-w-4xl bg-[#0f172a] rounded-3xl overflow-hidden shadow-2xl border border-slate-800 flex"
     style="min-height: 540px; max-height: 650px;">
 
-
-    <!-- =====================================================
-         IMAGEN DEL CLUB
-         ===================================================== -->
 
     <div
         class="imagen hidden md:flex md:w-[43%] bg-[#effff7] items-center justify-center overflow-hidden relative">
@@ -216,8 +237,6 @@
         </div>
 
 
-        <!-- Detalle inferior -->
-
         <div
             class="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-emerald-600 via-emerald-400 to-transparent">
         </div>
@@ -225,34 +244,26 @@
     </div>
 
 
-    <!-- =====================================================
-         FORMULARIO LOGIN
-         ===================================================== -->
-
     <div
-        class="w-full md:w-[57%] flex items-center justify-center px-7 py-7 sm:px-10 sm:py-8">
+        class="w-full md:w-[57%] flex items-center justify-center px-5 py-6 sm:px-10 sm:py-8">
 
         <div class="w-full max-w-sm">
 
 
-            <!-- =================================================
-                 IDENTIDAD
-                 ================================================= -->
-
-            <div class="text-center mb-6">
+            <div class="text-center mb-5 sm:mb-6">
 
                 <div
-                    class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 mb-3">
+                    class="inline-flex items-center justify-center w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 mb-3">
 
                     <i
-                        class="fa-solid fa-chart-line text-emerald-400 text-lg">
+                        class="fa-solid fa-chart-line text-emerald-400 text-base sm:text-lg">
                     </i>
 
                 </div>
 
 
                 <h1
-                    class="text-xl sm:text-2xl font-extrabold text-white">
+                    class="text-lg sm:text-2xl font-extrabold text-white leading-tight">
 
                     Sistema de Estadísticas
 
@@ -260,7 +271,7 @@
 
 
                 <p
-                    class="text-emerald-400 text-sm font-semibold mt-1">
+                    class="text-emerald-400 text-xs sm:text-sm font-semibold mt-1 leading-relaxed">
 
                     Complejo Deportivo Justiniano Posse
 
@@ -276,14 +287,10 @@
             </div>
 
 
-            <!-- =================================================
-                 BIENVENIDA
-                 ================================================= -->
-
             <div class="mb-5">
 
                 <h2
-                    class="text-lg font-bold text-white">
+                    class="text-base sm:text-lg font-bold text-white">
 
                     Bienvenido nuevamente
 
@@ -291,7 +298,7 @@
 
 
                 <p
-                    class="text-xs sm:text-sm text-slate-400 mt-1">
+                    class="text-xs sm:text-sm text-slate-400 mt-1 leading-relaxed">
 
                     Accedé para consultar y gestionar las estadísticas deportivas.
 
@@ -299,10 +306,6 @@
 
             </div>
 
-
-            <!-- =================================================
-                 ERROR
-                 ================================================= -->
 
             <div
                 id="error"
@@ -317,16 +320,11 @@
             </div>
 
 
-            <!-- =================================================
-                 FORMULARIO
-                 ================================================= -->
 
             <form
                 id="loginForm"
                 class="space-y-4">
 
-
-                <!-- EMAIL -->
 
                 <div>
 
@@ -343,7 +341,7 @@
                         class="campo flex items-center bg-[#0a0f1d] border border-slate-700 rounded-xl px-3.5">
 
                         <i
-                            class="fa-solid fa-envelope text-slate-500 mr-3 text-sm">
+                            class="fa-solid fa-envelope text-slate-500 mr-3 text-sm shrink-0">
                         </i>
 
 
@@ -353,14 +351,12 @@
                             placeholder="ejemplo@correo.com"
                             required
                             autocomplete="email"
-                            class="w-full py-3 bg-transparent outline-none text-sm">
+                            class="w-full min-w-0 py-3 bg-transparent outline-none text-sm">
 
                     </div>
 
                 </div>
 
-
-                <!-- CONTRASEÑA -->
 
                 <div>
 
@@ -377,7 +373,7 @@
                         class="campo flex items-center bg-[#0a0f1d] border border-slate-700 rounded-xl px-3.5">
 
                         <i
-                            class="fa-solid fa-lock text-slate-500 mr-3 text-sm">
+                            class="fa-solid fa-lock text-slate-500 mr-3 text-sm shrink-0">
                         </i>
 
 
@@ -387,13 +383,13 @@
                             placeholder="Ingresá tu contraseña"
                             required
                             autocomplete="current-password"
-                            class="w-full py-3 bg-transparent outline-none text-sm">
+                            class="w-full min-w-0 py-3 bg-transparent outline-none text-sm">
 
 
                         <button
                             type="button"
                             id="togglePassword"
-                            class="text-slate-500 hover:text-emerald-400 transition ml-2">
+                            class="text-slate-500 hover:text-emerald-400 transition ml-2 shrink-0 p-1">
 
                             <i
                                 id="eyeIcon"
@@ -406,8 +402,6 @@
 
                 </div>
 
-
-                <!-- BOTÓN -->
 
                 <button
                     type="submit"
@@ -425,15 +419,12 @@
             </form>
 
 
-            <!-- =================================================
-                 FRASE
-                 ================================================= -->
 
             <div
                 class="text-center mt-5">
 
                 <p
-                    class="text-xs text-slate-500 italic">
+                    class="text-xs text-slate-500 italic leading-relaxed">
 
                     "Datos que ayudan a tomar mejores decisiones."
 
@@ -442,15 +433,11 @@
             </div>
 
 
-            <!-- =================================================
-                 REGISTRO
-                 ================================================= -->
-
             <div
                 class="mt-5 text-center">
 
                 <p
-                    class="text-xs sm:text-sm text-slate-500">
+                    class="text-xs sm:text-sm text-slate-500 leading-relaxed">
 
                     ¿Todavía no tenés una cuenta?
 
@@ -467,15 +454,11 @@
             </div>
 
 
-            <!-- =================================================
-                 FOOTER
-                 ================================================= -->
-
             <div
                 class="mt-5 pt-4 border-t border-slate-800 text-center">
 
                 <p
-                    class="text-[10px] text-slate-600">
+                    class="text-[9px] sm:text-[10px] text-slate-600 leading-relaxed">
 
                     © 2026 Complejo Deportivo Justiniano Posse · Sistema de Gestión Deportiva
 
@@ -493,9 +476,6 @@
 
 <script>
 
-    // =====================================================
-    // MOSTRAR / OCULTAR CONTRASEÑA
-    // =====================================================
 
     document
         .getElementById('togglePassword')
@@ -528,10 +508,6 @@
 
         });
 
-
-    // =====================================================
-    // LOGIN
-    // =====================================================
 
     document
         .getElementById('loginForm')
@@ -658,3 +634,4 @@
 
 </body>
 </html>
+

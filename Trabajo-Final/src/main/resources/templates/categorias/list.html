@@ -1,512 +1,894 @@
 <!DOCTYPE html>
 
-<html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+<html xmlns:th="http:
+      xmlns:sec="http:
       th:replace="~{layout :: mainLayout(~{::#content})}"
       lang="es">
 
 <head>
 
-    <meta charset="UTF-8">
+<meta charset="UTF-8">
 
-    <title>Categorías</title>
+<title>Categorías</title>
 
-    <link rel="icon" href="data:,">
+<link rel="icon" href="data:,">
 
 </head>
 
 <body>
 
 <div id="content"
-     class="max-w-[1200px] mx-auto"
+     class="max-w-[1200px] mx-auto w-full"
      th:attr="data-puede-editar=${#authorization.expression('hasAnyRole(''ENTRENADOR'',''ADMIN'')')}">
 
 
-    <!-- HEADER -->
 
-    <div class="flex flex-col md:flex-row
-                md:items-center justify-between
-                gap-6 mb-10">
+<div class="flex flex-col md:flex-row
+            md:items-center justify-between
+            gap-4 sm:gap-6
+            mb-6 sm:mb-10">
 
-        <div>
+    <div class="min-w-0">
 
-            <h1 class="text-4xl font-black text-white
-                       tracking-tight italic uppercase">
+        <h1 class="text-2xl sm:text-3xl md:text-4xl
+                   font-black text-white
+                   tracking-tight italic uppercase
+                   break-words">
 
-                Categorías
+            Categorías
 
-            </h1>
-
-
-            <p class="text-emerald-500 font-bold mt-1">
-
-                Las divisiones formativas y competitivas del club.
-
-            </p>
-
-        </div>
+        </h1>
 
 
-        <!-- AGREGAR -->
-
-        <a th:href="@{/categorias/nuevo}"
-           sec:authorize="hasAnyRole('ENTRENADOR','ADMIN')"
-           class="bg-[#10b981]
-                  hover:bg-[#059669]
-                  text-slate-900
-                  px-6 py-3
-                  rounded-xl
+        <p class="text-emerald-500
                   font-bold
-                  flex items-center gap-2
-                  shadow-lg
-                  shadow-emerald-500/20
-                  transition-all
-                  transform active:scale-95">
+                  mt-1
+                  text-sm sm:text-base">
 
-            <i class="fa-solid fa-plus"></i>
+            Las divisiones formativas y competitivas del club.
 
-            <span>
-                Agregar categoría
-            </span>
-
-        </a>
+        </p>
 
     </div>
 
 
-    <!-- FILTRO DE BÚSQUEDA -->
+    
 
-    <div class="bg-[#0f172a]
-                border border-slate-800
-                rounded-2xl
-                p-4
-                mb-6">
+    <a th:href="@{/categorias/nuevo}"
+       sec:authorize="hasAnyRole('ENTRENADOR','ADMIN')"
+       class="bg-[#10b981]
+              hover:bg-[#059669]
+              text-slate-900
+              px-5 sm:px-6
+              py-3
+              rounded-xl
+              font-bold
+              flex items-center justify-center
+              gap-2
+              shadow-lg
+              shadow-emerald-500/20
+              transition-all
+              transform active:scale-95
+              w-full md:w-auto
+              shrink-0">
 
-        <div class="relative">
+        <i class="fa-solid fa-plus"></i>
 
-            <i class="fa-solid fa-magnifying-glass
-                      absolute left-4 top-1/2
-                      -translate-y-1/2
-                      text-slate-500"></i>
+        <span>
+            Agregar categoría
+        </span>
 
-            <input
-                type="text"
-                id="buscadorCategoria"
-                placeholder="Buscar por nombre de categoría..."
-                class="w-full
-                       bg-[#0a0f1d]
-                       border border-slate-800
-                       rounded-xl
-                       py-3
-                       pl-11
-                       pr-4
-                       text-white
-                       placeholder-slate-600
-                       outline-none
-                       focus:border-emerald-500
-                       transition-all">
+    </a>
 
+</div>
+
+
+
+
+<div class="bg-[#0f172a]
+            border border-slate-800
+            rounded-2xl
+            p-3 sm:p-4
+            mb-5 sm:mb-6">
+
+    <div class="relative min-w-0">
+
+        <i class="fa-solid fa-magnifying-glass
+                  absolute left-4 top-1/2
+                  -translate-y-1/2
+                  text-slate-500"></i>
+
+        <input
+            type="text"
+            id="buscadorCategoria"
+            placeholder="Buscar por nombre de categoría..."
+            class="w-full
+                   min-w-0
+                   bg-[#0a0f1d]
+                   border border-slate-800
+                   rounded-xl
+                   py-3
+                   pl-11
+                   pr-4
+                   text-sm sm:text-base
+                   text-white
+                   placeholder-slate-600
+                   outline-none
+                   focus:border-emerald-500
+                   transition-all">
+
+    </div>
+
+</div>
+
+
+
+
+<div id="categoriasGrid"
+     class="grid grid-cols-1 md:grid-cols-2
+            lg:grid-cols-3
+            gap-4 sm:gap-6">
+
+
+    
+
+    <div id="loading"
+         class="col-span-full py-14 sm:py-20 text-center">
+
+        <div class="inline-block
+                    animate-spin
+                    w-10 h-10
+                    border-4
+                    border-emerald-500
+                    border-t-transparent
+                    rounded-full">
         </div>
 
-    </div>
 
+        <p class="text-slate-500
+                  mt-4
+                  font-bold uppercase
+                  tracking-widest text-xs">
 
-    <!-- LISTADO -->
+            Cargando categorías...
 
-    <div id="categoriasGrid"
-         class="grid grid-cols-1 md:grid-cols-2
-                lg:grid-cols-3 gap-6">
-
-
-        <!-- LOADING -->
-
-        <div id="loading"
-             class="col-span-full py-20 text-center">
-
-            <div class="inline-block
-                        animate-spin
-                        w-10 h-10
-                        border-4
-                        border-emerald-500
-                        border-t-transparent
-                        rounded-full">
-            </div>
-
-
-            <p class="text-slate-500 mt-4
-                      font-bold uppercase
-                      tracking-widest text-xs">
-
-                Cargando categorías...
-
-            </p>
-
-        </div>
+        </p>
 
     </div>
 
+</div>
 
-    <!-- PAGINACIÓN -->
+<div id="paginacion"
+     class="flex flex-wrap
+            items-center justify-center
+            gap-2
+            mt-6 sm:mt-8
+            px-2">
+</div>
 
-    <div id="paginacion"
-         class="flex items-center justify-center gap-2 mt-8">
-    </div>
+<script>
+
+    let todasLasCategorias = [];
+
+    let paginaActual = 1;
+
+    const CATEGORIAS_POR_PAGINA = 6;
+
+    function puedeEditarRol() {
+
+        const content =
+            document.getElementById('content');
+
+        return content?.dataset?.puedeEditar === 'true';
+
+    }
+
+    function getJwt() {
+
+        const cookie =
+            document.cookie
+                .split('; ')
+                .find(row =>
+                    row.startsWith('token=')
+                );
 
 
-    <!-- ========================================================= -->
-    <!-- JAVASCRIPT -->
-    <!-- ========================================================= -->
+        return cookie
+            ? cookie.substring(6)
+            : null;
 
-    <script>
+    }
 
+    function escapeHtml(str) {
 
-        // =========================================================
-        // DATOS Y PAGINACIÓN
-        // =========================================================
-
-        let todasLasCategorias = [];
-
-        let paginaActual = 1;
-
-        const CATEGORIAS_POR_PAGINA = 6;
+        const div =
+            document.createElement('div');
 
 
-        // =========================================================
-        // PERMISOS DE ROL
-        // =========================================================
+        div.textContent =
+            str ?? '';
 
-        function puedeEditarRol() {
 
-            const content =
-                document.getElementById('content');
+        return div.innerHTML;
 
-            return content?.dataset?.puedeEditar === 'true';
+    }
+
+    function normalizarTexto(texto) {
+
+        return String(texto || '')
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '');
+
+    }
+
+
+    function mostrarPaginacion(totalResultados) {
+
+        const paginacion =
+            document.getElementById('paginacion');
+
+
+        paginacion.innerHTML = '';
+
+
+        const totalPaginas =
+            Math.ceil(
+                totalResultados /
+                CATEGORIAS_POR_PAGINA
+            );
+
+
+        if (totalPaginas <= 1) {
+
+            return;
+
+        }
+        const botonAnterior =
+            document.createElement('button');
+
+
+        botonAnterior.innerHTML =
+            `<i class="fa-solid fa-chevron-left"></i>`;
+
+
+        botonAnterior.className =
+            `w-10 h-10
+             rounded-xl
+             border border-slate-800
+             bg-[#0f172a]
+             text-slate-400
+             hover:text-white
+             hover:border-emerald-500
+             transition-all
+             disabled:opacity-30
+             disabled:cursor-not-allowed`;
+
+
+        botonAnterior.disabled =
+            paginaActual === 1;
+
+
+        botonAnterior.addEventListener(
+            'click',
+            () => {
+
+                if (paginaActual > 1) {
+
+                    paginaActual--;
+
+                    mostrarCategoriasPagina();
+
+                }
+
+            }
+        );
+
+
+        paginacion.appendChild(
+            botonAnterior
+        );
+
+
+        for (
+            let i = 1;
+            i <= totalPaginas;
+            i++
+        ) {
+
+            const boton =
+                document.createElement('button');
+
+
+            boton.textContent = i;
+
+
+            boton.className =
+                `w-10 h-10
+                 rounded-xl
+                 border
+                 font-bold
+                 transition-all
+                 ${
+                     i === paginaActual
+
+                     ? 'bg-emerald-500 border-emerald-500 text-slate-900'
+
+                     : 'bg-[#0f172a] border-slate-800 text-slate-400 hover:text-white hover:border-emerald-500'
+                 }`;
+
+
+            boton.addEventListener(
+                'click',
+                () => {
+
+                    paginaActual = i;
+
+                    mostrarCategoriasPagina();
+
+                }
+            );
+
+
+            paginacion.appendChild(
+                boton
+            );
 
         }
 
 
-        // =========================================================
-        // OBTENER JWT
-        // =========================================================
 
-        function getJwt() {
+        const botonSiguiente =
+            document.createElement('button');
 
-            const cookie =
-                document.cookie
-                    .split('; ')
-                    .find(row =>
-                        row.startsWith('token=')
+
+        botonSiguiente.innerHTML =
+            `<i class="fa-solid fa-chevron-right"></i>`;
+
+
+        botonSiguiente.className =
+            `w-10 h-10
+             rounded-xl
+             border border-slate-800
+             bg-[#0f172a]
+             text-slate-400
+             hover:text-white
+             hover:border-emerald-500
+             transition-all
+             disabled:opacity-30
+             disabled:cursor-not-allowed`;
+
+
+        botonSiguiente.disabled =
+            paginaActual === totalPaginas;
+
+
+        botonSiguiente.addEventListener(
+            'click',
+            () => {
+
+                if (
+                    paginaActual <
+                    totalPaginas
+                ) {
+
+                    paginaActual++;
+
+                    mostrarCategoriasPagina();
+
+                }
+
+            }
+        );
+
+
+        paginacion.appendChild(
+            botonSiguiente
+        );
+
+    }
+
+
+
+    function mostrarCategoriasPagina() {
+
+        const buscador =
+            normalizarTexto(
+                document.getElementById(
+                    'buscadorCategoria'
+                ).value
+            );
+
+
+        const filtradas =
+            todasLasCategorias.filter(categoria => {
+
+                const nombre =
+                    normalizarTexto(
+                        categoria.nombre || ''
                     );
 
 
-            return cookie
-                ? cookie.substring(6)
-                : null;
+                return !buscador ||
+                       nombre.includes(buscador);
+
+            });
+
+        const inicio =
+            (paginaActual - 1) *
+            CATEGORIAS_POR_PAGINA;
+
+
+        const fin =
+            inicio +
+            CATEGORIAS_POR_PAGINA;
+
+
+        const pagina =
+            filtradas.slice(
+                inicio,
+                fin
+            );
+
+
+        mostrarCategorias(
+            pagina,
+            filtradas.length
+        );
+
+    }
+
+
+
+    function mostrarCategorias(
+        categorias,
+        totalResultados = categorias.length
+    ) {
+
+        const grid =
+            document.getElementById(
+                'categoriasGrid'
+            );
+
+
+        grid.innerHTML = '';
+
+
+        if (totalResultados === 0) {
+
+            grid.innerHTML = `
+
+                <div class="col-span-full
+                            py-14 sm:py-20
+                            px-4
+                            text-center
+                            border-2 border-dashed
+                            border-slate-800
+                            rounded-[2rem]">
+
+                    <div class="w-16 h-16
+                                mx-auto mb-5
+                                rounded-2xl
+                                bg-slate-800
+                                flex items-center
+                                justify-center">
+
+                        <i class="fa-solid
+                                  fa-layer-group
+                                  text-2xl
+                                  text-slate-600">
+                        </i>
+
+                    </div>
+
+
+                    <p class="text-slate-500
+                              font-bold">
+
+                        No se encontraron categorías.
+
+                    </p>
+
+
+                </div>
+
+            `;
+
+
+            mostrarPaginacion(0);
+
+            return;
 
         }
 
 
-        // =========================================================
-        // ESCAPAR HTML
-        // =========================================================
 
-        function escapeHtml(str) {
+        categorias.forEach(categoria => {
 
-            const div =
+            const cantidadJugadores =
+                Array.isArray(categoria.jugadores)
+                    ? categoria.jugadores.length
+                    : 0;
+
+            const descripcion =
+                categoria.descripcion ||
+                'División de competencia y formación técnica del club.';
+
+
+            const entrenadorNombre =
+                `${categoria.nombreEntrenador || ''} ${categoria.apellidoEntrenador || ''}`
+                    .trim() || 'Sin entrenador';
+
+
+
+
+            const acciones =
+                puedeEditarRol()
+                    ? `
+
+                        <div class="mt-5 sm:mt-6
+                                    flex flex-col
+                                    min-[400px]:flex-row
+                                    gap-2">
+
+                            <a
+                                href="/categorias/nuevo?id=${categoria.id}"
+                                class="flex-1
+                                       bg-emerald-500/10
+                                       hover:bg-emerald-500
+                                       text-emerald-500
+                                       hover:text-slate-900
+                                       py-3
+                                       rounded-xl
+                                       font-bold
+                                       transition-all
+                                       text-xs
+                                       uppercase
+                                       tracking-widest
+                                       text-center
+                                       min-w-0">
+
+                                <i class="fa-solid
+                                          fa-pen-to-square
+                                          mr-1">
+                                </i>
+
+                                Editar
+
+                            </a>
+
+
+                            <button
+                                type="button"
+                                class="btn-eliminar
+                                       w-full
+                                       min-[400px]:w-12
+                                       min-h-12
+                                       bg-slate-800
+                                       hover:bg-red-500/20
+                                       text-slate-400
+                                       hover:text-red-500
+                                       rounded-xl
+                                       transition-all
+                                       shrink-0"
+                                data-id="${categoria.id}"
+                                data-nombre="${escapeHtml(categoria.nombre || '')}">
+
+                                <i class="fa-solid
+                                          fa-trash-can">
+                                </i>
+
+                            </button>
+
+                        </div>
+
+                    `
+                    : '';
+
+
+            const card =
                 document.createElement('div');
 
 
-            div.textContent =
-                str ?? '';
+            card.className = `
+                bg-[#0f172a]
+                border border-slate-800
+                p-5 sm:p-6 md:p-8
+                rounded-[1.5rem] sm:rounded-[2rem]
+                hover:border-emerald-500/50
+                transition-all
+                group relative
+                min-w-0
+                overflow-hidden
+            `;
 
 
-            return div.innerHTML;
+            card.innerHTML = `
 
-        }
+                
 
+                <div class="w-12 h-12 sm:w-14 sm:h-14
+                            bg-emerald-500/10
+                            rounded-2xl
+                            flex items-center
+                            justify-center
+                            text-emerald-500
+                            mb-5 sm:mb-6
+                            shrink-0">
 
-        // =========================================================
-        // NORMALIZAR TEXTO
-        // =========================================================
+                    <i class="fa-solid
+                              fa-layer-group
+                              text-xl sm:text-2xl">
+                    </i>
 
-        function normalizarTexto(texto) {
+                </div>
 
-            return String(texto || '')
-                .toLowerCase()
-                .normalize('NFD')
-                .replace(/[\u0300-\u036f]/g, '');
+                <h3 class="text-xl sm:text-2xl
+                           font-black
+                           text-white
+                           mb-2
+                           italic
+                           tracking-tighter
+                           break-words
+                           overflow-wrap-anywhere">
 
-        }
+                    ${escapeHtml(
+                        categoria.nombre || ''
+                    )}
 
-
-        // =========================================================
-        // PAGINACIÓN
-        // =========================================================
-
-        function mostrarPaginacion(totalResultados) {
-
-            const paginacion =
-                document.getElementById('paginacion');
-
-
-            paginacion.innerHTML = '';
-
-
-            const totalPaginas =
-                Math.ceil(
-                    totalResultados /
-                    CATEGORIAS_POR_PAGINA
-                );
+                </h3>
 
 
-            if (totalPaginas <= 1) {
+                
 
-                return;
+                <p class="text-slate-500
+                          text-sm
+                          mb-5 sm:mb-6
+                          leading-relaxed
+                          font-medium
+                          break-words">
 
-            }
+                    ${escapeHtml(
+                        descripcion
+                    )}
 
-
-            // =====================================================
-            // ANTERIOR
-            // =====================================================
-
-            const botonAnterior =
-                document.createElement('button');
-
-
-            botonAnterior.innerHTML =
-                `<i class="fa-solid fa-chevron-left"></i>`;
+                </p>
 
 
-            botonAnterior.className =
-                `w-10 h-10
-                 rounded-xl
-                 border border-slate-800
-                 bg-[#0f172a]
-                 text-slate-400
-                 hover:text-white
-                 hover:border-emerald-500
-                 transition-all
-                 disabled:opacity-30
-                 disabled:cursor-not-allowed`;
+                <div class="border-t
+                            border-slate-800
+                            pt-5 sm:pt-6
+                            space-y-3">
 
 
-            botonAnterior.disabled =
-                paginaActual === 1;
+                    
+
+                    <div class="flex
+                                items-start
+                                gap-2
+                                min-w-0">
+
+                        <i class="fa-solid
+                                  fa-users
+                                  text-emerald-500
+                                  text-xs
+                                  mt-1
+                                  shrink-0">
+                        </i>
+
+                        <span class="text-xs
+                                     font-bold
+                                     text-slate-300
+                                     break-words
+                                     min-w-0">
+
+                            ${cantidadJugadores}
+                            jugador${cantidadJugadores === 1 ? '' : 'es'}
+
+                        </span>
+
+                    </div>
 
 
-            botonAnterior.addEventListener(
-                'click',
-                () => {
+                    
 
-                    if (paginaActual > 1) {
+                    <div class="flex
+                                items-start
+                                gap-2
+                                min-w-0">
 
-                        paginaActual--;
+                        <i class="fa-solid
+                                  fa-user-tie
+                                  text-emerald-500
+                                  text-xs
+                                  mt-1
+                                  shrink-0">
+                        </i>
 
-                        mostrarCategoriasPagina();
+                        <span class="text-xs
+                                     font-bold
+                                     text-slate-300
+                                     break-words
+                                     min-w-0">
 
-                    }
+                            ${escapeHtml(
+                                entrenadorNombre
+                            )}
 
-                }
-            );
+                        </span>
 
+                    </div>
 
-            paginacion.appendChild(
-                botonAnterior
-            );
-
-
-            // =====================================================
-            // NÚMEROS
-            // =====================================================
-
-            for (
-                let i = 1;
-                i <= totalPaginas;
-                i++
-            ) {
-
-                const boton =
-                    document.createElement('button');
+                </div>
 
 
-                boton.textContent = i;
+                
+
+                ${acciones}
+
+            `;
 
 
-                boton.className =
-                    `w-10 h-10
-                     rounded-xl
-                     border
-                     font-bold
-                     transition-all
-                     ${
-                         i === paginaActual
+            grid.appendChild(card);
 
-                         ? 'bg-emerald-500 border-emerald-500 text-slate-900'
-
-                         : 'bg-[#0f172a] border-slate-800 text-slate-400 hover:text-white hover:border-emerald-500'
-                     }`;
+        });
 
 
-                boton.addEventListener(
+        grid
+            .querySelectorAll(
+                '.btn-eliminar'
+            )
+            .forEach(btn => {
+
+                btn.addEventListener(
                     'click',
-                    () => {
+                    function () {
 
-                        paginaActual = i;
-
-                        mostrarCategoriasPagina();
-
-                    }
-                );
-
-
-                paginacion.appendChild(
-                    boton
-                );
-
-            }
-
-
-            // =====================================================
-            // SIGUIENTE
-            // =====================================================
-
-            const botonSiguiente =
-                document.createElement('button');
-
-
-            botonSiguiente.innerHTML =
-                `<i class="fa-solid fa-chevron-right"></i>`;
-
-
-            botonSiguiente.className =
-                `w-10 h-10
-                 rounded-xl
-                 border border-slate-800
-                 bg-[#0f172a]
-                 text-slate-400
-                 hover:text-white
-                 hover:border-emerald-500
-                 transition-all
-                 disabled:opacity-30
-                 disabled:cursor-not-allowed`;
-
-
-            botonSiguiente.disabled =
-                paginaActual === totalPaginas;
-
-
-            botonSiguiente.addEventListener(
-                'click',
-                () => {
-
-                    if (
-                        paginaActual <
-                        totalPaginas
-                    ) {
-
-                        paginaActual++;
-
-                        mostrarCategoriasPagina();
-
-                    }
-
-                }
-            );
-
-
-            paginacion.appendChild(
-                botonSiguiente
-            );
-
-        }
-
-
-        // =========================================================
-        // MOSTRAR PÁGINA ACTUAL
-        // =========================================================
-
-        function mostrarCategoriasPagina() {
-
-            const buscador =
-                normalizarTexto(
-                    document.getElementById(
-                        'buscadorCategoria'
-                    ).value
-                );
-
-
-            const filtradas =
-                todasLasCategorias.filter(categoria => {
-
-                    const nombre =
-                        normalizarTexto(
-                            categoria.nombre || ''
+                        eliminarCategoria(
+                            this.dataset.id,
+                            this.dataset.nombre
                         );
 
-
-                    return !buscador ||
-                           nombre.includes(buscador);
-
-                });
-
-
-            // =====================================================
-            // CALCULAR PÁGINA
-            // =====================================================
-
-            const inicio =
-                (paginaActual - 1) *
-                CATEGORIAS_POR_PAGINA;
-
-
-            const fin =
-                inicio +
-                CATEGORIAS_POR_PAGINA;
-
-
-            const pagina =
-                filtradas.slice(
-                    inicio,
-                    fin
+                    }
                 );
 
+            });
 
-            mostrarCategorias(
-                pagina,
-                filtradas.length
+
+        mostrarPaginacion(
+            totalResultados
+        );
+
+    }
+
+
+
+    async function cargarCategorias() {
+
+        const grid =
+            document.getElementById(
+                'categoriasGrid'
             );
+
+
+        const token =
+            getJwt();
+
+
+        if (!token) {
+
+            grid.innerHTML = `
+
+                <div class="col-span-full py-20
+                            text-center
+                            border-2 border-dashed
+                            border-slate-800
+                            rounded-[2rem]">
+
+                    <p class="text-red-500 font-bold">
+
+                        Sesión expirada.
+
+                    </p>
+
+                </div>
+
+            `;
+
+            return;
 
         }
 
 
-        // =========================================================
-        // MOSTRAR CATEGORÍAS
-        // =========================================================
+        try {
 
-        function mostrarCategorias(
-            categorias,
-            totalResultados = categorias.length
-        ) {
+            const res =
+                await fetch(
+                    '/api/categorias',
+                    {
 
-            const grid =
-                document.getElementById(
-                    'categoriasGrid'
+                        method: 'GET',
+
+                        headers: {
+
+                            'Authorization':
+                                'Bearer ' + token,
+
+                            'Accept':
+                                'application/json'
+
+                        }
+
+                    }
                 );
+
+
+            if (!res.ok) {
+
+                if (
+                    res.status === 401 ||
+                    res.status === 403
+                ) {
+
+                    throw new Error(
+                        "No tenés permisos para consultar las categorías."
+                    );
+
+                }
+
+
+                throw new Error(
+                    "Error al obtener las categorías."
+                );
+
+            }
+
+
+            const data =
+                await res.json();
+
+
+            console.log(
+                "Respuesta /api/categorias:",
+                data
+            );
+
+
+
+            let categorias = [];
+
+
+            if (Array.isArray(data)) {
+
+                categorias = data;
+
+            } else if (
+                data &&
+                Array.isArray(data.content)
+            ) {
+
+                categorias =
+                    data.content;
+
+            } else if (
+                data &&
+                typeof data === 'object'
+            ) {
+
+                categorias = [data];
+
+            }
 
 
             grid.innerHTML = '';
 
 
-            // =====================================================
-            // SIN RESULTADOS
-            // =====================================================
-
-            if (totalResultados === 0) {
+            if (categorias.length === 0) {
 
                 grid.innerHTML = `
 
                     <div class="col-span-full py-20
+                                px-4
                                 text-center
                                 border-2 border-dashed
                                 border-slate-800
@@ -531,739 +913,257 @@
                         <p class="text-slate-500
                                   font-bold">
 
-                            No se encontraron categorías.
+                            No hay categorías registradas.
 
                         </p>
 
 
+                        <p class="text-slate-700
+                                  text-xs mt-2">
+
+                            Creá la primera categoría
+                            para comenzar.
+
+                        </p>
+
                     </div>
 
                 `;
-
-
-                mostrarPaginacion(0);
 
                 return;
 
             }
 
 
-            // =====================================================
-            // MOSTRAR CATEGORÍAS
-            // =====================================================
-
-            categorias.forEach(categoria => {
+            todasLasCategorias =
+                categorias;
 
 
-                // =================================================
-                // JUGADORES
-                // =================================================
-
-                const cantidadJugadores =
-                    Array.isArray(categoria.jugadores)
-                        ? categoria.jugadores.length
-                        : 0;
+            paginaActual = 1;
 
 
-                // =================================================
-                // DESCRIPCIÓN
-                // =================================================
 
-                const descripcion =
-                    categoria.descripcion ||
-                    'División de competencia y formación técnica del club.';
+            mostrarCategoriasPagina();
 
 
-                // =================================================
-                // ENTRENADOR
-                // =================================================
+        } catch (error) {
 
-                const entrenadorNombre =
-                    `${categoria.nombreEntrenador || ''} ${categoria.apellidoEntrenador || ''}`
-                        .trim() || 'Sin entrenador';
-
-
-                // =================================================
-                // ACCIONES SEGÚN ROL
-                // =================================================
-
-                const acciones =
-                    puedeEditarRol()
-                        ? `
-
-                            <div class="mt-6 flex gap-2">
-
-                                <a
-                                    href="/categorias/nuevo?id=${categoria.id}"
-                                    class="flex-1
-                                           bg-emerald-500/10
-                                           hover:bg-emerald-500
-                                           text-emerald-500
-                                           hover:text-slate-900
-                                           py-3
-                                           rounded-xl
-                                           font-bold
-                                           transition-all
-                                           text-xs
-                                           uppercase
-                                           tracking-widest
-                                           text-center">
-
-                                    <i class="fa-solid
-                                              fa-pen-to-square
-                                              mr-1">
-                                    </i>
-
-                                    Editar
-
-                                </a>
+            console.error(
+                "Error al cargar categorías:",
+                error
+            );
 
 
-                                <button
-                                    type="button"
-                                    class="btn-eliminar
-                                           w-12
-                                           bg-slate-800
-                                           hover:bg-red-500/20
-                                           text-slate-400
-                                           hover:text-red-500
-                                           rounded-xl
-                                           transition-all"
-                                    data-id="${categoria.id}"
-                                    data-nombre="${escapeHtml(categoria.nombre || '')}">
+            grid.innerHTML = `
 
-                                    <i class="fa-solid
-                                              fa-trash-can">
-                                    </i>
+                <div class="col-span-full
+                            p-6 sm:p-10
+                            bg-red-500/10
+                            border border-red-500/20
+                            rounded-[2rem]
+                            text-red-500
+                            text-center
+                            break-words">
 
-                                </button>
-
-                            </div>
-
-                        `
-                        : '';
+                    <i class="fa-solid
+                              fa-circle-exclamation
+                              text-xl mb-3">
+                    </i>
 
 
-                // =================================================
-                // CARD
-                // =================================================
+                    <p class="font-black">
 
-                const card =
-                    document.createElement('div');
-
-
-                card.className = `
-                    bg-[#0f172a]
-                    border border-slate-800
-                    p-8 rounded-[2rem]
-                    hover:border-emerald-500/50
-                    transition-all
-                    group relative
-                `;
-
-
-                card.innerHTML = `
-
-                    <!-- ICONO -->
-
-                    <div class="w-14 h-14
-                                bg-emerald-500/10
-                                rounded-2xl
-                                flex items-center
-                                justify-center
-                                text-emerald-500
-                                mb-6">
-
-                        <i class="fa-solid
-                                  fa-layer-group
-                                  text-2xl">
-                        </i>
-
-                    </div>
-
-
-                    <!-- NOMBRE -->
-
-                    <h3 class="text-2xl
-                               font-black
-                               text-white
-                               mb-2
-                               italic
-                               tracking-tighter">
-
-                        ${escapeHtml(
-                            categoria.nombre || ''
-                        )}
-
-                    </h3>
-
-
-                    <!-- DESCRIPCIÓN -->
-
-                    <p class="text-slate-500
-                              text-sm
-                              mb-6
-                              leading-relaxed
-                              font-medium">
-
-                        ${escapeHtml(
-                            descripcion
-                        )}
+                        ERROR AL CARGAR LAS CATEGORÍAS
 
                     </p>
 
 
-                    <!-- INFORMACIÓN -->
+                    <p class="text-xs
+                              mt-2
+                              text-red-400
+                              break-words">
 
-                    <div class="border-t
-                                border-slate-800
-                                pt-6
-                                space-y-3">
+                        ${escapeHtml(
+                            error.message
+                        )}
 
+                    </p>
 
-                        <!-- JUGADORES -->
+                </div>
 
-                        <div class="flex
-                                    items-center
-                                    gap-2">
+            `;
 
-                            <i class="fa-solid
-                                      fa-users
-                                      text-emerald-500
-                                      text-xs">
-                            </i>
+        }
 
-                            <span class="text-xs
-                                         font-bold
-                                         text-slate-300">
-
-                                ${cantidadJugadores}
-                                jugador${cantidadJugadores === 1 ? '' : 'es'}
-
-                            </span>
-
-                        </div>
+    }
 
 
-                        <!-- ENTRENADOR -->
-
-                        <div class="flex
-                                    items-center
-                                    gap-2">
-
-                            <i class="fa-solid
-                                      fa-user-tie
-                                      text-emerald-500
-                                      text-xs">
-                            </i>
-
-                            <span class="text-xs
-                                         font-bold
-                                         text-slate-300">
-
-                                ${escapeHtml(
-                                    entrenadorNombre
-                                )}
-
-                            </span>
-
-                        </div>
-
-                    </div>
+    async function eliminarCategoria(
+        id,
+        nombre
+    ) {
 
 
-                    <!-- ACCIONES -->
+        if (!puedeEditarRol()) {
 
-                    ${acciones}
+            alert(
+                "No tenés permisos para eliminar categorías."
+            );
 
-                `;
+            return;
+
+        }
 
 
-                grid.appendChild(card);
+        if (
+            !confirm(
+                `¿Seguro que querés eliminar la categoría "${nombre}"?`
+            )
+        ) {
 
-            });
+            return;
+
+        }
 
 
-            // =====================================================
-            // EVENTOS ELIMINAR
-            // =====================================================
+        const token =
+            getJwt();
 
-            grid
-                .querySelectorAll(
-                    '.btn-eliminar'
-                )
-                .forEach(btn => {
 
-                    btn.addEventListener(
-                        'click',
-                        function () {
+        if (!token) {
 
-                            eliminarCategoria(
-                                this.dataset.id,
-                                this.dataset.nombre
-                            );
+            alert(
+                "Sesión expirada."
+            );
+
+            window.location.href =
+                "/login";
+
+            return;
+
+        }
+
+
+        try {
+
+            const res =
+                await fetch(
+                    `/api/categorias/${id}`,
+                    {
+
+                        method: 'DELETE',
+
+                        headers: {
+
+                            'Authorization':
+                                'Bearer ' + token,
+
+                            'Accept':
+                                'application/json'
 
                         }
-                    );
 
-                });
+                    }
+                );
 
 
-            // =====================================================
-            // MOSTRAR PAGINACIÓN
-            // =====================================================
 
-            mostrarPaginacion(
-                totalResultados
+            if (
+                res.status === 401 ||
+                res.status === 403
+            ) {
+
+                throw new Error(
+                    "No tenés permisos para eliminar categorías."
+                );
+
+            }
+
+
+            if (!res.ok) {
+
+                let mensaje =
+                    "No se pudo eliminar la categoría.";
+
+
+                try {
+
+                    const errorData =
+                        await res.json();
+
+
+                    if (
+                        errorData.mensaje
+                    ) {
+
+                        mensaje =
+                            errorData.mensaje;
+
+                    } else if (
+                        errorData.message
+                    ) {
+
+                        mensaje =
+                            errorData.message;
+
+                    }
+
+                } catch (_) {}
+
+
+                throw new Error(
+                    mensaje
+                );
+
+            }
+
+            await cargarCategorias();
+
+
+        } catch (error) {
+
+            console.error(
+                "Error eliminando categoría:",
+                error
+            );
+
+
+            alert(
+                error.message ||
+                "Error al eliminar la categoría."
             );
 
         }
 
-
-        // =========================================================
-        // CARGAR CATEGORÍAS
-        // =========================================================
-
-        async function cargarCategorias() {
-
-            const grid =
-                document.getElementById(
-                    'categoriasGrid'
-                );
+    }
 
 
-            const token =
-                getJwt();
+    document.addEventListener(
+        'DOMContentLoaded',
+        function () {
 
+            document
+                .getElementById(
+                    'buscadorCategoria'
+                )
+                .addEventListener(
+                    'input',
+                    function () {
 
-            if (!token) {
+                        paginaActual = 1;
 
-                grid.innerHTML = `
-
-                    <div class="col-span-full py-20
-                                text-center
-                                border-2 border-dashed
-                                border-slate-800
-                                rounded-[2rem]">
-
-                        <p class="text-red-500 font-bold">
-
-                            Sesión expirada.
-
-                        </p>
-
-                    </div>
-
-                `;
-
-                return;
-
-            }
-
-
-            try {
-
-                const res =
-                    await fetch(
-                        '/api/categorias',
-                        {
-
-                            method: 'GET',
-
-                            headers: {
-
-                                'Authorization':
-                                    'Bearer ' + token,
-
-                                'Accept':
-                                    'application/json'
-
-                            }
-
-                        }
-                    );
-
-
-                // =================================================
-                // ERROR HTTP
-                // =================================================
-
-                if (!res.ok) {
-
-                    if (
-                        res.status === 401 ||
-                        res.status === 403
-                    ) {
-
-                        throw new Error(
-                            "No tenés permisos para consultar las categorías."
-                        );
+                        mostrarCategoriasPagina();
 
                     }
-
-
-                    throw new Error(
-                        "Error al obtener las categorías."
-                    );
-
-                }
-
-
-                const data =
-                    await res.json();
-
-
-                console.log(
-                    "Respuesta /api/categorias:",
-                    data
                 );
 
 
-                // =================================================
-                // SOPORTAR ARRAY O PAGINACIÓN
-                // =================================================
-
-                let categorias = [];
-
-
-                if (Array.isArray(data)) {
-
-                    categorias = data;
-
-                } else if (
-                    data &&
-                    Array.isArray(data.content)
-                ) {
-
-                    categorias =
-                        data.content;
-
-                } else if (
-                    data &&
-                    typeof data === 'object'
-                ) {
-
-                    categorias = [data];
-
-                }
-
-
-                grid.innerHTML = '';
-
-
-                // =================================================
-                // SIN CATEGORÍAS
-                // =================================================
-
-                if (categorias.length === 0) {
-
-                    grid.innerHTML = `
-
-                        <div class="col-span-full py-20
-                                    text-center
-                                    border-2 border-dashed
-                                    border-slate-800
-                                    rounded-[2rem]">
-
-                            <div class="w-16 h-16
-                                        mx-auto mb-5
-                                        rounded-2xl
-                                        bg-slate-800
-                                        flex items-center
-                                        justify-center">
-
-                                <i class="fa-solid
-                                          fa-layer-group
-                                          text-2xl
-                                          text-slate-600">
-                                </i>
-
-                            </div>
-
-
-                            <p class="text-slate-500
-                                      font-bold">
-
-                                No hay categorías registradas.
-
-                            </p>
-
-
-                            <p class="text-slate-700
-                                      text-xs mt-2">
-
-                                Creá la primera categoría
-                                para comenzar.
-
-                            </p>
-
-                        </div>
-
-                    `;
-
-                    return;
-
-                }
-
-
-                // =================================================
-                // GUARDAR TODAS LAS CATEGORÍAS
-                // =================================================
-
-                todasLasCategorias =
-                    categorias;
-
-
-                paginaActual = 1;
-
-
-                // =================================================
-                // MOSTRAR PRIMERA PÁGINA
-                // =================================================
-
-                mostrarCategoriasPagina();
-
-
-            } catch (error) {
-
-                console.error(
-                    "Error al cargar categorías:",
-                    error
-                );
-
-
-                grid.innerHTML = `
-
-                    <div class="col-span-full
-                                p-10
-                                bg-red-500/10
-                                border border-red-500/20
-                                rounded-[2rem]
-                                text-red-500
-                                text-center">
-
-                        <i class="fa-solid
-                                  fa-circle-exclamation
-                                  text-xl mb-3">
-                        </i>
-
-
-                        <p class="font-black">
-
-                            ERROR AL CARGAR LAS CATEGORÍAS
-
-                        </p>
-
-
-                        <p class="text-xs
-                                  mt-2
-                                  text-red-400">
-
-                            ${escapeHtml(
-                                error.message
-                            )}
-
-                        </p>
-
-                    </div>
-
-                `;
-
-            }
+            cargarCategorias();
 
         }
+    );
 
-
-        // =========================================================
-        // ELIMINAR CATEGORÍA
-        // =========================================================
-
-        async function eliminarCategoria(
-            id,
-            nombre
-        ) {
-
-
-            // =================================================
-            // SEGURIDAD EXTRA
-            // =================================================
-
-            if (!puedeEditarRol()) {
-
-                alert(
-                    "No tenés permisos para eliminar categorías."
-                );
-
-                return;
-
-            }
-
-
-            if (
-                !confirm(
-                    `¿Seguro que querés eliminar la categoría "${nombre}"?`
-                )
-            ) {
-
-                return;
-
-            }
-
-
-            const token =
-                getJwt();
-
-
-            if (!token) {
-
-                alert(
-                    "Sesión expirada."
-                );
-
-                window.location.href =
-                    "/login";
-
-                return;
-
-            }
-
-
-            try {
-
-                const res =
-                    await fetch(
-                        `/api/categorias/${id}`,
-                        {
-
-                            method: 'DELETE',
-
-                            headers: {
-
-                                'Authorization':
-                                    'Bearer ' + token,
-
-                                'Accept':
-                                    'application/json'
-
-                            }
-
-                        }
-                    );
-
-
-                // =================================================
-                // AUTORIZACIÓN
-                // =================================================
-
-                if (
-                    res.status === 401 ||
-                    res.status === 403
-                ) {
-
-                    throw new Error(
-                        "No tenés permisos para eliminar categorías."
-                    );
-
-                }
-
-
-                // =================================================
-                // ERROR
-                // =================================================
-
-                if (!res.ok) {
-
-                    let mensaje =
-                        "No se pudo eliminar la categoría.";
-
-
-                    try {
-
-                        const errorData =
-                            await res.json();
-
-
-                        if (
-                            errorData.mensaje
-                        ) {
-
-                            mensaje =
-                                errorData.mensaje;
-
-                        } else if (
-                            errorData.message
-                        ) {
-
-                            mensaje =
-                                errorData.message;
-
-                        }
-
-                    } catch (_) {}
-
-
-                    throw new Error(
-                        mensaje
-                    );
-
-                }
-
-
-                // =================================================
-                // RECARGAR LISTA
-                // =================================================
-
-                await cargarCategorias();
-
-
-            } catch (error) {
-
-                console.error(
-                    "Error eliminando categoría:",
-                    error
-                );
-
-
-                alert(
-                    error.message ||
-                    "Error al eliminar la categoría."
-                );
-
-            }
-
-        }
-
-
-        // =========================================================
-        // INICIAR
-        // =========================================================
-
-        document.addEventListener(
-            'DOMContentLoaded',
-            function () {
-
-                document
-                    .getElementById(
-                        'buscadorCategoria'
-                    )
-                    .addEventListener(
-                        'input',
-                        function () {
-
-                            paginaActual = 1;
-
-                            mostrarCategoriasPagina();
-
-                        }
-                    );
-
-
-                cargarCategorias();
-
-            }
-        );
-
-    </script>
+</script>
 
 </div>
 

@@ -1,5 +1,5 @@
-```html
 <!DOCTYPE html>
+
 <html xmlns:th="http://www.thymeleaf.org"
       th:replace="~{layout :: mainLayout(~{::#content})}"
       lang="es">
@@ -7,152 +7,359 @@
 <head>
     <meta charset="UTF-8">
     <title>Nuevo Entrenador</title>
-    <!-- Evita el request de favicon -->
-    <link rel="icon" href="data:,">
-    <!-- Tailwind (solo para dev, en prod instalalo con npm) -->
-    <script src="https://cdn.tailwindcss.com"></script>
+
+<link rel="icon" href="data:,">
+
+<script src="https://cdn.tailwindcss.com"></script>
+
 </head>
 
 <body>
-<div id="content" class="max-w-[1000px] mx-auto">
 
-    <!-- HEADER -->
-    <div class="flex items-center gap-4 mb-10">
-        <a th:href="@{/entrenadores}" class="w-11 h-11 flex items-center justify-center 
-                  bg-[#0f172a] border border-slate-800 rounded-xl 
-                  text-slate-400 hover:text-emerald-500 
-                  hover:border-emerald-500/30 transition-all">
-            <i class="fa-solid fa-arrow-left"></i>
-        </a>
-        <div>
-            <h1 id="formTitle" class="text-4xl font-black text-white italic uppercase tracking-tight">
-                Nuevo Entrenador
-            </h1>
-            <p class="text-emerald-500 font-bold mt-1">
-                Completá los datos del personal técnico.
-            </p>
-        </div>
+<div id="content"
+     class="max-w-[1000px] mx-auto w-full">
+
+
+
+<div class="flex items-start sm:items-center
+            gap-3 sm:gap-4
+            mb-6 sm:mb-10">
+
+    <a th:href="@{/entrenadores}"
+       class="w-10 h-10 sm:w-11 sm:h-11
+              flex items-center justify-center
+              bg-[#0f172a]
+              border border-slate-800
+              rounded-xl
+              text-slate-400
+              hover:text-emerald-500
+              hover:border-emerald-500/30
+              transition-all
+              shrink-0">
+
+        <i class="fa-solid fa-arrow-left"></i>
+
+    </a>
+
+    <div class="min-w-0">
+
+        <h1 id="formTitle"
+            class="text-2xl sm:text-3xl md:text-4xl
+                   font-black
+                   text-white
+                   italic
+                   uppercase
+                   tracking-tight
+                   break-words">
+
+            Nuevo Entrenador
+
+        </h1>
+
+        <p class="text-emerald-500
+                  font-bold
+                  mt-1
+                  text-sm sm:text-base">
+
+            Completá los datos del personal técnico.
+
+        </p>
+
     </div>
 
-    <!-- FORMULARIO -->
-    <form id="entrenadorForm">
-        <input type="hidden" id="entrenadorId">
+</div>
 
-        <div class="bg-[#0f172a] border border-slate-800 rounded-[2.5rem] p-8">
 
-            <!-- CAMPOS -->
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-                <div class="space-y-2">
-                    <label for="nombre" class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
-                        Nombre
-                    </label>
-                    <input type="text" id="nombre" required
-                           class="w-full bg-[#0a0f1d] border border-slate-800 text-slate-200 px-5 py-4 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
-                           placeholder="Ej: Juan">
-                </div>
 
-                <div class="space-y-2">
-                    <label for="apellido" class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
-                        Apellido
-                    </label>
-                    <input type="text" id="apellido" required
-                           class="w-full bg-[#0a0f1d] border border-slate-800 text-slate-200 px-5 py-4 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
-                           placeholder="Ej: Pérez">
-                </div>
+<form id="entrenadorForm">
 
-                <div class="space-y-2 md:col-span-2">
-                    <label for="edad" class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
-                        Edad
-                    </label>
-                    <input type="number" id="edad" required min="18"
-                           class="w-full bg-[#0a0f1d] border border-slate-800 text-slate-200 px-5 py-4 rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 transition-all"
-                           placeholder="Ej: 35">
-                </div>
+    <input type="hidden" id="entrenadorId">
 
-                <!-- IMAGEN ENTRENADOR -->
-                <div class="space-y-3 md:col-span-2">
+    <div class="bg-[#0f172a]
+                border border-slate-800
+                rounded-2xl sm:rounded-[2.5rem]
+                p-5 sm:p-6 md:p-8">
 
-                    <label class="text-[10px] font-black text-slate-500 uppercase tracking-widest ml-1">
-                        Foto del entrenador
-                    </label>
 
-                    <div class="flex flex-col items-center justify-center
-                                bg-[#0a0f1d]
-                                border border-slate-800
-                                rounded-2xl
-                                p-6">
+        
 
-                        <!-- PREVIEW -->
-                        <div id="imagenPreviewContainer"
-                             class="w-32 h-32 mb-4
-                                    bg-slate-800
-                                    rounded-full
-                                    flex items-center justify-center
-                                    overflow-hidden
-                                    border border-slate-700">
+        <div class="grid grid-cols-1 md:grid-cols-2
+                    gap-5 sm:gap-6">
 
-                            <div id="imagenPlaceholder"
-                                 class="text-slate-600 text-4xl">
-                                <i class="fa-solid fa-user"></i>
-                            </div>
 
-                            <img id="imagenPreview"
-                                 src=""
-                                 alt="Vista previa"
-                                 class="hidden w-full h-full object-cover">
-                        </div>
+            
 
-                        <input type="file"
-                               id="imagenEntrenadorInput"
-                               accept="image/*"
-                               class="hidden">
+            <div class="space-y-2 min-w-0">
 
-                        <button type="button"
-                                onclick="document.getElementById('imagenEntrenadorInput').click()"
-                                class="px-5 py-3
-                                       rounded-xl
-                                       bg-slate-800
-                                       hover:bg-slate-700
-                                       text-slate-200
-                                       font-bold
-                                       text-sm
-                                       transition-all">
+                <label for="nombre"
+                       class="text-[10px]
+                              font-black
+                              text-slate-500
+                              uppercase
+                              tracking-widest
+                              ml-1">
 
-                            <i class="fa-solid fa-camera mr-2"></i>
-                            Seleccionar imagen
-                        </button>
+                    Nombre
 
-                        <p class="text-[10px] text-slate-600 font-bold uppercase tracking-wider mt-3">
-                            JPG, PNG o WEBP
-                        </p>
+                </label>
 
-                    </div>
-                </div>
+                <input type="text"
+                       id="nombre"
+                       required
+                       class="w-full
+                              min-w-0
+                              bg-[#0a0f1d]
+                              border border-slate-800
+                              text-slate-200
+                              px-4 sm:px-5
+                              py-3.5 sm:py-4
+                              rounded-xl
+                              outline-none
+                              focus:ring-2
+                              focus:ring-emerald-500
+                              transition-all"
+                       placeholder="Ej: Juan">
 
             </div>
 
-            <!-- BOTONES -->
-            <div class="flex justify-end gap-3 mt-8 pt-8 border-t border-slate-800">
 
-                <a th:href="@{/entrenadores}"
-                   class="px-6 py-3 rounded-xl border border-slate-800 bg-[#0a0f1d] text-slate-400 hover:text-white font-bold transition-all">
-                    Cancelar
-                </a>
+            
 
-                <button type="submit"
-                        id="submitButton"
-                        class="px-8 py-3 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-black uppercase text-xs tracking-widest shadow-lg shadow-emerald-500/20 transition-all">
+            <div class="space-y-2 min-w-0">
 
-                    <i class="fa-solid fa-floppy-disk mr-2"></i>
-                    Guardar entrenador
+                <label for="apellido"
+                       class="text-[10px]
+                              font-black
+                              text-slate-500
+                              uppercase
+                              tracking-widest
+                              ml-1">
 
-                </button>
+                    Apellido
+
+                </label>
+
+                <input type="text"
+                       id="apellido"
+                       required
+                       class="w-full
+                              min-w-0
+                              bg-[#0a0f1d]
+                              border border-slate-800
+                              text-slate-200
+                              px-4 sm:px-5
+                              py-3.5 sm:py-4
+                              rounded-xl
+                              outline-none
+                              focus:ring-2
+                              focus:ring-emerald-500
+                              transition-all"
+                       placeholder="Ej: Pérez">
+
+            </div>
+
+
+            
+
+            <div class="space-y-2
+                        md:col-span-2
+                        min-w-0">
+
+                <label for="edad"
+                       class="text-[10px]
+                              font-black
+                              text-slate-500
+                              uppercase
+                              tracking-widest
+                              ml-1">
+
+                    Edad
+
+                </label>
+
+                <input type="number"
+                       id="edad"
+                       required
+                       min="18"
+                       class="w-full
+                              min-w-0
+                              bg-[#0a0f1d]
+                              border border-slate-800
+                              text-slate-200
+                              px-4 sm:px-5
+                              py-3.5 sm:py-4
+                              rounded-xl
+                              outline-none
+                              focus:ring-2
+                              focus:ring-emerald-500
+                              transition-all"
+                       placeholder="Ej: 35">
+
+            </div>
+
+
+            
+
+            <div class="space-y-3
+                        md:col-span-2
+                        min-w-0">
+
+                <label class="text-[10px]
+                              font-black
+                              text-slate-500
+                              uppercase
+                              tracking-widest
+                              ml-1">
+
+                    Foto del entrenador
+
+                </label>
+
+
+                <div class="flex flex-col
+                            items-center
+                            justify-center
+                            bg-[#0a0f1d]
+                            border border-slate-800
+                            rounded-2xl
+                            p-4 sm:p-6">
+
+
+                    
+
+                    <div id="imagenPreviewContainer"
+                         class="w-28 h-28
+                                sm:w-32 sm:h-32
+                                mb-4
+                                bg-slate-800
+                                rounded-full
+                                flex items-center
+                                justify-center
+                                overflow-hidden
+                                border border-slate-700
+                                shrink-0">
+
+                        <div id="imagenPlaceholder"
+                             class="text-slate-600
+                                    text-3xl sm:text-4xl">
+
+                            <i class="fa-solid fa-user"></i>
+
+                        </div>
+
+                        <img id="imagenPreview"
+                             src=""
+                             alt="Vista previa"
+                             class="hidden
+                                    w-full
+                                    h-full
+                                    object-cover">
+
+                    </div>
+
+
+                    <input type="file"
+                           id="imagenEntrenadorInput"
+                           accept="image/*"
+                           class="hidden">
+
+
+                    <button type="button"
+                            onclick="document.getElementById('imagenEntrenadorInput').click()"
+                            class="px-4 sm:px-5
+                                   py-3
+                                   rounded-xl
+                                   bg-slate-800
+                                   hover:bg-slate-700
+                                   text-slate-200
+                                   font-bold
+                                   text-sm
+                                   transition-all
+                                   w-full sm:w-auto">
+
+                        <i class="fa-solid fa-camera mr-2"></i>
+
+                        Seleccionar imagen
+
+                    </button>
+
+
+                    <p class="text-[10px]
+                              text-slate-600
+                              font-bold
+                              uppercase
+                              tracking-wider
+                              mt-3
+                              text-center">
+
+                        JPG, PNG o WEBP
+
+                    </p>
+
+                </div>
 
             </div>
 
         </div>
-    </form>
+
+
+        
+
+        <div class="flex flex-col-reverse
+                    sm:flex-row
+                    sm:justify-end
+                    gap-3
+                    mt-6 sm:mt-8
+                    pt-6 sm:pt-8
+                    border-t
+                    border-slate-800">
+
+
+            <a th:href="@{/entrenadores}"
+               class="w-full sm:w-auto
+                      text-center
+                      px-6 py-3
+                      rounded-xl
+                      border border-slate-800
+                      bg-[#0a0f1d]
+                      text-slate-400
+                      hover:text-white
+                      font-bold
+                      transition-all">
+
+                Cancelar
+
+            </a>
+
+
+            <button type="submit"
+                    id="submitButton"
+                    class="w-full sm:w-auto
+                           px-8 py-3
+                           rounded-xl
+                           bg-emerald-500
+                           hover:bg-emerald-400
+                           text-slate-900
+                           font-black
+                           uppercase
+                           text-xs
+                           tracking-widest
+                           shadow-lg
+                           shadow-emerald-500/20
+                           transition-all">
+
+                <i class="fa-solid fa-floppy-disk mr-2"></i>
+
+                Guardar entrenador
+
+            </button>
+
+        </div>
+
+    </div>
+
+</form>
 
 <script>
 
@@ -161,9 +368,6 @@
         return cookie ? cookie.split('=')[1] : null;
     }
 
-    /* ============================================================
-       IMAGEN - VISTA PREVIA
-       ============================================================ */
 
     let imagenEntrenadorSeleccionada = null;
 
@@ -200,9 +404,6 @@
     });
 
 
-    /* ============================================================
-       CARGAR ENTRENADOR PARA EDITAR
-       ============================================================ */
 
     async function cargarEntrenador(id) {
 
@@ -227,7 +428,6 @@
             document.getElementById('apellido').value = e.apellido;
             document.getElementById('edad').value = e.edad;
 
-            /* CARGAR IMAGEN EXISTENTE */
             if (e.imagen) {
 
                 const preview = document.getElementById('imagenPreview');
@@ -264,9 +464,6 @@
     });
 
 
-    /* ============================================================
-       GUARDAR / ACTUALIZAR ENTRENADOR
-       ============================================================ */
 
     document.getElementById('entrenadorForm').onsubmit = async function(e) {
 
@@ -343,14 +540,7 @@
 
             if (res.ok) {
 
-                /* OBTENER ENTRENADOR GUARDADO */
                 const entrenadorGuardado = await res.json();
-
-                /*
-                 * SUBIR IMAGEN SOLO SI SELECCIONÓ UNA.
-                 * Se hace después de crear/actualizar porque
-                 * necesitamos el ID del entrenador.
-                 */
 
                 if (imagenEntrenadorSeleccionada) {
 
@@ -441,4 +631,3 @@
 
 </body>
 </html>
-

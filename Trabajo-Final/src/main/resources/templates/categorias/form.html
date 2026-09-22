@@ -12,228 +12,263 @@
 
 <body>
 
-<div id="content" class="max-w-[1000px] mx-auto">
+<div id="content" class="max-w-[1000px] mx-auto w-full">
 
-```
-<!-- HEADER -->
-<div class="flex items-center gap-4 mb-10">
 
-    <a th:href="@{/categorias}"
-       class="w-11 h-11 flex items-center justify-center
-              bg-[#0f172a] border border-slate-800 rounded-xl
-              text-slate-400 hover:text-emerald-500
-              hover:border-emerald-500/30 transition-all">
+<div class="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-10">
 
-        <i class="fa-solid fa-arrow-left"></i>
+<a th:href="@{/categorias}"
+   class="w-10 h-10 sm:w-11 sm:h-11 shrink-0
+          flex items-center justify-center
+          bg-[#0f172a] border border-slate-800 rounded-xl
+          text-slate-400 hover:text-emerald-500
+          hover:border-emerald-500/30 transition-all">
 
-    </a>
+    <i class="fa-solid fa-arrow-left"></i>
 
-    <div>
+</a>
 
-        <h1 id="formTitle"
-            class="text-4xl font-black text-white italic uppercase tracking-tight">
-            Nueva Categoría
-        </h1>
+<div class="min-w-0">
 
-        <p class="text-emerald-500 font-bold mt-1">
-            Completá los datos de la categoría.
-        </p>
+    <h1 id="formTitle"
+        class="text-2xl sm:text-3xl md:text-4xl
+               font-black text-white italic uppercase
+               tracking-tight break-words">
+
+        Nueva Categoría
+
+    </h1>
+
+    <p class="text-emerald-500 font-bold mt-1 text-sm sm:text-base">
+
+        Completá los datos de la categoría.
+
+    </p>
+
+</div>
+
+</div>
+
+
+<form id="categoriaForm">
+
+<input type="hidden" id="categoriaId">
+
+
+<div class="bg-[#0f172a] border border-slate-800
+            rounded-2xl sm:rounded-[2.5rem]
+            p-5 sm:p-8">
+
+
+    <div class="flex items-center gap-3 sm:gap-4 mb-6 sm:mb-8">
+
+        <div class="w-11 h-11 sm:w-12 sm:h-12 shrink-0
+                    rounded-2xl
+                    bg-emerald-500/10
+                    flex items-center justify-center
+                    text-emerald-500">
+
+            <i class="fa-solid fa-layer-group text-lg sm:text-xl"></i>
+
+        </div>
+
+        <div class="min-w-0">
+
+            <h2 class="text-lg sm:text-xl
+                       font-black text-white
+                       uppercase italic">
+
+                Datos de la categoría
+
+            </h2>
+
+            <p class="text-[10px] sm:text-xs
+                      text-slate-600
+                      font-bold uppercase
+                      tracking-widest mt-1">
+
+                Información general
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+
+    <div class="grid grid-cols-1 md:grid-cols-2
+                gap-5 sm:gap-6">
+
+
+        <div class="space-y-2 min-w-0">
+
+            <label for="nombre"
+                   class="text-[10px] font-black text-slate-500
+                          uppercase tracking-widest ml-1">
+
+                Nombre
+
+            </label>
+
+            <input type="text"
+                   id="nombre"
+                   required
+                   maxlength="100"
+                   placeholder="Ej: Primera, Sub 17, Sub 15..."
+                   class="w-full min-w-0
+                          bg-[#0a0f1d]
+                          border border-slate-800
+                          text-slate-200
+                          px-4 sm:px-5
+                          py-3.5 sm:py-4
+                          rounded-xl outline-none
+                          focus:ring-2 focus:ring-emerald-500
+                          focus:border-transparent
+                          transition-all">
+
+        </div>
+
+
+
+        <div class="space-y-2 min-w-0">
+
+            <label for="año"
+                   class="text-[10px] font-black text-slate-500
+                          uppercase tracking-widest ml-1">
+
+                Año
+
+            </label>
+
+            <input type="text"
+                   id="año"
+                   required
+                   maxlength="4"
+                   placeholder="Ej: 2026"
+                   class="w-full min-w-0
+                          bg-[#0a0f1d]
+                          border border-slate-800
+                          text-slate-200
+                          px-4 sm:px-5
+                          py-3.5 sm:py-4
+                          rounded-xl outline-none
+                          focus:ring-2 focus:ring-emerald-500
+                          focus:border-transparent
+                          transition-all">
+
+        </div>
+
+
+        <div class="space-y-2 md:col-span-2 min-w-0">
+
+            <label for="descripcion"
+                   class="text-[10px] font-black text-slate-500
+                          uppercase tracking-widest ml-1">
+
+                Descripción
+
+            </label>
+
+            <textarea id="descripcion"
+                      required
+                      rows="4"
+                      maxlength="150"
+                      placeholder="Descripción de la categoría..."
+                      class="w-full min-w-0
+                             bg-[#0a0f1d]
+                             border border-slate-800
+                             text-slate-200
+                             px-4 sm:px-5
+                             py-3.5 sm:py-4
+                             rounded-xl outline-none
+                             focus:ring-2 focus:ring-emerald-500
+                             focus:border-transparent
+                             transition-all
+                             resize-none"></textarea>
+
+        </div>
+
+
+        <div class="space-y-2 md:col-span-2 min-w-0">
+
+            <label for="entrenadorId"
+                   class="text-[10px] font-black text-slate-500
+                          uppercase tracking-widest ml-1">
+
+                Entrenador
+
+            </label>
+
+            <select id="entrenadorId"
+                    required
+                    class="w-full min-w-0
+                           bg-[#0a0f1d]
+                           border border-slate-800
+                           text-slate-200
+                           px-4 sm:px-5
+                           py-3.5 sm:py-4
+                           rounded-xl outline-none
+                           focus:ring-2 focus:ring-emerald-500
+                           focus:border-transparent
+                           transition-all">
+
+                <option value="">
+                    Seleccione un entrenador...
+                </option>
+
+            </select>
+
+        </div>
+
+    </div>
+
+
+    <div class="flex flex-col-reverse sm:flex-row
+                sm:justify-end
+                gap-3
+                mt-6 sm:mt-8
+                pt-6 sm:pt-8
+                border-t border-slate-800">
+
+        <a th:href="@{/categorias}"
+           class="w-full sm:w-auto
+                  text-center
+                  px-6 py-3 rounded-xl
+                  border border-slate-800
+                  bg-[#0a0f1d]
+                  text-slate-400 hover:text-white
+                  font-bold transition-all">
+
+            Cancelar
+
+        </a>
+
+        <button type="submit"
+                id="submitButton"
+                class="w-full sm:w-auto
+                       px-8 py-3 rounded-xl
+                       bg-emerald-500 hover:bg-emerald-400
+                       text-slate-900 font-black
+                       uppercase text-xs tracking-widest
+                       shadow-lg shadow-emerald-500/20
+                       transition-all">
+
+            <i class="fa-solid fa-floppy-disk mr-2"></i>
+            Guardar categoría
+
+        </button>
 
     </div>
 
 </div>
 
-
-<!-- FORMULARIO -->
-<form id="categoriaForm">
-
-    <input type="hidden" id="categoriaId">
-
-
-    <div class="bg-[#0f172a] border border-slate-800
-                rounded-[2.5rem] p-8">
-
-        <!-- CABECERA -->
-        <div class="flex items-center gap-4 mb-8">
-
-            <div class="w-12 h-12 rounded-2xl
-                        bg-emerald-500/10
-                        flex items-center justify-center
-                        text-emerald-500">
-
-                <i class="fa-solid fa-layer-group text-xl"></i>
-
-            </div>
-
-            <div>
-
-                <h2 class="text-xl font-black text-white uppercase italic">
-                    Datos de la categoría
-                </h2>
-
-                <p class="text-xs text-slate-600
-                          font-bold uppercase tracking-widest mt-1">
-                    Información general
-                </p>
-
-            </div>
-
-        </div>
-
-
-        <!-- CAMPOS -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
-            <!-- NOMBRE -->
-            <div class="space-y-2">
-
-                <label for="nombre"
-                       class="text-[10px] font-black text-slate-500
-                              uppercase tracking-widest ml-1">
-                    Nombre
-                </label>
-
-                <input type="text"
-                       id="nombre"
-                       required
-                       maxlength="100"
-                       placeholder="Ej: Primera, Sub 17, Sub 15..."
-                       class="w-full bg-[#0a0f1d]
-                              border border-slate-800
-                              text-slate-200 px-5 py-4
-                              rounded-xl outline-none
-                              focus:ring-2 focus:ring-emerald-500
-                              focus:border-transparent
-                              transition-all">
-
-            </div>
-
-
-            <!-- AÑO -->
-            <div class="space-y-2">
-
-                <label for="año"
-                       class="text-[10px] font-black text-slate-500
-                              uppercase tracking-widest ml-1">
-                    Año
-                </label>
-
-                <input type="text"
-                       id="año"
-                       required
-                       maxlength="4"
-                       placeholder="Ej: 2026"
-                       class="w-full bg-[#0a0f1d]
-                              border border-slate-800
-                              text-slate-200 px-5 py-4
-                              rounded-xl outline-none
-                              focus:ring-2 focus:ring-emerald-500
-                              focus:border-transparent
-                              transition-all">
-
-            </div>
-
-
-            <!-- DESCRIPCIÓN -->
-            <div class="space-y-2 md:col-span-2">
-
-                <label for="descripcion"
-                       class="text-[10px] font-black text-slate-500
-                              uppercase tracking-widest ml-1">
-                    Descripción
-                </label>
-
-                <textarea id="descripcion"
-                          required
-                          rows="4"
-                          maxlength="150"
-                          placeholder="Descripción de la categoría..."
-                          class="w-full bg-[#0a0f1d]
-                                 border border-slate-800
-                                 text-slate-200 px-5 py-4
-                                 rounded-xl outline-none
-                                 focus:ring-2 focus:ring-emerald-500
-                                 focus:border-transparent
-                                 transition-all resize-none"></textarea>
-
-            </div>
-
-
-            <!-- ENTRENADOR -->
-            <div class="space-y-2 md:col-span-2">
-
-                <label for="entrenadorId"
-                       class="text-[10px] font-black text-slate-500
-                              uppercase tracking-widest ml-1">
-                    Entrenador
-                </label>
-
-                <select id="entrenadorId"
-                        required
-                        class="w-full bg-[#0a0f1d]
-                               border border-slate-800
-                               text-slate-200 px-5 py-4
-                               rounded-xl outline-none
-                               focus:ring-2 focus:ring-emerald-500
-                               focus:border-transparent
-                               transition-all">
-
-                    <option value="">
-                        Seleccione un entrenador...
-                    </option>
-
-                </select>
-
-            </div>
-
-        </div>
-
-
-        <!-- BOTONES -->
-        <div class="flex justify-end gap-3 mt-8 pt-8
-                    border-t border-slate-800">
-
-            <a th:href="@{/categorias}"
-               class="px-6 py-3 rounded-xl
-                      border border-slate-800
-                      bg-[#0a0f1d]
-                      text-slate-400 hover:text-white
-                      font-bold transition-all">
-
-                Cancelar
-
-            </a>
-
-            <button type="submit"
-                    id="submitButton"
-                    class="px-8 py-3 rounded-xl
-                           bg-emerald-500 hover:bg-emerald-400
-                           text-slate-900 font-black
-                           uppercase text-xs tracking-widest
-                           shadow-lg shadow-emerald-500/20
-                           transition-all">
-
-                <i class="fa-solid fa-floppy-disk mr-2"></i>
-                Guardar categoría
-
-            </button>
-
-        </div>
-
-    </div>
-
 </form>
 
 
-<!-- ========================================================= -->
-<!-- JAVASCRIPT - DENTRO DE #content -->
-<!-- ========================================================= -->
-
 <script>
 
-    // =========================================================
-    // OBTENER JWT
-    // =========================================================
+
 
     function getJwt() {
 
@@ -247,9 +282,6 @@
     }
 
 
-    // =========================================================
-    // CARGAR ENTRENADORES
-    // =========================================================
 
     async function cargarEntrenadores() {
 
@@ -307,7 +339,6 @@
             );
 
 
-            // Soporta array directo o respuesta paginada
             let entrenadores = [];
 
             if (Array.isArray(data)) {
@@ -330,7 +361,6 @@
             }
 
 
-            // Limpiar opciones anteriores
             select.innerHTML = `
                 <option value="">
                     Seleccione un entrenador...
@@ -354,7 +384,6 @@
             }
 
 
-            // Agregar entrenadores
             entrenadores.forEach(entrenador => {
 
                 if (!entrenador.id) {
@@ -394,9 +423,6 @@
     }
 
 
-    // =========================================================
-    // CARGAR CATEGORÍA PARA EDITAR
-    // =========================================================
 
     async function cargarCategoria(id) {
 
@@ -466,13 +492,10 @@
                 categoria.descripcion || '';
 
 
-            // Obtener ID del entrenador
             let entrenadorId =
                 categoria.entrenadorId;
 
 
-            // Por si el backend devuelve
-            // el objeto entrenador
             if (
                 !entrenadorId &&
                 categoria.entrenador
@@ -518,20 +541,14 @@
     }
 
 
-    // =========================================================
-    // INICIALIZAR
-    // =========================================================
-
     document.addEventListener(
         'DOMContentLoaded',
         async function () {
 
-            // Primero cargamos los entrenadores
             const entrenadoresCargados =
                 await cargarEntrenadores();
 
 
-            // Después comprobamos si es edición
             const params =
                 new URLSearchParams(
                     window.location.search
@@ -543,8 +560,6 @@
 
             if (id) {
 
-                // Es importante cargar la categoría
-                // después de llenar el select
                 if (entrenadoresCargados) {
 
                     await cargarCategoria(id);
@@ -560,10 +575,6 @@
         }
     );
 
-
-    // =========================================================
-    // GUARDAR / ACTUALIZAR
-    // =========================================================
 
     document.getElementById(
         'categoriaForm'
@@ -618,10 +629,6 @@
                 ).value;
 
 
-            // =================================================
-            // VALIDACIONES
-            // =================================================
-
             if (!nombre) {
 
                 alert(
@@ -662,10 +669,6 @@
             }
 
 
-            // =================================================
-            // DATOS
-            // =================================================
-
             const categoriaData = {
 
                 nombre: nombre,
@@ -684,10 +687,6 @@
                 categoriaData
             );
 
-
-            // =================================================
-            // BOTÓN
-            // =================================================
 
             const boton =
                 document.getElementById(
@@ -739,10 +738,6 @@
                 );
 
 
-                // =================================================
-                // ERROR
-                // =================================================
-
                 if (!res.ok) {
 
                     let mensaje =
@@ -787,10 +782,6 @@
                 }
 
 
-                // =================================================
-                // ÉXITO
-                // =================================================
-
                 alert(
                     id
                         ? "Categoría actualizada correctamente."
@@ -831,6 +822,7 @@
     );
 
 </script>
+
 </div>
 
 </body>
